@@ -16,9 +16,9 @@
 
 .. autofunction:: submitFormToSP
 
-:class:`SmartRedirectHandler` Objects
+:class:`ShibbolethRedirectHandler` Objects
 -------------------------------------
-.. autoclass:: SmartRedirectHandler
+.. autoclass:: ShibbolethRedirectHandler
    :members:
    :undoc-members:
 

@@ -31,7 +31,7 @@ import re
 log = logging.getLogger('arcs.shibboleth.client')
 
 
-class SmartRedirectHandler(HTTPRedirectHandler, HTTPBasicAuthHandler, HTTPCookieProcessor):
+class ShibbolethRedirectHandler(HTTPRedirectHandler, HTTPBasicAuthHandler, HTTPCookieProcessor):
 
     def __init__(self, credentialmanager=None, cookiejar=None, **kwargs):
         HTTPBasicAuthHandler.__init__(self)
@@ -196,7 +196,7 @@ def list_shibboleth_idps(sp):
     :param sp: the URL of the service provider you want to connect to
 
     """
-    opener = urllib2.build_opener(SmartRedirectHandler())
+    opener = urllib2.build_opener(ShibbolethRedirectHandler())
     request = urllib2.Request(sp)
     log.debug("GET: %s" % request.get_full_url())
     response = opener.open(request)
@@ -219,7 +219,7 @@ def open_shibprotected_url(idp, sp, cm, cj):
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
     cookiejar = cj
-    opener = urllib2.build_opener(SmartRedirectHandler(credentialmanager=cm, cookiejar=cookiejar))
+    opener = urllib2.build_opener(ShibbolethRedirectHandler(credentialmanager=cm, cookiejar=cookiejar))
     request = urllib2.Request(sp)
     log.debug("GET: %s" % request.get_full_url())
     response = opener.open(request)
