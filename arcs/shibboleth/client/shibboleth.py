@@ -27,6 +27,8 @@ from time import time
 import logging
 import re
 
+from exceptions import WAYFException
+
 
 log = logging.getLogger('arcs.shibboleth.client')
 
@@ -116,6 +118,8 @@ def submitWayfForm(idp, opener, data, res):
     }
     #Set IDP to correct IDP
     wayf_data = {}
+    if not data['origin'].has_key(idp):
+        raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
     wayf_data['origin'] = data['origin'][idp]
     wayf_data['shire'] = data['shire']['value']
     wayf_data['providerId'] = data['providerId']['value']
