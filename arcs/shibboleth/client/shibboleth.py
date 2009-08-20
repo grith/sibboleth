@@ -110,7 +110,14 @@ class FormParser(HTMLParser):
 
 
 def submitWayfForm(idp, opener, data, res):
-    """submit WAYF form with IDP"""
+    """
+    submit WAYF form with IDP
+
+    :param idp: the Identity Provider that will be selected at the WAYF
+    :param opener: the urllib2 opener
+    :param data: the form data as a dictionary
+    :param res: the response object
+    """
     headers = {
     "Referer": res.url
     }
@@ -132,7 +139,15 @@ def submitWayfForm(idp, opener, data, res):
 
 
 def submitIdpForm(opener, title, data, res, cm):
-    """submit login form to IdP"""
+    """
+    submit login form to IdP
+
+    :param opener: the urllib2 opener
+    :param title: the title of the IdP login page
+    :param data: the form data as a dictionary
+    :param res: the response object
+    :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
+    """
     headers = {
     "Referer": res.url
     }
@@ -152,7 +167,13 @@ def submitIdpForm(opener, title, data, res, cm):
 
 
 def submitFormToSP(opener, data, res):
-    """submit IdP form to SP"""
+    """
+    submit IdP form to SP
+
+    :param opener: the urllib2 opener
+    :param data: the form data as a dictionary
+    :param res: the response object
+    """
     headers = {
     "Referer": res.url
     }
@@ -165,7 +186,11 @@ def submitFormToSP(opener, data, res):
 
 
 def whatForm(forms):
-    """try to guess what type of form we have encountered"""
+    """
+    try to guess what type of form we have encountered
+
+    :param forms: a list of forms, the forms are dictionaries of fields
+    """
     form_types = {'wayf': ['origin', 'providerId', 'shire', 'target', 'time'],
                   'login': ['j_password', 'j_username'],
                   'idp': ['SAMLResponse', 'TARGET'],
@@ -251,7 +276,13 @@ def open_shibprotected_url(idp, sp, cm, cj):
 
 
 def set_cookies_expiries(cookiejar):
-    """set the shibboleth session cookies to the default SP expiry"""
+    """
+    Set the shibboleth session cookies to the default SP expiry, this way
+    the cookies can be used by other applications.
+    The cookes that are modified are ``_shibsession_`` and ``_shibstate_``
+
+    :param cj: the cookie jar that stores the shibboleth cookies
+    """
     for cookie in cookiejar:
         if cookie.name.startswith('_shibsession_') or cookie.name.startswith('_shibstate_'):
             cookie.expires = int(time()) + 28800
