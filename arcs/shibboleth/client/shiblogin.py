@@ -19,13 +19,17 @@
 #
 #############################################################################
 
+import os
+from os import path
 import logging
 import optparse
 from cookielib import MozillaCookieJar
 from shibboleth import open_shibprotected_url, list_shibboleth_idps
 from credentials import CredentialManager
 
-log = logging.getLogger('shib-cookies')
+homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
+
+log = logging.getLogger('shib-login')
 
 def main():
 
@@ -36,8 +40,11 @@ def main():
                     help="the username to login as.")
     optp.add_option("-p", "--password",
                     help="the password to use.")
-    optp.add_option("-o", "--output",
-                    help="file to output the cookies to.")
+    optp.add_option("-d", "--storedir", dest="store_dir",
+                     help="the directory to store the certificate/key and \
+                     config file",
+                     metavar="DIR",
+                     default=path.join(homedir, ".shibboleth"))
     optp.add_option("-i", "--idp",
                     help="unique ID of the IdP used to log in")
     optp.add_option('-v', '--verbose', dest='verbose', action='count',
@@ -61,6 +68,9 @@ def main():
         optp.print_help()
         return
 
+    if not path.exists(opts.store_dir):
+        os.mkdir(opts.store_dir)
+
     sp = args[0]
 
     if not opts.idp:
@@ -72,15 +82,18 @@ def main():
         return
 
     idp = opts.idp
+
+    # if the cookies file exists load it
     c = CredentialManager(opts.username, opts.password, log.info)
-    cj = MozillaCookieJar()
+    cookies_file = path.join(opts.store_dir, 'cookies.txt')
+    cj = MozillaCookieJar(filename=cookies_file)
+    if path.exists(cookies_file):
+        cj.load()
 
     if sp:
         log.info("Using IdP: %s" % idp)
         resp = open_shibprotected_url(idp, sp, c, cj)
-        for i in resp.readlines():
-            print i,
+        print("Successfully authenticated to %s" % sp)
 
-    if opts.output:
-        cj.save(opts.output, ignore_discard=True)
+    cj.save(ignore_discard=True)
 
