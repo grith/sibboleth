@@ -289,5 +289,6 @@ def set_cookies_expiries(cookiejar):
     """
     for cookie in cookiejar:
         if cookie.name.startswith('_shibsession_') or cookie.name.startswith('_shibstate_'):
-            cookie.expires = int(time()) + 28800
+            if not cookie.expires:
+                cookie.expires = int(time()) + 28800
 
