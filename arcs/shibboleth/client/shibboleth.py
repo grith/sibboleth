@@ -288,7 +288,8 @@ def set_cookies_expiries(cookiejar):
     :param cj: the cookie jar that stores the shibboleth cookies
     """
     for cookie in cookiejar:
-        if cookie.name.startswith('_shibsession_') or cookie.name.startswith('_shibstate_'):
+        if cookie.name.startswith('_shibsession_'):
             if not cookie.expires:
                 cookie.expires = int(time()) + 28800
+                cookie.discard = False
 

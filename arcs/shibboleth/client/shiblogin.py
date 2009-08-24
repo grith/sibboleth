@@ -95,5 +95,5 @@ def main():
         resp = open_shibprotected_url(idp, sp, c, cj)
         print("Successfully authenticated to %s" % sp)
 
-    cj.save(ignore_discard=True)
+    cj.save()
 
