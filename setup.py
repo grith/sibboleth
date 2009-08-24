@@ -29,6 +29,7 @@ setup(name='arcs.shibboleth.client',
       entry_points="""
       # -*- Entry points: -*-
       [console_scripts]
-      shib-cookies = arcs.shibboleth.client.shibcookies:main
+      shib-login = arcs.shibboleth.client.shiblogin:main
+      shib-logout = arcs.shibboleth.client.shiblogout:main
       """,
       )
