@@ -29,7 +29,7 @@ from urllib2 import HTTPCookieProcessor
 
 homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
 
-log = logging.getLogger('shib-login')
+log = logging.getLogger('shib-logout')
 
 def main():
 
