@@ -25,7 +25,7 @@ import logging
 import optparse
 from cookielib import MozillaCookieJar
 from shibboleth import open_shibprotected_url, list_shibboleth_idps
-from credentials import CredentialManager
+from credentials import CredentialManager, Idp
 
 homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
 
@@ -73,15 +73,8 @@ def main():
 
     sp = args[0]
 
-    if not opts.idp:
-        idps = list_shibboleth_idps(sp)
-        idp_keys = idps.keys()
-        print "Please specify on of the following IdPs:\n"
-        for i in idp_keys:
-            print i
-        return
 
-    idp = opts.idp
+    idp = Idp(opts.idp or '')
 
     # if the cookies file exists load it
     c = CredentialManager(opts.username, opts.password, log.info)
@@ -90,10 +83,9 @@ def main():
     if path.exists(cookies_file):
         cj.load()
 
-    if sp:
-        log.info("Using IdP: %s" % idp)
-        resp = open_shibprotected_url(idp, sp, c, cj)
-        print("Successfully authenticated to %s" % sp)
+    log.info("Using IdP: %s" % idp)
+    resp = open_shibprotected_url(idp, sp, c, cj)
+    print("Successfully authenticated to %s" % sp)
 
     cj.save()
 
