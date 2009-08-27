@@ -126,6 +126,7 @@ def submitWayfForm(idp, opener, data, res):
     #Set IDP to correct IDP
     wayf_data = {}
     idp.set_idps(data['origin'])
+    idp.choose_idp()
     idp.get_idp()
     if not data['origin'].has_key(idp):
         raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)

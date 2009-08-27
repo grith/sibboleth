@@ -82,7 +82,7 @@ class Idp:
     This class responds to the WAYF form with the selected idp
     """
     def __init__(self, idp=''):
-        self.idp = idp
+        self.idp = idp or ''
 
     def set_idps(self, idps):
         """
@@ -93,14 +93,10 @@ class Idp:
         self.idps.sort()
 
 
-    def get_idp(self):
+    def choose_idp(self):
         """
-        return the selected idp
+        some how decide what idp to authenticat to
         """
-        if self.idp:
-            return self.idp
-
-
         import struct, fcntl, termios
         def terminal_dimensions():
             fd = os.open(os.ctermid(), os.O_RDONLY)
@@ -132,6 +128,12 @@ class Idp:
             idp_list.append("%s: %s" % (n, self.idps[n-1]))
         print_list_wide(idp_list)
         self.idp = self.idps[int(raw_input("Idp (1-%s):" % len(self.idps)))-1]
+
+
+    def get_idp(self):
+        """
+        return the selected idp
+        """
         return self.idp
 
     def __repr__(self):

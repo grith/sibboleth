@@ -74,7 +74,7 @@ def main():
     sp = args[0]
 
 
-    idp = Idp(opts.idp or '')
+    idp = Idp(opts.idp)
 
     # if the cookies file exists load it
     c = CredentialManager(opts.username, opts.password, log.info)
