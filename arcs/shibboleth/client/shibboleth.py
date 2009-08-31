@@ -27,7 +27,7 @@ from time import time
 import logging
 import re
 
-from exceptions import WAYFException
+from arcs.shibboleth.client.exceptions import WAYFException
 
 
 log = logging.getLogger('arcs.shibboleth.client')
