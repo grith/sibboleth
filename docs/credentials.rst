@@ -13,3 +13,10 @@
    :members:
    :undoc-members:
 
+
+:class:`Idp` Objects
+----------------------------------
+.. autoclass:: Idp
+   :members:
+   :undoc-members:
+
