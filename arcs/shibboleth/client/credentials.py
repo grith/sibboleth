@@ -97,31 +97,37 @@ class Idp:
         """
         some how decide what idp to authenticat to
         """
-        import struct, fcntl, termios
-        def terminal_dimensions():
-            fd = os.open(os.ctermid(), os.O_RDONLY)
-            if not os.isatty(fd):
-                return (0,0)
-            return struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+        try:
+            import struct, fcntl, termios
+            def terminal_dimensions():
+                fd = os.open(os.ctermid(), os.O_RDONLY)
+                if not os.isatty(fd):
+                    return (0,0)
+                return struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
 
 
-        def print_list_wide(items):
-            lmax = max([len(x) for x in items]) + 1
-            width = terminal_dimensions()[1]
-            if width:
-                col = width/lmax
-                i = 1
-                for item in items:
-                    if not i%col:
+            def print_list_wide(items):
+                lmax = max([len(x) for x in items]) + 1
+                width = terminal_dimensions()[1]
+                if width:
+                    col = width/lmax
+                    i = 1
+                    for item in items:
+                        if not i%col:
+                            print item
+                        else:
+                            print item.ljust(lmax),
+                        i = i + 1
+                    if i-1%col:
+                        print('')
+                else:
+                    for item in items:
                         print item
-                    else:
-                        print item.ljust(lmax),
-                    i = i + 1
-                if i-1%col:
-                    print('')
-            else:
+        except:
+            def print_list_wide(items):
                 for item in items:
                     print item
+
 
         idp_list = []
         for n in range(1, len(self.idps)):
