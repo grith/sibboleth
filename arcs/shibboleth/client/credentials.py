@@ -76,3 +76,80 @@ class CredentialManager:
         self.username = None
         self.password = None
 
+
+class Idp:
+    """
+    This class responds to the WAYF form with the selected idp
+    """
+    def __init__(self, idp=''):
+        self.idp = idp or ''
+
+    def set_idps(self, idps):
+        """
+        set the list of possible idps
+        """
+        self.raw_idps = idps
+        self.idps = idps.keys()
+        self.idps.sort()
+
+
+    def choose_idp(self):
+        """
+        some how decide what idp to authenticat to
+        """
+        try:
+            import struct, fcntl, termios
+            def terminal_dimensions():
+                fd = os.open(os.ctermid(), os.O_RDONLY)
+                if not os.isatty(fd):
+                    return (0,0)
+                return struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+
+
+            def print_list_wide(items):
+                lmax = max([len(x) for x in items]) + 1
+                width = terminal_dimensions()[1]
+                if width:
+                    col = width/lmax
+                    i = 1
+                    for item in items:
+                        if not i%col:
+                            print item
+                        else:
+                            print item.ljust(lmax),
+                        i = i + 1
+                    if i-1%col:
+                        print('')
+                else:
+                    for item in items:
+                        print item
+        except:
+            def print_list_wide(items):
+                for item in items:
+                    print item
+
+
+        idp_list = []
+        for n in range(1, len(self.idps)):
+            idp_list.append("%s: %s" % (n, self.idps[n-1]))
+        print_list_wide(idp_list)
+        self.idp = self.idps[int(raw_input("Idp (1-%s):" % len(self.idps)))-1]
+
+
+    def get_idp(self):
+        """
+        return the selected idp
+        """
+        return self.idp
+
+    def __repr__(self):
+        return self.idp
+
+    __str__ = __repr__
+
+    def __eq__(self, value):
+        return self.idp.__eq__(value)
+
+    def __hash__(self):
+        return self.idp.__hash__()
+
