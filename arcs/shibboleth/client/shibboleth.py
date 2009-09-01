@@ -215,7 +215,7 @@ def whatForm(forms):
             rtype,rform = match_form(form, ft, form_types[ft])
             if rtype:
                 return rtype,rform
-    return None, None
+    return '', None
 
 
 def list_shibboleth_idps(sp):

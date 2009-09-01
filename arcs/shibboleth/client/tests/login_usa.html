@@ -1,0 +1,123 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+	    <title>login.unisa.edu.au &#8211; University of South Australia</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <style type="text/css" media="screen">@import 'css/cas.css'/**/;</style>
+	    <!--[if gte IE 6]><style type="text/css" media="screen">@import 'css/ie_cas.css';</style><![endif]-->
+	    <script type="text/javascript" src="js/common_rosters.js"></script>
+	</head>
+
+	<body id="cas" onload="init();">
+	    <div id="header">
+	        <h1 id="app-name">login.unisa.edu.au</h1>
+	    </div>
+
+		<div id="navigation-background">
+		<div id="navigation">
+			<p class="top-nav1">
+				<a href="http://unisa.edu.au/">
+					<img src="/images/icons/home_small.gif" width="18" height="14" alt=" " /> 
+					UniSA home
+				</a>
+			</p>
+
+			<p class="top-nav">
+<a href="http://unisa.edu.au/directory/">
+			<img src="/images/icons/directory_small.gif" width="18" height="14" alt=" "> 
+Directory</a></p>
+
+			<form class="top-nav" method="get" action="http://www.applications.unisa.edu.au/search" name="search_UniSA"><p class="search"><input onselect="this.select()" type="text" value="search UniSA website" id="search" name="search" size="19" class="search-box"></p>
+			<!--<label for="search"><span class="search-icon"><input type="image" src="/images/icons/search.gif" name="Search UniSA website" alt="Search UniSA website"></span></label>--></form>
+
+			<p class="top-nav">
+			<a href="http://unisa.edu.au/webmail.asp">
+			<img src="/images/icons/email_small.gif" width="18" height="14" alt=" "> 
+			Email</a></p>
+
+			<p class="top-nav">
+			<a href="https://my.unisa.edu.au/director/director.aspx?system=portal">
+			<img src="/images/icons/myunisa.gif" width="18" height="14" alt=" "> 
+			myUniSA</a></p>
+
+			<p class="top-nav">
+				<a href="http://www.library.unisa.edu.au/">
+				<img src="/images/icons/library_small.gif" width="18" height="14" alt=" "> 
+				Library</a>
+			</p>
+
+
+		</div>
+		</div>
+
+	    <div id="content">
+
+			<form id="fm1" class="fm-v clearfix" method="post" action="/auth/login;jsessionid=6EF1EF5133829497A58E9A9B41413665?service=https%3A%2F%2Flogin.unisa.edu.au%2Fshibboleth-idp%2FSSO%3Ftarget%3Dcookie%26shire%3Dhttps%253A%252F%252Fslcs1.arcs.org.au%252FShibboleth.sso%252FSAML%252FPOST%26providerId%3Dhttps%253A%252F%252Fslcs1.arcs.org.au%252Fshibboleth%26time%3D1251800936">
+			    
+                <div class="box" id="login">
+                <!-- Congratulations on bringing CAS online!  The default authentication handler authenticates where usernames equal passwords: go ahead, try it out.  -->
+                    <h2>Enter your UniSA Username and Password</h2>
+                    <div class="row">
+                        <label for="username"><span class="accesskey">U</span>sername:</label>
+						
+						
+						
+						
+						<input id="username" name="username" class="required" tabindex="1" accesskey="u" type="text" value="" size="25" autocomplete="false"/>
+						
+                    </div>
+                    <div class="row">
+                        <label for="password"><span class="accesskey">P</span>assword:</label>
+						
+						
+						<input id="password" name="password" class="required" tabindex="2" accesskey="p" type="password" value="" size="25"/>
+                    </div>
+		<!--
+                    <div class="row check">
+                        <input id="warn" name="warn" value="true" tabindex="3" accesskey="w" type="checkbox" />
+                        <label for="warn"><span class="accesskey">W</span>arn me before logging me into other sites.</label>
+                    </div>
+		-->
+                    <div class="row btn-row">
+						<input type="hidden" name="lt" value="_c9679A608-1135-DB58-6231-095B6DB6AC71_k3B2EE6C9-1430-12F2-0ABF-BA2C0232EBEA" />
+						<input type="hidden" name="_eventId" value="submit" />
+
+                        <input class="btn-submit" name="submit" accesskey="l" value="LOGIN" tabindex="4" type="submit" />
+                        <input class="btn-reset" name="reset" accesskey="c" value="CLEAR" tabindex="5" type="reset" />
+                    </div>
+                </div>
+               
+	            <div id="sidebar">
+			<h2>Welcome to <tt>login.unisa.edu.au</tt></h2>
+<p>This is the web login service for UniSA web applications. This page will become more familiar as additional services throughout the University start using web single sign-on and federated access management. For more information checkout the <a href="http://www.aaf.edu.au/">Australian Access Federation.</a></p>
+
+<h2>News:</h2>
+<p><tt>`login'</tt> is now the initial sign-on page for Shibboleth Federated Access at UniSA.</p>
+<p><a href="http://www.atn.edu.au/">ATN</a> <a href="http://www.egradschool.edu.au/">eGradschool</a> is the first service to utilise <tt>`login'</tt>. <a href="http://blackboard.qut.edu.au/">Course content</a> is hosted by <a href="http://www.qut.edu.au/">QUT</a> for eGradSchool students Australia wide.
+</p>
+<p>A list of <a href="http://www.federation.org.au/FedManager/jsp/index.jsp">testbed websites</a> compatible with <tt>`login'</tt> are available via the Meta Access Management System (MAMS) website.</p>
+<p>Help is available if you <a href="http://www.unisa.edu.au/ists/ITHelpDesk/FAQS/Password/">forgot your password</a>.</p>
+
+	                <p>For security reasons, please Log Out and Exit your web browser when you are done accessing services that require authentication!</p>
+	            </div>
+        	</form>
+		</div>
+	    <div id="footer">
+	        <div>
+	        </div>
+	        <a href="http://www.unisa.edu.au/ists" title="go to ISTS eResearch home page">
+			<img width="260" height="63" title="ISTS eResearch" alt="Information Strategy and Technology Services" src="/images/ists.gif" id="logo" />
+		</a>
+	    </div>
+	</body>
+</html>
+

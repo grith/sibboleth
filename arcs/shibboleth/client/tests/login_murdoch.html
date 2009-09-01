@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>MAIS Login</title>
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<SCRIPT language=JavaScript>
+<!-- JavaScript Time!
+function HelpWindow(hwurl)
+{
+   var hwin=window.open('', 'mais_help', 'resizable=1,scrollbars=1,menubar=0,location=0,toolbar=0,directories=0,status=0,width=450,height=400');
+   hwin.location=hwurl;
+}
+
+function SubmitCheck(dsf)
+{
+   var tf = document.forms.MAISLogin;
+   if (tf.i_id_numb.value && tf.i_pin.value)
+   {  if (dsf) { tf.submit(); return false; }
+      else return true;
+   }
+   if (!tf.i_id_numb.value)
+   {  tf.i_id_numb.focus();  return false;   }
+   tf.i_pin.focus();   return false;
+}
+
+// That's all folks! -->
+</SCRIPT>
+
+<link rel="stylesheet" href="https://www.murdoch.edu.au/index/index.css" type="text/css">
+<link rel="stylesheet" href="https://www.murdoch.edu.au/index/indexprint.css" type="text/css" MEDIA="print">
+<SCRIPT LANGUAGE="JavaScript" SRC="https://www.murdoch.edu.au/lib/js/scalepage.js"></SCRIPT>
+
+<STYLE>
+.footer { color:#BCBFBE }
+.footerlink { color:#90909F }
+ form { margin-bottom : 0; }
+</STYLE>
+</head>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#006b54" VLINK="#006b54" ALINK="#006B54"
+   MARGINHEIGHT="0" MARGINWIDTH="0"
+   onLoad="ScalePageSetup('maincontent','page_base','content_top',new Array('content_base')); CheckScalePage();"
+   onResize="CheckScalePage();"
+   >
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+   <td valign="middle" align="center" width="200" class="logo" rowspan="2" height="66">
+      <a href="http://www.murdoch.edu.au/" title="Murdoch University Home Page"><img src="https://www.murdoch.edu.au/images/header/cs/logo/mu_logo_lhs_50.gif"
+         height=50 width=185 alt="Murdoch University Home Page"  border="0"></a></td>
+   <td class="topnav" ALIGN="center" VALIGN="middle" HEIGHT=42><img SRC="https://www.murdoch.edu.au/images/dynamic/banner.gif" BORDER="0" WIDTH="300" HEIGHT="42" ALT=""></td>
+   <td class="topnav" ALIGN=RIGHT VALIGN="middle" HEIGHT=42 NOWRAP>
+
+      <a href="http://www.murdoch.edu.au/">MURDOCH</a>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="http://www.murdoch.edu.au/goto/Index">INDEX</a>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="http://www.murdoch.edu.au/goto/SearchMurdoch">SEARCH</a>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="http://www.murdoch.edu.au/goto/People@Murdoch">PEOPLE</a>&nbsp;&nbsp;
+
+   </TD>
+</tr>
+<tr>
+   <TD class="topnav2" valign="middle" ALIGN=LEFT COLSPAN=2>
+      &nbsp;
+   </TD>
+</TR>
+<TR>
+<TD class="maincontent" VALIGN=TOP COLSPAN=3">
+<DIV ID="maincontent" WIDTH="100%"><SPAN ID="content_top"></SPAN>
+
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=15 WIDTH="100%">
+<TR>
+   <TD VALIGN=TOP>
+<!-- Main Page Content -->
+
+<H1 class="underline">Murdoch Authentication & Identification System</H1>
+
+<FORM NAME="MAISLogin" method=post onSubmit="return SubmitCheck()" ACTION="https://mais.murdoch.edu.au/login" ENCTYPE="application/x-www-form-urlencoded">
+<center>
+<P>&nbsp;</P>
+
+<!-- Warning on -->
+<!-- i_mais_msg: $i_mais_msg -->
+<!-- /Warning -->
+
+<P>
+
+<TABLE BORDER=1 CELLSPACING=1 CELLPADDING=20 BGCOLOR="#EEEEEE">
+<TR>
+   <TD>
+<table border=0 cellspacing=5 cellpadding=0>
+<tr>
+   <TD WIDTH=30 ROWSPAN=2>&nbsp;</TD>
+   <th align=right><FONT FACE="Futura, Arial, Verdana">Murdoch Username:</FONT></th>
+   <td align=left>
+   <INPUT TYPE="text" NAME="i_id_numb" VALUE="" SIZE=8 MAXLENGTH=8">
+
+   </td>
+
+<INPUT TYPE="hidden" NAME="warning" VALUE="on">
+<!-- Other Vars -->
+<INPUT TYPE="hidden" NAME="i_this_full_url" VALUE="https://idp.murdoch.edu.au/shibboleth-idp/SSO?target=cookie&amp;shire=https%3A%2F%2Fslcs1.arcs.org.au%2FShibboleth.sso%2FSAML%2FPOST&amp;providerId=https%3A%2F%2Fslcs1.arcs.org.au%2Fshibboleth&amp;time=1251801148">
+<INPUT TYPE="hidden" NAME="i_this_url" VALUE="https://idp.murdoch.edu.au/shibboleth-idp/SSO">
+<INPUT TYPE="hidden" NAME="MAISTrackID" VALUE="OHEHYVFTXA">
+<INPUT TYPE="hidden" NAME="i_mais_env" VALUE="mais">
+<!-- /Other Vars -->
+
+   <td ROWSPAN=2 nowrap> &nbsp; &nbsp; </td>
+   <td COLSPAN=2> &nbsp; </td>
+   <TD WIDTH=30 ROWSPAN=2>&nbsp;</TD>
+</tr>
+<tr>
+   <th align=right><FONT FACE="Futura, Arial, Verdana">Murdoch Password:</FONT></th>
+   <td align=left>
+   <INPUT TYPE="password" NAME="i_pin" VALUE="" SIZE="8">
+   </td>
+   <th><INPUT TYPE="submit" NAME="Submit" VALUE="Enter">
+      </form>
+   </th>
+   <th>
+      <FORM METHOD="GET" ACTION="https://www.murdoch.edu.au/wwwforms/mais/help/maishelp.html" TARGET="maishelp">
+      <INPUT TYPE="submit" NAME="B" VALUE="Help">
+      </FORM>
+   </th>
+</tr>
+</table>
+   </TD>
+</TR>
+</TABLE>
+
+<script language="JavaScript">
+   document.forms.MAISLogin.i_id_numb.focus();
+</script>
+
+<!-- No MotD! --><P>&nbsp;</P>
+
+</center>
+
+<!-- End Main Page Content -->
+
+<P>&nbsp;</P>
+   </TD>
+</TR>
+</TABLE>
+<SPAN ID="content_base"></SPAN></DIV>
+   </TD>
+</TR>
+<TR>
+   <TD COLSPAN=3 ALIGN=RIGHT>
+      <DIV ALIGN=RIGHT class="footer">
+            <A NAME="page_info"></A>&copy; 2004 <A HREF="http://www.murdoch.edu.au/">Murdoch University</A>  &nbsp;&nbsp;|&nbsp;&nbsp;
+      <SPAN class="noprint">
+            <A HREF="http://www.murdoch.edu.au/goto/CopyrightNotice">Copyright &amp; Disclaimer</A>   &nbsp;&nbsp;|&nbsp;&nbsp;
+            <A HREF="http://www.murdoch.edu.au/goto/PrivacyNotice">Privacy</A>  &nbsp;&nbsp;|&nbsp;&nbsp;
+            <A HREF="http://www.murdoch.edu.au/goto/MurdochNetPolicy">MurdochNet Policy</A> &nbsp;&nbsp;|&nbsp;&nbsp;
+      </SPAN>
+            <A HREF="http://www.murdoch.edu.au/goto/CRICOSCode">CRICOS Code: 00125J</A>
+      </DIV>
+   </TD>
+</TR>
+
+</TABLE>
+      <SPAN ID="page_base"></SPAN>
+
+</body>
+</html>

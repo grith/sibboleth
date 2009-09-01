@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<title>Identity Provider Selection</title> 
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+
+	
+	body
+	{
+		color: #000000;
+		background-color: #FEFCEE;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	
+	a 
+	{
+		color: #203781; 
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	
+	a:hover
+	{
+		color: #203781;
+		text-decoration: underline;
+	}
+	
+	h2.aaf
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 17px;
+	}
+	
+	
+	h1
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 18px;
+	}
+	
+	p
+	{
+		color: #000000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		line-height: 1.2;
+		font-size: 12px;
+	}
+	
+	b
+	{
+		color: #000000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		line-height: 1.2;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	
+	tt
+	{
+		line-height: 1.2;
+		font-weight: bold;
+	}
+	
+	span.aaf
+	{
+		line-height: 30px;
+	}
+	
+	img.aaf-login-button
+	{
+		padding-bottom: 10px;
+		padding-top: 12px;
+	}
+	
+	input.non-aaf-login-button
+	{
+		padding-bottom: 8px;
+		padding-top: 12px;
+		float: right;
+	}
+	
+	input.non-aaf-login
+	{
+		border-width: 1px;
+		border-style: solid;
+		border-color: #999999;
+		margin-bottom: 4px;
+	}
+	
+	input.aaf
+	{
+		border-width: 1px;
+		border-style: solid;
+		border-color: #888888;
+	}
+	
+	a.aaf
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 12px;
+	}
+	
+	.box-aaf
+	{
+		margin-left:auto; margin-right:auto;
+		border-style: solid;
+		border-color: #00247D;
+		border-width: 1px;
+		padding: 10px;
+		text-align: left;
+		background-color: FEFFE1;
+	}
+	
+	.selectedIdP
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 12px;
+		background-color: white;
+		border-color: #203781;
+		border-style: solid;
+		margin: 2px;
+		border-width: 1px;
+		width: 400px;
+		height: 25px;
+		text-align: center;
+		line-height: 25px;
+	}
+	
+	.fullheight
+	{
+		height: 100%;
+		min-height: 100%;
+	}
+	
+	.bluebox
+	{
+		border-width: 1px;
+		border-color: #203781;
+		background-color: #C79D3D;
+		border-style: solid;
+		padding: 3px;
+	}
+
+-->
+</style>
+</head>
+<body bgcolor="#ffffff" onLoad="if (document.IdPList && document.IdPList.Select) document.IdPList.Select.focus()">
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%; height:100%">
+	<tr>
+		<td align="center" valign="middle">
+			<table border="0" cellpadding="0" cellspacing="0" width="600" class="box-aaf">
+				<tr>
+					<td align="right">
+										</td>
+				</tr>
+				<tr>
+					<td class="aaf">
+						<a href="http://www.aaf.edu.au/" target="_blank"><img src="https://ds.aaf.edu.au/discovery/images/aaf_logo_small.png" border="0" class="aaf" alt="Federation Logo"></a>
+						<br>
+						<a href="http://www.aaf.edu.au/en/aaf/about/" class="aaf-link">About AAF</a>&nbsp;:&nbsp;<a href="http://manager.aaf.edu.au/en/aaf/faq/" class="aaf-link">FAQ</a>&nbsp;:&nbsp;<a href="http://manager.aaf.edu.au/en/aaf/help/" class="aaf-link">Help</a>&nbsp;:&nbsp;<a href="http://manager.aaf.edu.au/en/aaf/privacy/" class="aaf-link">Privacy</a>
+ 
+<!-- Identity Provider Selection: Start-->
+<h1>Select your Identity Provider</h1> 
+<p class="aaf">
+In order to access a Resource on host <tt>'code.arcs.org.au'</tt> you must authenticate yourself.</p>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+
+function showConfirmation(){
+	
+	return confirm(unescape('Are you sure that you want to set the selected entry as your default Identity Provider? Don\'t do this if you use several AAF accounts.'));
+}
+
+function checkForm(){
+	if(document.IdPList.user_idp.selectedIndex == 0){
+		alert(unescape('Select the Identity Provider you are affiliated with'));
+		return false;
+	} else {
+		
+		if (document.IdPList.permanent && document.IdPList.permanent.checked){
+			return showConfirmation();
+		} else {
+			return true;
+		}
+	}
+}
+-->
+</script>
+
+<form id="IdPList" name="IdPList" method="post" onSubmit="return checkForm()" action="?entityID=https%3A%2F%2Fcode.arcs.org.au%2Fshibboleth&amp;return=https%3A%2F%2Fcode.arcs.org.au%2FShibboleth.sso%2FDS%3FSAMLDS%3D1%26target%3Dcookie">
+	<p>
+		<select name="user_idp"> 
+			<option value="-" selected="selected">Select the Identity Provider you are affiliated with ...</option>
+		
+	<optgroup label="Australian University">
+		<option value="https://shibidp.ecu.edu.au/idp/shibboleth">Edith Cowan University</option>
+		<option value="https://idp1.griffith.edu.au/idp/shibboleth">Griffith University</option>
+		<option value="https://idp.qut.edu.au/idp/shibboleth">Queensland University of Technology</option>
+		<option value="https://unisa.edu.au/idp/shibboleth">University of South Australia</option>
+	</optgroup>
+	<optgroup label="New Zealand University">
+		<option value="https://idp.lincoln.ac.nz/idp/shibboleth">Lincoln University NZ</option>
+		<option value="https://idp.canterbury.ac.nz/idp/shibboleth">University of Canterbury</option>
+	</optgroup>
+	<optgroup label="Members of ARCS (MARCS)">
+		<option value="https://idp.arcs.org.au/idp/shibboleth">ARCS IdP</option>
+		<option value="urn:mace:federation.org.au:testfed:idp.eresearchsa.edu.au">eResearch SA</option>
+		<option value="urn:mace:federation.org.au:testfed:idp.ivec.org">iVEC</option>
+		<option value="https://idp.vpac.org/idp/shibboleth">VPAC</option>
+	</optgroup>
+	<optgroup label="Virtual Home Organization">
+		<option value="https://vho.aaf.edu.au/idp/shibboleth">AAF Virtual IdP</option>
+	</optgroup>
+	<optgroup label="Others">
+		<option value="https://arcs-a3.hpcu.uq.edu.au/idp/shibboleth">ARCS Auth Test IdP</option>
+		<option value="https://chive.qut.edu.au/idp/shibboleth">AutoGraph/ShARPE test IdP</option>
+		<option value="urn:mace:federation.org.au:testfed:mams.melcoe.mq.edu.au">MAMS MELCOE</option>
+	</optgroup>
+	<optgroup label="Upcoming">
+		<option value="https://shibboleth.aarnet.edu.au/idp/shibboleth">Bootstrapped IdP aarnet.edu.au</option>
+		<option value="https://idp.ac3.edu.au/idp/shibboleth">Bootstrapped IdP ac3.edu.au</option>
+		<option value="https://chief.nbi.ansto.gov.au/idp/shibboleth">Bootstrapped IdP ansto.gov.au</option>
+	</optgroup>		</select>
+		<input type="submit" name="Select" accesskey="s" tabindex="10" value="Select" > 
+	</p>
+	<p>
+		<input tabindex="8" type="checkbox" name="session" value="true">		<span class="warning">Remember selection for this web browser session.</span><br>
+		
+		<!-- Value permanent must be a number which is equivalent to the days the cookie shall be valid --><input type="checkbox" tabindex="9" name="permanent" value="100"> <span class="warning">Remember selection permanently and bypass WAYF from now on.</span>	</p>
+</form>
+<table border="0" cellpadding="1" cellspacing="0">
+	<tr>
+		<td valign="top" width="14"><img src="https://ds.aaf.edu.au/discovery/images/arrow-12.gif" alt="arrow"></td>
+		<td valign="top"><p class="aaf">The <a href="http://www.aaf.edu.au/" target="_blank">Australian Access Federation</a> provides infrastructure to facilitate trusted electronic communications and collaboration within and between higher education and research institutions both locally and internationally as well as with other organizations providing researchers with access to an environment necessary to support world-class research.</p></td>
+	</tr>
+</table>
+<!-- Identity Provider Selection: End-->
+						</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
