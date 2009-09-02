@@ -1,0 +1,88 @@
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+	    <title>JCU CAS &#8211; Central Authentication Service</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <style type="text/css" media="screen">@import 'css/jcu.css'/**/;</style>
+	    <!--[if gte IE 6]><style type="text/css" media="screen">@import 'css/ie_cas.css';</style><![endif]-->
+	    <script type="text/javascript" src="js/common_rosters.js"></script>
+	    <link rel="icon" href="/cas/favicon.ico" type="image/x-icon" />
+	</head>
+
+	<body id="cas" onload="init();">
+	      <div id="topnav">
+<a href="https://mail.jcu.edu.au">Web mail</a> | 
+<a href="https://learnjcu.jcu.edu.au/">LearnJCU</a> | 
+<a href="http://www.jcu.edu.au/contacts/">Contacts</a> | 
+<a href="http://www.jcu.edu.au/bulletin/">Bulletins</a> | 
+
+<a href="http://www.jcu.edu.au/maps/">Campus Maps</a> 
+<div class="searchbox">
+<form method="get" action="http://www.jcu.edu.au/app/scripts/searchforwarder.cfm" id="f">   
+<!--<fieldset id="SearchBox">--><input type="hidden" name="jcusearchtype" value="googlejcu" />
+<label for="search"><img height="16" width="55" alt="Search..." src="http://www.jcu.edu.au/groups/public/documents/webgraphics/hp_search_img.gif" /></label>
+<input type="text" name="jcusearchquery" id="search" value="" size="20" maxlength="120" />
+<button name="submit" type="submit"><img height="16" width="20" alt="Go" src="http://www.jcu.edu.au/groups/public/documents/webgraphics/hp_go_img.gif" /></button>
+<!--</fieldset>--></form></div></div>
+
+	    <div id="header">
+	        <h1 id="app-name">James Cook University Central Authentication Service</h1>
+	    </div>
+
+	    <div id="content">
+
+			<form id="fm1" class="fm-v clearfix" action="/cas/login;jsessionid=B1D469A92EBAE45D969AAE0557B5EED7?service=https%3a%2f%2fidp.jcu.edu.au%2fidp%2fAuthn%2fRemoteUser" method="post">
+			    
+                <div class="box" id="login">
+                <!-- James Cook University - Central Authentication Service -->
+                    <h2>Enter your LoginID and Password</h2>
+                    <div class="row">
+                        <label for="username"><span class="accesskey">L</span>oginID:</label>
+						
+						
+						
+						
+						<input id="username" name="username" class="required" tabindex="1" accesskey="n" type="text" value="" size="25" autocomplete="false"/>
+						
+                    </div>
+                    <div class="row">
+                        <label for="password"><span class="accesskey">P</span>assword:</label>
+						
+						
+						<input id="password" name="password" class="required" tabindex="2" accesskey="p" type="password" value="" size="25" autocomplete="off"/>
+                    </div>
+                    <div class="row check">
+                        <input id="warn" name="warn" value="true" tabindex="3" accesskey="w" type="checkbox" />
+                        <label for="warn"><span class="accesskey">W</span>arn me before logging me into other sites.</label>
+                    </div>
+                    <div class="row btn-row">
+						<input type="hidden" name="lt" value="_c21DD4DE6-1CA5-88D4-23D4-71E55BBB093E_kC925EE40-AB34-418E-9F59-38FBB222F259" />
+						<input type="hidden" name="_eventId" value="submit" />
+
+                        <input class="btn-submit" name="submit" accesskey="l" value="LOGIN" tabindex="4" type="submit" />
+                        <input class="btn-reset" name="reset" accesskey="c" value="CLEAR" tabindex="5" type="reset" />
+                    </div>
+                </div>
+               
+	            <div id="sidebar">
+	                <p>For security reasons, please Log Out and Exit your web browser when you are done accessing services that require authentication.</p>
+	            </div>
+        	</form>
+		</div>
+	    <div id="footer">
+	        <div>
+	            <p>Copyright &copy; 2005-2007 JA-SIG. All rights reserved.</p>
+	            <p>Powered by <a href="http://www.ja-sig.org/products/cas/">JA-SIG Central Authentication Service 3.3.1</a></p>
+	        </div>
+	    </div>
+	</body>
+</html>
+

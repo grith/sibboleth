@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html lang="EN">
+
+<head>
+  
+<!-- START: head -->
+
+  <title>The University of Queensland, Australia</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="title" content="The University of Queensland Identity Provider Login Page" />
+  <meta name="description" content="Federated login service for web resources for users from The University of Queensland." />
+  <meta name="keywords" content="University of Queensland ; UQ ; Queensland university ; Australian universities ; Queensland universities ; Brisbane ; Australia" />
+
+  <link rel="bookmark" href="uqhome/images/favicon.ico" />
+  <link rel="shortcut icon" href="uqhome/images/favicon.ico" />
+  <link rel="stylesheet" href="uqhome/css/default.css" media="screen" type="text/css" />
+  <link rel="stylesheet" href="uqhome/css/handheld.css" media="handheld"  type="text/css" />
+  <link rel="stylesheet" href="uqhome/css/default.css" media="print" type="text/css" />
+  <script type="text/javascript" src="uqhome/include/js/default.js"></script>
+
+<!-- END: head -->
+
+
+</head>
+
+<body onload="document.login_form.j_username.focus()">
+  
+
+<!--START: Header -->
+
+<div id="header">
+
+  <div id="headertitle">
+    <h1><a href="http://www.uq.edu.au/" target="_blank"><img src="uqhome/images/uq_logo.gif" width="200" height="72" alt="The University of Queensland Homepage" border="0" /></a></h1>
+  </div>
+
+  <div id="headertitle2">
+    <h1><img src="uqhome/images/header-shib.jpg" width="380" height="55" alt="Shibboleth Federation Login" border="0" /></h1>
+  </div>
+
+  <div id="menu">
+    <ul>
+      <li><a href="http://www.uq.edu.au/" target="_blank" accesskey="1">UQ Home</a></li>
+      <li><a href="http://www.uq.edu.au/search/" target="_blank" accesskey="3">Search</a></li>
+      <li><a href="http://www.uq.edu.au/contacts" target="_blank" accesskey="4">Contacts</a></li>
+      <li><a href="http://www.uq.edu.au/study/" target="_blank" accesskey="5">Study</a></li>
+      <li><a href="http://www.uq.edu.au/news" target="_blank" accesskey="6">News</a></li>
+      <li><a href="http://www.uq.edu.au/events" target="_blank" accesskey="7">Events</a></li>
+      <li><a href="http://www.uq.edu.au/maps/" target="_blank" accesskey="8">Maps</a></li>
+      <li><a href="http://www.uq.edu.au/library/" target="_blank" accesskey="9">Library</a></li>
+    </ul>
+  </div>
+
+  <div id="shield">
+    <p id="myuq_nav"><a href="http://my.uq.edu.au" target="_blank" accesskey="9">my.UQ</a></p>
+    <img src="uqhome/images/header_shield.gif" width="192" height="72" alt="" />
+  </div>
+
+
+  <div id="search">
+    <form name="search_form" onsubmit="return goto_url(this)" action="">
+
+    <label for="search_options"></label>
+    <select name="search_select" id="search_options">
+      <option value="http://www.uq.edu.au/googlesearch?sitesearch=uq.edu.au&amp;q=" selected="selected">All of UQ</option>
+      <option value="http://www.uq.edu.au/contacts/index.phtml?searchtype=2&amp;staff_search=">People</option>
+      <option value="http://www.uq.edu.au/news/index.html?search=1&amp;freetext=">UQ News</option>
+      <option value="http://www.uq.edu.au/events/event_search.php?action=search&amp;search_field=">UQ Events</option>
+      <option value="http://www.uq.edu.au/uqexperts/index.php?search=1&amp;action=searchExpertise&amp;or_and=or&amp;search_special=">UQ Experts</option>
+      <option value="http://www.uq.edu.au/hupp/index.html?action=search&amp;searchtext=">Policies</option>
+      <option value="http://www.uq.edu.au/departments/unitsearch.html?q=">Org. Units</option>
+    </select>
+
+    <label for="SearchUQ"></label>
+    <input class="formfield-search" type="text" name="search_text" id="SearchUQ" size="18" maxlength="100" value="Enter keywords" onfocus="if(this.value=='Enter keywords')this.value='';" onblur="if(this.value=='')this.value='Enter keywords';" style="top-margin: -1px" />
+
+    <input type="image" name="submit" value="search" src="uqhome/images/button-search.gif" alt="Search" class="searchbutton" style="top-margin: -1px" />&nbsp;
+    </form>
+  </div>
+
+</div>
+
+<!-- END: Header-->
+
+
+
+
+
+
+<!--START: Mobile Header -->
+
+<div id="header-mobile">
+  <div id="contain-mobile">
+  <h1 title="UQ Online"><a href="http://www.uq.edu.au/" target="_blank">UQ Online</a></h1>
+  [<a href="http://www.uq.edu.au/" target="_blank">UQ Home</a>] [<a href="http://www.uq.edu.au/search/" target="_blank">Search</a>] [<a href="http://www.uq.edu.au/contacts" target="_blank">Contacts</a>] [<a href="http://www.uq.edu.au/study/" target="_blank">Study</a>] [<a href="http://www.uq.edu.au/news" target="_blank">News</a>] [<a href="http://www.uq.edu.au/events" target="_blank">Events</a>] [<a href="http://www.uq.edu.au/maps/" target="_blank">Maps</a>] [<a href="http://www.uq.edu.au/library/" target="_blank">Library</a>]
+  </div>
+</div>
+
+<!--END: Mobile Header -->
+
+
+
+<!--START: For Accessibility -->
+
+<a href="#title" class="skip" title="access key 2" accesskey="2" target="_blank">skip nav</a>
+
+<!--END: For Accessibility -->
+
+
+
+  
+
+<!-- START: Content -->
+
+<div id="bodybg">
+  <div id="contain">
+
+  <br style="clear: both;" />
+
+
+
+<!-- START: Main Body -->
+
+<div id="title"></div> <!-- For accessibility -->
+
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+
+
+
+  
+
+<!-- START: First column -->
+
+
+  <td width="182" valign="top" class="uqnavigation">
+    <br />
+      <a href="https://www.uq.edu.au/secure/uqsignin/index.html" target="_blank"><img src="uqhome/images/feature_onesignin.jpg" width="174" height="134" alt="UQ Sign In" border="0" /></a>
+
+
+<!-- START: Main Menu -->    
+
+
+      <table width="175" border="0" cellspacing="1" cellpadding="1" summary="Side Menu">
+      <tr>
+        <td colspan="2"><img src="uqhome/images/header-essentials.gif" width="175" height="21" alt="header-essentials" /></td>
+      </tr>    
+      
+      <tr> 
+        <td width="18"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+        <td width="157"><a class="sidemenulinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=password" target="_blank">I forgot my password</a></td>
+      </tr>
+      
+      <tr> 
+        <td width="18"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+        <td width="157"><a class="sidemenulinks" href="http://www.its.uq.edu.au/passwd.html" target="_blank">Change my password</a></td>
+
+      </tr>
+      
+      <tr> 
+        <td width="18"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+        <td width="157"><a class="sidemenulinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=whatis" target="_blank">FAQs</a></td>
+      </tr>
+      </table>
+      <br />
+
+
+<!--Main Menu starts here -->    
+
+      <table width="175" border="0" cellspacing="1" cellpadding="1" summary="Side Menu">
+      <tr>
+
+        <td colspan="2"><img src="uqhome/images/header-quicklinks.gif" width="175" height="21" alt="header-quicklinks" /></td>
+      </tr>    
+      
+      <tr> 
+        <td width="18"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+        <td width="157"><a class="sidemenulinks" href="http://my.uq.edu.au/" target="_blank">my.UQ</a></td>
+      </tr>
+      
+      <tr> 
+        <td width="18"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+        <td width="157"><a class="sidemenulinks" href="https://www.sinet.uq.edu.au/" target="_blank">mySI-net</a></td>
+      </tr>
+      </table>
+      <br />
+
+    </td>
+
+
+<!--First column ends-->  
+      
+
+
+<!-- START: Dividing column -->
+
+  <td width="4"><img src="uqhome/images/clear.gif" height="1" width="4" alt="" /></td>
+
+  <td width="1" bgcolor="#EBEBEB">
+    <table cellpadding="0" cellspacing="0" border="0" width="1">
+    <tr>
+      <td></td>
+    </tr>
+    </table>
+  </td>
+
+  <td width="5"><img src="uqhome/images/clear.gif" height="1" width="4" alt="" /></td>
+
+<!-- END: Dividing column -->
+
+
+
+
+  <!-- START: Middle column -->
+<script>
+function new_url()
+{
+window.location.replace("/shibboleth-idp/PKISSO"+window.location.search)
+}
+</script>
+
+
+<!-- Feature Area-->
+
+  <td width="70%" valign="top" class="body">
+
+      <p />
+      <h1><b>UQ Sign In:</b></h1>
+
+      <form name="login_form" method="post" action="j_security_check">
+      <table class="login">
+      <tr class="login">
+        <td class="uqorgSigninLabel"><b>Username:</b></td>
+        <td class="uqorgSigninField">
+          <input name="j_username" type="text" id="j_username" size="16" />
+        </td>
+      </tr>
+
+      <tr class="login">
+        <td class="uqorgSigninLabel"><b>Password:</b></td>
+        <td class="uqorgSigninField">
+          <input id="j_password" type="password" name="j_password" size="16" /></td>
+        <td>
+          <input type="image" src="uqhome/images/sign-in.gif" alt="Sign In Button" value="LOGIN" />
+        </td>
+      </tr>
+	<tr>
+		<td></td><td>
+		</td><td>
+		<a href="javascript:new_url()"><image src="uqhome/images/PKI_Sign_in.gif" alt="PKI Sign in"></a>
+		</td>
+	</tr>
+      </table>
+      </form>
+
+
+
+      <br />
+      <table width="70%" border="0" cellspacing="0" cellpadding="4" summary="UQ Highlight Area">
+      <tr> 
+        <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/arrow.gif" width="7" height="12" alt="" /></td>
+        <td align="left" valign="top" height="5"><b><a class="highlightlinks" href="http://www.uq.edu.au/uqsignin/" target="_blank">UQ Sign In website</a></b><br /></td>
+      </tr>
+      <tr> 
+        <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/arrow.gif" width="7" height="12" alt="" /></td>
+        <td align="left" valign="top" height="5"><b><a class="highlightlinks" href="http://www.uq.edu.au/uqsignin/info.php?option=whatis" target="_blank">What is my UQ Sign In username and password?</a></b><br /></td>
+      </tr>  
+      <tr> 
+        <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/arrow.gif" width="7" height="12" alt="" /></td>
+        <td align="left" valign="top" height="5"><b><a class="highlightlinks" href="http://shibboleth.internet2.edu/" target="_blank">What is Shibboleth?</a></b><br /></td>
+      </tr>  
+      <tr> 
+        <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/arrow.gif" width="7" height="12" alt="" /></td>
+        <td align="left" valign="top" height="5"><b><a class="highlightlinks" href="http://shibboleth.internet2.edu/" target="_blank">More information about Shibboleth?</a></b><br /></td>
+      </tr>  
+      </table>
+    </td>
+
+<!-- END: Middle column --> 
+
+
+
+<!-- START: Dividing column -->
+
+
+  <td width="4"><img src="uqhome/images/clear.gif" height="1" width="4" alt="" /></td>
+
+  <td width="1" bgcolor="#EBEBEB">
+    <table cellpadding="0" cellspacing="0" border="0" width="1">
+    <tr>
+      <td></td>
+    </tr>
+    </table>
+  </td>
+
+  <td width="5"><img src="uqhome/images/clear.gif" height="1" width="4" alt="" /></td>
+
+
+<!-- END: Dividing column -->
+
+
+
+  
+
+<!-- START: Third Column -->
+
+
+    <td width="210" valign="top">
+      <br />
+      <table width="306" border="0" cellspacing="0" cellpadding="0" summary="UQ Feature Area" align="center">
+        <tr>             
+          <td width="133" valign="top"><a href="https://www.uq.edu.au/secure/uqsignin/verify.php" target="_blank"><img src="uqhome/images/uqfeatureL.jpg" width="133" height="133" border="0" alt="Verify my UQ Sign In?" /></a> 
+          </td>
+          
+          <td width="173" valign="top"><a href="https://www.uq.edu.au/secure/uqsignin/verify.php" target="_blank"><img src="uqhome/images/uqfeatureR.gif" width="174" height="133" border="0" alt="Verify my UQ Sign In?" /></a></td>
+        </tr>
+      </table>              
+      
+
+<!--UQ Highlights Area--> 
+
+
+       <table width="307" border="0" cellspacing="0" cellpadding="4" summary="UQ Highlight Area">
+        <tr> 
+          <td align="left" valign="top" colspan="2"><img src="uqhome/images/header-learnmore.gif" width="307" height="21" alt="Highlights" /></td>
+        </tr>
+        <tr> 
+          <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+          <td align="left" valign="top" width="300" height="5"><b><a class="highlightlinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=whatis" target="_blank">What is UQ Sign In?</a></b><br />
+          </td>
+        </tr>
+        <tr> 
+          <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+          <td align="left" valign="top" width="300" height="5"><b><a class="highlightlinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=security" target="_blank">Security Info</a></b><br />
+          </td>
+        </tr>  
+        <tr> 
+          <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+          <td align="left" valign="top" width="300" height="5"><b><a class="highlightlinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=password" target="_blank">Password Info</a></b><br />
+          </td>
+        </tr>  
+        <tr> 
+          <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+          <td align="left" valign="top" width="300" height="5"><b><a class="highlightlinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=privacy" target="_blank">Privacy Info</a></b><br />
+          </td>
+        </tr>  
+        <tr> 
+          <td align="left" valign="top" width="7" height="5"><img src="uqhome/images/blue-arrow.gif" width="9" height="8" alt="" /></td>
+          <td align="left" valign="top" width="300" height="5"><b><a class="highlightlinks" href="https://www.uq.edu.au/secure/uqsignin/info.php?option=sites" target="_blank">Sites using UQ Sign In</a></b><br />
+          </td>
+        </tr>                                                
+      </table>
+    </td>
+
+
+<!-- END: Third Column -->
+
+
+
+  
+
+</tr>
+</table>
+
+
+<!-- END: Main Body -->
+
+
+</div>
+</div>
+
+
+<!-- END: Content -->
+
+
+
+  
+<!-- START: Feedback line -->
+
+<div id="feedback">
+  <a href="http://www.uq.edu.au/feedback/" class="feedback" target="_blank">feedback</a>&nbsp;
+</div>
+
+<!-- END: Feedback line -->
+
+
+
+<!-- START: Footer -->
+
+<div id="footer">
+
+<!-- Do not modify anything below this area-->
+<script type="text/javascript" src="uqhome/include/js/footer.js"></script>
+
+<noscript>
+&copy; 2006 The University of Queensland, Brisbane, Australia<br />
+ABN 63 942 912 684<br />
+CRICOS Provider No: <a href="http://cricos.detya.gov.au/asp/InstitutionDetails.asp?PVID=025" target="_blank">00025B</a><br />
+</noscript>
+
+Authorised by: Director, Office of Marketing &amp; Communications<br />
+Maintained by: <a href="mailto:webservices@uq.edu.au" target="_blank">webservices@uq.edu.au</a><br />
+Updated July 2006.
+</div>
+
+<!-- END: Footer -->
+
+
+</body>
+
+</html>
