@@ -136,7 +136,7 @@ class Idp:
         for n in range(1, len(self.idps)):
             idp_list.append("%s: %s" % (n, self.idps[n-1]))
         print_list_wide(idp_list)
-        self.idp = self.idps[int(raw_input("Idp (1-%s):" % len(self.idps)))-1]
+        self.idp = self.idps[int(raw_input("Idp (1-%i):" % (len(self.idps) - 1))) - 1]
 
 
     def get_idp(self):
