@@ -97,6 +97,9 @@ class Idp:
         """
         some how decide what idp to authenticat to
         """
+        if self.idp:
+            return
+
         try:
             import struct, fcntl, termios
             def terminal_dimensions():
