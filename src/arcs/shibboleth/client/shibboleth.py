@@ -324,7 +324,7 @@ class Shibboleth(shib_interface):
 
         idp = Idp(idp)
         c = CredentialManager(username, password, antiprint)
-        r = open_shibprotected_url(self.idp, url, self.c, self.cj)
+        r = open_shibprotected_url(idp, url, c, self.cj)
         del c, idp
         return r
 
