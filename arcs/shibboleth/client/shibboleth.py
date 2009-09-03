@@ -304,3 +304,32 @@ def set_cookies_expiries(cookiejar):
                 cookie.expires = int(time()) + 28800
                 cookie.discard = False
 
+from arcs.shibboleth.client.credentials import CredentialManager, Idp
+from cookielib import CookieJar
+
+try:
+    from au.org.arcs.auth.shibboleth import ShibbolethClient as shib_interface
+except:
+    shib_interface = object
+
+
+class Shibboleth(shib_interface):
+    def __init__(self):
+        self.cj = CookieJar()
+
+    def shibopen(self, url, username, password, idp):
+
+        def antiprint(*args):
+            pass
+
+        idp = Idp(idp)
+        c = CredentialManager(username, password, antiprint)
+        r = open_shibprotected_url(self.idp, url, self.c, self.cj)
+        del c, idp
+        return r
+
+    def open(self, url):
+        opener = urllib2.build_opener(ShibbolethHandler(cookiejar=self.cj))
+        request = urllib2.Request(url)
+        return opener.open(request)
+
