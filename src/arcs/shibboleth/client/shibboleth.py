@@ -33,12 +33,12 @@ from arcs.shibboleth.client.exceptions import WAYFException
 log = logging.getLogger('arcs.shibboleth.client')
 
 
-class ShibbolethRedirectHandler(HTTPRedirectHandler, HTTPBasicAuthHandler, HTTPCookieProcessor):
 
-    def __init__(self, credentialmanager=None, cookiejar=None, **kwargs):
-        HTTPBasicAuthHandler.__init__(self)
+
+class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
+
+    def __init__(self, cookiejar=None, **kwargs):
         HTTPCookieProcessor.__init__(self, cookiejar ,**kwargs)
-        self.credentialmanager = credentialmanager
 
     def http_error_302(self, req, fp, code, msg, headers):
         log.debug("GET %s" % req.get_full_url())
@@ -47,6 +47,14 @@ class ShibbolethRedirectHandler(HTTPRedirectHandler, HTTPBasicAuthHandler, HTTPC
         return result
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302
+
+
+class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
+
+    def __init__(self, credentialmanager=None, cookiejar=None, **kwargs):
+        HTTPBasicAuthHandler.__init__(self)
+        ShibbolethHandler.__init__(self, cookiejar=cookiejar)
+        self.credentialmanager = credentialmanager
 
     def http_error_401(self, req, fp, code, msg, headers):
         """Basic Auth handler"""
@@ -228,7 +236,7 @@ def list_shibboleth_idps(sp):
     :param sp: the URL of the service provider you want to connect to
 
     """
-    opener = urllib2.build_opener(ShibbolethRedirectHandler())
+    opener = urllib2.build_opener(ShibbolethAuthHandler())
     request = urllib2.Request(sp)
     log.debug("GET: %s" % request.get_full_url())
     response = opener.open(request)
@@ -251,7 +259,7 @@ def open_shibprotected_url(idp, sp, cm, cj):
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
     cookiejar = cj
-    opener = urllib2.build_opener(ShibbolethRedirectHandler(credentialmanager=cm, cookiejar=cookiejar))
+    opener = urllib2.build_opener(ShibbolethAuthHandler(credentialmanager=cm, cookiejar=cookiejar))
     request = urllib2.Request(sp)
     log.debug("GET: %s" % request.get_full_url())
     response = opener.open(request)
@@ -295,4 +303,33 @@ def set_cookies_expiries(cookiejar):
             if not cookie.expires:
                 cookie.expires = int(time()) + 28800
                 cookie.discard = False
+
+from arcs.shibboleth.client.credentials import CredentialManager, Idp
+from cookielib import CookieJar
+
+try:
+    from au.org.arcs.auth.shibboleth import ShibbolethClient as shib_interface
+except:
+    shib_interface = object
+
+
+class Shibboleth(shib_interface):
+    def __init__(self):
+        self.cj = CookieJar()
+
+    def shibopen(self, url, username, password, idp):
+
+        def antiprint(*args):
+            pass
+
+        idp = Idp(idp)
+        c = CredentialManager(username, password, antiprint)
+        r = open_shibprotected_url(idp, url, c, self.cj)
+        del c, idp
+        return r
+
+    def open(self, url):
+        opener = urllib2.build_opener(ShibbolethHandler(cookiejar=self.cj))
+        request = urllib2.Request(url)
+        return opener.open(request)
 
