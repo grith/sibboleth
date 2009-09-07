@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>au.org.arcs.auth</groupId>
 	<artifactId>arcs-shibboleth-client</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 
 	<repositories>
 		<repository>
@@ -35,7 +35,7 @@
 							<descriptors>
 								<descriptor>arcs-shibboleth-client.assembly.xml</descriptor>
 							</descriptors>
-							<finalName>arcs</finalName>
+							<finalName>arcs-shibboleth-client</finalName>
 							<archive>
 								<index>true</index>
 								<manifest>

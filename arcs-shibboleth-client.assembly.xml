@@ -1,5 +1,5 @@
 <assembly>
-	<id>shibboleth-client</id>
+	<id>lib</id>
 	<formats>
 		<format>jar</format>
 	</formats>
