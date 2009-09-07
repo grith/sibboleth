@@ -1,7 +1,11 @@
 from setuptools import setup, find_packages
+from xml.dom.minidom import parse
+from xml import xpath
 from os import path
 
-version = '1.0'
+pom = parse('pom.xml')
+version = xpath.Evaluate('//project/version/text()', pom)[0].data.rstrip('-SNAPSHOT')
+
 
 setup(name='arcs.shibboleth.client',
       version=version,
