@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
-import os
+from os import path
 
 version = '1.0'
 
 setup(name='arcs.shibboleth.client',
       version=version,
       description="Shibboleth authentication handler",
-      long_description=open(os.path.join("docs", "intro.rst")).read() + "\n" +
-                       open(os.path.join("docs", "history.rst")).read(),
+      long_description=open(path.join("docs", "intro.rst")).read() + "\n" +
+                       open(path.join("docs", "history.rst")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
