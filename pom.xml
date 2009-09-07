@@ -30,6 +30,14 @@
 	</dependencies>
 
 	<build>
+
+		<resources>
+			<resource>
+				<targetPath>${project.build.outputDirectory}</targetPath>
+				<filtering>false</filtering>
+				<directory>src/main/python</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
