@@ -1,0 +1,2 @@
+prune src/main/resources/*
+prune src/main/java/*
