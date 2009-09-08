@@ -86,9 +86,9 @@ def list_shibboleth_idps(sp):
     parser = FormParser()
     for line in response:
         parser.feed(line)
-    type, form = whatForm(parser.forms)
+    type, adapter = getFormAdapter(parser.title, parser.forms)
     if type == 'wayf':
-        return form['origin']
+        return adapter.data['origin']
     raise("Unknown error: Shibboleth auth chain lead to nowhere")
 
 
