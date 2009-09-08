@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from urlparse import urlsplit
 import urllib2
 from urllib2 import HTTPCookieProcessor, HTTPRedirectHandler
 from urllib2 import HTTPBasicAuthHandler
@@ -109,30 +110,23 @@ def open_shibprotected_url(idp, sp, cm, cj):
     slcsresp = None
     tries = 0
     while(not slcsresp):
+
+        for c in cj:
+            if c.name.startswith('_shibsession_') and c.domain == urlsplit(sp)[1]:
+                set_cookies_expiries(cj)
+                return response
+
         parser = FormParser()
         for line in response:
             parser.feed(line)
         parser.close()
-        type, adapter = getFormAdapter(parser.title, parser.forms)
+        type, adapter = getFormAdapter(parser.title, parser.forms, idp, cm)
 
-        if type == 'wayf':
-            log.info('Submitting form to wayf')
-            adapter.prompt()
-            request, response = adapter.submit(opener, response, idp)
-            continue
-        if type.endswith('login'):
-            if tries > 2:
-                raise Exception("Too Many Failed Attempts to Authenticate")
-            adapter.prompt()
-            request, response = adapter.submit(opener, response, cm)
-            tries += 1
-            continue
-        if type == 'idp':
-            log.info('Submitting IdP SAML form')
+        if adapter:
             adapter.prompt()
             request, response = adapter.submit(opener, response)
-            set_cookies_expiries(cj)
-            return response
+            continue
+
         raise("Unknown error: Shibboleth auth chain lead to nowhere")
 
 

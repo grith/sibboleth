@@ -86,7 +86,7 @@ class FormHandler(object):
                 form_handler_registry.append((name, cls))
 
 
-    def __init__(self, title, data):
+    def __init__(self, title, data, **kwargs):
         self.title = title
         self.data = data
 
@@ -104,7 +104,11 @@ class WAYF(FormHandler):
     form_type = 'wayf'
     signature = ['origin', 'providerId', 'shire', 'target', 'time']
 
-    def submit(self, opener, res, idp):
+    def __init__(self, title, data, **kwargs):
+        FormHandler.__init__(self, title, data)
+        self.idp = kwargs['idp']
+
+    def submit(self, opener, res):
         """
         submit WAYF form with IDP
 
@@ -113,11 +117,13 @@ class WAYF(FormHandler):
         :param data: the form data as a dictionary
         :param res: the response object
         """
+        log.info('Submitting form to wayf')
         headers = {
         "Referer": res.url
         }
         #Set IDP to correct IDP
         wayf_data = {}
+        idp = self.idp
         data = self.data
         idp.set_idps(data['origin'])
         idp.choose_idp()
@@ -145,7 +151,12 @@ class IdPFormLogin(FormHandler):
     username_field = signature[1]
     password_field = signature[0]
 
-    def submit(self, opener, res, cm):
+    def __init__(self, title, data, **kwargs):
+        FormHandler.__init__(self, title, data)
+        self.cm = kwargs['credentialmanager']
+        self.tries = 0
+
+    def submit(self, opener, res):
         """
         submit login form to IdP
 
@@ -154,10 +165,14 @@ class IdPFormLogin(FormHandler):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
+        if self.tries > 2:
+            raise Exception("Too Many Failed Attempts to Authenticate")
+        self.tries += 1
         headers = {
         "Referer": res.url
         }
         idp_data = {}
+        cm = self.cm
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         log.info("Form Authentication from: %s" % url)
@@ -191,6 +206,7 @@ class IdPSPForm(FormHandler):
         :param data: the form data as a dictionary
         :param res: the response object
         """
+        log.info('Submitting IdP SAML form')
         headers = {
         "Referer": res.url
         }
@@ -203,7 +219,7 @@ class IdPSPForm(FormHandler):
         return request, response
 
 
-def getFormAdapter(title, forms):
+def getFormAdapter(title, forms, idp, cm):
     """
     try to guess what type of form we have encountered
 
@@ -224,7 +240,7 @@ def getFormAdapter(title, forms):
         for name, adapter in form_handler_registry:
             radapter = match_form(form, adapter.signature)
             if radapter:
-                return adapter.form_type, adapter(title, form)
+                return adapter.form_type, adapter(title, form, idp=idp, credentialmanager=cm)
     return '', None
 
 
