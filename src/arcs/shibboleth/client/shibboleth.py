@@ -134,7 +134,7 @@ def set_cookies_expiries(cookiejar):
     """
     Set the shibboleth session cookies to the default SP expiry, this way
     the cookies can be used by other applications.
-    The cookes that are modified are ``_shibsession_`` and ``_shibstate_``
+    The cookes that are modified are ``_shibsession_``
 
     :param cj: the cookie jar that stores the shibboleth cookies
     """
