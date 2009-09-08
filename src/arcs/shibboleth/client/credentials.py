@@ -66,12 +66,6 @@ class CredentialManager:
             self.set_username()
         return self.username
 
-    def print_realm(self, realm):
-        if self.printfunc:
-            self.printfunc(realm)
-            return
-        print(realm)
-
     def reset(self):
         self.username = None
         self.password = None
