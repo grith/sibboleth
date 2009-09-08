@@ -154,7 +154,6 @@ class IdPFormLogin(FormHandler):
     def __init__(self, title, data, **kwargs):
         FormHandler.__init__(self, title, data)
         self.cm = kwargs['credentialmanager']
-        self.tries = 0
 
     def submit(self, opener, res):
         """
@@ -165,9 +164,9 @@ class IdPFormLogin(FormHandler):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        if self.tries > 2:
+        if self.cm.tries > 2:
             raise Exception("Too Many Failed Attempts to Authenticate")
-        self.tries += 1
+        self.cm.tries += 1
         headers = {
         "Referer": res.url
         }

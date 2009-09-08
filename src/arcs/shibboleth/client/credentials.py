@@ -32,6 +32,7 @@ class CredentialManager:
         self.username = username
         self.password = password
         self.printfunc = printfunc
+        self.tries = 0
 
     def get_password(self):
         """return the password of the user"""
