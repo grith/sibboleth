@@ -155,8 +155,6 @@ class DS(FormHandler):
             raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
         wayf_data['user_idp'] = idps[idp]
         wayf_data['Select'] = 'Select'
-        print res.url
-        print data['form']['action']
         if data['form']['action'].startswith('?'):
             urlsp = urlparse.urlsplit(res.url)
             urlsp = urlparse.urlunsplit((urlsp[0], urlsp[1], urlsp[2], '', ''))
@@ -164,7 +162,6 @@ class DS(FormHandler):
         else:
             url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode(wayf_data)
-        print data
         request = urllib2.Request(url, data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
