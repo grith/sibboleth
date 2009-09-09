@@ -34,13 +34,16 @@ class FormParser(HTMLParser):
         HTMLParser.__init__(self)
         self.in_title = False
         self.in_form = False
-        self.in_origin = False
+        self.in_wayf = False
+        self.in_ds = False
+        self.ds_optgroup = ''
         self.title = ''
         self.forms = []
         self.data = {}
 
     def handle_starttag(self, tag, attrs):
         self.origin_idp = None
+        self.ds_idp = None
         if tag == "title":
             self.in_title = True
         if tag == "form":
@@ -49,17 +52,31 @@ class FormParser(HTMLParser):
             self.in_form = True
             self.data['form'] = dict(attrs)
         if self.in_form and tag == "select" and ('name','origin') in attrs:
-            self.in_origin = True
+            self.in_wayf = True
             self.data['origin'] = {}
-        if self.in_form and self.in_origin and tag == "option":
+        if self.in_form and tag == "select" and ('name',"user_idp") in attrs:
+            self.in_ds = True
+            self.data['ds'] = {}
+        if self.in_form and self.in_ds and tag == "optgroup":
+            self.ds_optgroup = dict(attrs)['label']
+            self.data['ds'][self.ds_optgroup] = {}
+        if self.in_form and self.in_ds and tag == "option":
+            origin_idp = dict(attrs)
+            if not origin_idp['value'] in ['-', '']:
+                self.origin_idp = origin_idp['value']
+
+        if self.in_form and self.in_wayf and tag == "option":
             self.origin_idp = attrs
         if self.in_form and tag == "input":
             attrs = dict(attrs)
             if 'name' in attrs:
                 self.data[attrs['name']] = attrs
+
     def handle_data(self, data):
-        if self.in_form and self.in_origin and self.origin_idp and data.strip():
+        if self.in_form and self.in_wayf and self.origin_idp and data.strip():
             self.data['origin'][data.strip()] = self.origin_idp[0][1]
+        if self.in_form and self.in_ds and self.origin_idp and data.strip():
+            self.data['ds'][self.ds_optgroup][data.strip()] = self.origin_idp
         if self.in_title:
             self.title += data
 
@@ -69,8 +86,12 @@ class FormParser(HTMLParser):
         if tag == "form":
             self.in_form = False
             self.forms.append(self.data)
-        if self.in_form and self.in_origin and tag == "select":
-            self.in_origin = False
+        if self.in_form and self.in_wayf and tag == "select":
+            self.in_wayf = False
+        if self.in_form and self.in_ds and tag == "optgroup":
+            self.ds_optgroup = ''
+        if self.in_form and self.in_ds and tag == "select":
+            self.in_ds = False
 
 
 
@@ -98,6 +119,56 @@ class FormHandler(object):
             printer(self.title)
         else:
             print(self.title)
+
+class DS(FormHandler):
+    form_type = 'ds'
+    signature = ['ds', 'Select', 'form', 'session', 'permanent']
+
+    def __init__(self, title, data, **kwargs):
+        FormHandler.__init__(self, title, data)
+        self.idp = kwargs['idp']
+
+    def submit(self, opener, res):
+        """
+        submit WAYF form with IDP
+
+        :param idp: the Identity Provider that will be selected at the WAYF
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        """
+        log.info('Submitting form to wayf')
+        headers = {
+        "Referer": res.url
+        }
+        #Set IDP to correct IDP
+        wayf_data = {}
+        idp = self.idp
+        data = self.data
+        idps = {}
+        for d in data['ds']:
+            idps.update(data['ds'][d])
+        idp.set_idps(idps)
+        idp.choose_idp()
+        idp.get_idp()
+        if not idps.has_key(idp):
+            raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
+        wayf_data['user_idp'] = idps[idp]
+        wayf_data['Select'] = 'Select'
+        print res.url
+        print data['form']['action']
+        if data['form']['action'].startswith('?'):
+            urlsp = urlparse.urlsplit(res.url)
+            urlsp = urlparse.urlunsplit((urlsp[0], urlsp[1], urlsp[2], '', ''))
+            url = res.url + data['form']['action']
+        else:
+            url = urlparse.urljoin(res.url, data['form']['action'])
+        data = urllib.urlencode(wayf_data)
+        print data
+        request = urllib2.Request(url, data)
+        log.debug("POST: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
 
 
 class WAYF(FormHandler):
