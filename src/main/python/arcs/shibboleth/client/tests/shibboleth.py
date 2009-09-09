@@ -20,7 +20,7 @@
 #############################################################################
 
 import unittest
-from arcs.shibboleth.client import shibboleth
+from arcs.shibboleth.client import shibboleth, forms
 import inspect
 
 from os import path
@@ -30,16 +30,16 @@ class TestShibboleth(unittest.TestCase):
     def setUp(self):
         pass
 
-    def testFormTypeDetection(self):
-        for i in ['wayf_level1', 'login_vpac', 'login_jcu', 'login_ac3', 'login_auckland', 'login_murdoch', 'login_uq', 'login_usa']:
-            type, name = i.split('_')
+    def testFormAdapterDetection(self):
+        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3', 'login_uq', 'cas_login_usa']:
+            type, name = i.rsplit('_', 1)
             html = open(path.join(here, i + '.html'))
             parser = shibboleth.FormParser()
             for line in html:
                 parser.feed(line)
             parser.close()
-            rtype, form = shibboleth.whatForm(parser.forms)
-            self.assertEqual('_'.join([rtype, name]), i)
+            rname, adapter = forms.getFormAdapter(parser.title, parser.forms)
+            self.assertEqual('_'.join([rname, name]), i)
 
 
 if __name__ == '__main__':

@@ -32,6 +32,7 @@ class CredentialManager:
         self.username = username
         self.password = password
         self.printfunc = printfunc
+        self.tries = 0
 
     def get_password(self):
         """return the password of the user"""
@@ -65,12 +66,6 @@ class CredentialManager:
         if not self.username:
             self.set_username()
         return self.username
-
-    def print_realm(self, realm):
-        if self.printfunc:
-            self.printfunc(realm)
-            return
-        print(realm)
 
     def reset(self):
         self.username = None
@@ -133,10 +128,14 @@ class Idp:
 
 
         idp_list = []
-        for n in range(1, len(self.idps)):
-            idp_list.append("%s: %s" % (n, self.idps[n-1]))
+        print self.idps
+        for n in range(0, len(self.idps)):
+            idp_list.append("%s: %s" % (n + 1, self.idps[n]))
         print_list_wide(idp_list)
-        self.idp = self.idps[int(raw_input("Idp (1-%s):" % len(self.idps)))-1]
+        idp_n = 0
+        while not idp_n - 1 in range(0, len(self.idps)):
+            idp_n = int(raw_input("Idp (1-%i):" % (len(self.idps))))
+        self.idp = self.idps[idp_n - 1]
 
 
     def get_idp(self):
