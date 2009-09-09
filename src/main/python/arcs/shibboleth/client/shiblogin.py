@@ -24,7 +24,7 @@ from os import path
 import logging
 import optparse
 from cookielib import MozillaCookieJar
-from shibboleth import open_shibprotected_url, list_shibboleth_idps
+from shibboleth import open_shibprotected_url
 from credentials import CredentialManager, Idp
 
 homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
