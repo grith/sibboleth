@@ -286,6 +286,35 @@ class IdPSPForm(FormHandler):
         return request, response
 
 
+class IdPSPFormRelayState(FormHandler):
+    """
+    Slight variation on the IdPSPForm
+    """
+    form_type = 'idp'
+    signature = ['SAMLResponse', 'RelayState']
+
+
+    def submit(self, opener, res):
+        """
+        submit IdP form to SP
+
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        """
+        log.info('Submitting IdP SAML form')
+        headers = {
+        "Referer": res.url
+        }
+        data = self.data
+        url = urlparse.urljoin(res.url, data['form']['action'])
+        data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'RelayState':'cookie'})
+        request = urllib2.Request(url, data=data)
+        log.debug("POST: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
+
+
 def getFormAdapter(title, forms, idp, cm):
     """
     try to guess what type of form we have encountered
