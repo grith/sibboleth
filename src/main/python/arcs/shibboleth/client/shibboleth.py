@@ -144,7 +144,7 @@ def set_cookies_expiries(cookiejar):
                 cookie.expires = int(time()) + 28800
                 cookie.discard = False
 
-from arcs.shibboleth.client.credentials import CredentialManager, Idp
+from arcs.shibboleth.client.credentials import SimpleCredentialManager, Idp
 from cookielib import CookieJar
 
 try:
@@ -163,7 +163,7 @@ class Shibboleth(shib_interface):
             pass
 
         idp = Idp(idp)
-        c = CredentialManager(username, password, antiprint)
+        c = SimpleCredentialManager(username, password, antiprint)
         r = open_shibprotected_url(idp, url, c, self.cj)
         del c, idp
         return r
