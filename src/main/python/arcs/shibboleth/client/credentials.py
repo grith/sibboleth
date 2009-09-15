@@ -22,6 +22,34 @@
 import os
 from getpass import getpass
 
+class SimpleCredentialManager:
+    """
+    This class is responsible for displaying information about the location
+    being authed too, and receiving user name and password from the user.
+    """
+
+    def __init__(self, username, password, printfunc):
+        self.username = username
+        self.password = password
+        self.printfunc = printfunc
+        self.tries = 0
+
+    def get_password(self):
+        """return the password of the user"""
+        return self.password
+
+    def set_password(self, verify=False):
+        return self.password
+
+    def set_username(self):
+        return self.username
+
+    def get_username(self):
+        return self.username
+
+    def reset(self):
+        pass
+
 class CredentialManager:
     """
     This class is responsible for displaying information about the location
