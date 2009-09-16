@@ -29,12 +29,12 @@
 		</dependencySet>
 	</dependencySets>
 
-	<fileSets>
-		<fileSet>
-			<directory>src/main/python</directory>
-			<outputDirectory>Lib</outputDirectory>
-		</fileSet>
-	</fileSets>
+<!--	<fileSets>-->
+<!--		<fileSet>-->
+<!--			<directory>src/main/python</directory>-->
+<!--			<outputDirectory>Lib</outputDirectory>-->
+<!--		</fileSet>-->
+<!--	</fileSets>-->
 
 
 	<!-- probably unnecessary -->

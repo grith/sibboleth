@@ -33,8 +33,8 @@
 
 		<resources>
 			<resource>
-				<targetPath>${project.build.outputDirectory}</targetPath>
-				<filtering>false</filtering>
+<!--				<targetPath>${project.build.outputDirectory}</targetPath>-->
+<!--				<filtering>false</filtering>-->
 				<directory>src/main/python</directory>
 			</resource>
 		</resources>
