@@ -195,10 +195,9 @@ class WAYF(FormHandler):
         data = self.data
         idp.set_idps(data['origin'])
         idp.choose_idp()
-        idp.get_idp()
-        if not data['origin'].has_key(idp):
+        if not data['origin'].has_key(idp.get_idp()):
             raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
-        wayf_data['origin'] = data['origin'][idp]
+        wayf_data['origin'] = data['origin'][idp.get_idp()]
         wayf_data['shire'] = data['shire']['value']
         wayf_data['providerId'] = data['providerId']['value']
         wayf_data['target'] = data['target']['value']

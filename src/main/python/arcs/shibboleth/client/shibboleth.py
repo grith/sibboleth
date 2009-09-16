@@ -162,7 +162,6 @@ class Shibboleth(shib_interface):
         def antiprint(*args):
             pass
 
-        idp = Idp(idp)
         c = SimpleCredentialManager(username, password, antiprint)
         r = open_shibprotected_url(idp, url, c, self.cj)
         del c, idp

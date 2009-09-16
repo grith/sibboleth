@@ -21,7 +21,7 @@ public class Shibboleth {
         shibClient = (ShibbolethClient)shibObject.__tojava__(ShibbolethClient.class);
     }
 
-    public PyInstance shibOpen(String username, char[] password, String idp) {
+    public PyInstance shibOpen(String username, char[] password, IdpObject idp) {
     	
     	return shibClient.shibopen(url, username, new String(password), idp);
     	
@@ -41,7 +41,7 @@ public class Shibboleth {
     	
     	Shibboleth shib = new Shibboleth("https://slcs1.arcs.org.au/SLCS/login");
     	
-    	PyInstance returnValue = shib.shibOpen(args[0], args[1].toCharArray(), "VPAC");
+    	PyInstance returnValue = shib.shibOpen(args[0], args[1].toCharArray(), new IdpObject());
     	
     	Iterable<PyObject> it = returnValue.asIterable();
     	
