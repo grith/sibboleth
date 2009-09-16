@@ -41,7 +41,7 @@ public class Shibboleth {
     	
     	Shibboleth shib = new Shibboleth("https://slcs1.arcs.org.au/SLCS/login");
     	
-    	PyInstance returnValue = shib.shibOpen(args[0], args[1].toCharArray(), new IdpObject());
+    	PyInstance returnValue = shib.shibOpen(args[0], args[1].toCharArray(), new DummyIdpObject());
     	
     	Iterable<PyObject> it = returnValue.asIterable();
     	
