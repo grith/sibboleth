@@ -17,8 +17,8 @@ public class Shibboleth {
         PythonInterpreter interpreter = new PythonInterpreter();
         interpreter.exec("from arcs.shibboleth.client.shibboleth import Shibboleth");
         PyObject shibbolethClientClass = interpreter.get("Shibboleth");
-        PyObject employeeObj = shibbolethClientClass.__call__();
-        shibClient = (ShibbolethClient)employeeObj.__tojava__(ShibbolethClient.class);
+        PyObject shibObject = shibbolethClientClass.__call__();
+        shibClient = (ShibbolethClient)shibObject.__tojava__(ShibbolethClient.class);
     }
 
     public PyInstance shibOpen(String username, char[] password, String idp) {
