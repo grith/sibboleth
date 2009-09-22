@@ -7,6 +7,13 @@
 .. moduleauthor:: Russell Sim <russell@vpac.org>
 
 
+:class:`SimpleCredentialManager` Objects
+----------------------------------
+.. autoclass:: SimpleCredentialManager
+   :members:
+   :undoc-members:
+
+
 :class:`CredentialManager` Objects
 ----------------------------------
 .. autoclass:: CredentialManager

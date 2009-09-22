@@ -14,11 +14,13 @@ Using the shibboleth handler is a bit different to the urllib2 handlers because 
 
 ::
 
-    from arcs.shibboleth.client import Shibboleth, CredentialManager, Idp
-    idp = Idp()
-    c = CredentialManager()
-    shibboleth = Shibboleth(idp, c, cj)
-    response = shibboleth.openurl(sp)
+    from arcs.shibboleth.client import Shibboleth, SimpleCredentialManager, Idp
+    idp = Idp('VPAC')
+    c = SimpleCredentialManager('testuser', 'testpass')
+    shibboleth = Shibboleth(idp, c)
+    response = shibboleth.openurl('https://slcs1.arcs.org.au/SLCS/login')
+    for line in response:
+        print line
 
 .. autoclass:: Shibboleth
    :members:

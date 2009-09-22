@@ -29,21 +29,64 @@ except:
     ICredentialManager = object
     IIdp = object
 
+
+class SimpleCredentialManager(ICredentialManager):
+    """
+    This class is responsible for authenticating the user in a non interactive way.
+    """
+
+    def __init__(self, username, password):
+        self.tries = 0
+        self.username = username
+        self.password = password
+
+    def set_title(self, title):
+        pass
+
+    def prompt(self, controller):
+        """
+        check that we havent tried to authenticate more then once, if we have then raise and exception
+        """
+        if self.tries < 1:
+            controller.run()
+        raise Exception("Authentication Failure, number of tries exceeded")
+
+    def get_password(self):
+        """return the password of the user"""
+        return self.password
+
+    def get_username(self):
+        return self.username
+
+
 class CredentialManager(ICredentialManager):
     """
     This class is responsible for displaying information about the location
     being authed too, and receiving user name and password from the user.
     """
 
+    def __init__(self, username=None, password=None):
+        if username:
+            self.username = username
+        if password:
+            self.password = password
+
     def set_title(self, title):
+        """
+        show the title of the Basic Auth or Form that the user is presented with.
+        """
         print title
 
     def prompt(self, controller):
-        self.controller = controller
+        """
+        the controller.run() function is called as the last method in this function to return control
+
+        :param controller: the :class:`~arcs.shibboleth.client.shibboleth.Shibboleth` controller that control will be handed back to once the class is finshed taking input
+        """
         user_name = os.getenv('USERNAME') or os.getenv('LOGNAME')
         self.username = raw_input("Username [%s]:" % user_name) or user_name
         self.password = getpass("Password:")
-        self.controller.run()
+        controller.run()
 
     def get_password(self):
         """return the password of the user"""
@@ -71,10 +114,13 @@ class Idp(IIdp):
     def prompt(self, controller):
         """
         some how decide what idp to authenticate to
+        the controller.run() function is called as the last method in this function to return control
+
+        :param controller: the :class:`~arcs.shibboleth.client.shibboleth.Shibboleth` controller that control will be handed back to once the class is finshed taking input
         """
-        self.controller = controller
+        controller = controller
         if self.idp:
-            self.controller.run()
+            controller.run()
             return
 
         try:
@@ -117,7 +163,7 @@ class Idp(IIdp):
         while not idp_n - 1 in range(0, len(self.idps)):
             idp_n = int(raw_input("Idp (1-%i):" % (len(self.idps))))
         self.idp = self.idps[idp_n - 1]
-        self.controller.run()
+        controller.run()
 
 
     def get_idp(self):
