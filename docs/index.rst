@@ -16,6 +16,7 @@ Contents:
    history
    shibboleth
    credentials
+   forms
 
 Indices and tables
 ==================

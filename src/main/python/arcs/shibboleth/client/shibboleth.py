@@ -73,63 +73,6 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
                                           url, req, headers)
 
 
-def list_shibboleth_idps(sp):
-    """
-    return a list of idps protecting a service provider.
-
-    :param sp: the URL of the service provider you want to connect to
-
-    """
-    opener = urllib2.build_opener(ShibbolethAuthHandler())
-    request = urllib2.Request(sp)
-    log.debug("GET: %s" % request.get_full_url())
-    response = opener.open(request)
-    parser = FormParser()
-    for line in response:
-        parser.feed(line)
-    type, adapter = getFormAdapter(parser.title, parser.forms)
-    if type == 'wayf':
-        return adapter.data['origin']
-    raise("Unknown error: Shibboleth auth chain lead to nowhere")
-
-
-def open_shibprotected_url(idp, sp, cm, cj):
-    """
-    return a urllib response from the service once shibboleth authentication is complete.
-
-    :param idp: the Identity Provider that will be selected at the WAYF
-    :param sp: the URL of the service provider you want to connect to
-    :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
-    :param cj: the cookie jar that will be used to store the shibboleth cookies
-    """
-    cookiejar = cj
-    opener = urllib2.build_opener(ShibbolethAuthHandler(credentialmanager=cm, cookiejar=cookiejar))
-    request = urllib2.Request(sp)
-    response = opener.open(request)
-
-    slcsresp = None
-    tries = 0
-    while(not slcsresp):
-
-        for c in cj:
-            if c.name.startswith('_shibsession_') and c.domain == urlsplit(sp)[1]:
-                set_cookies_expiries(cj)
-                return response
-
-        parser = FormParser()
-        for line in response:
-            parser.feed(line)
-        parser.close()
-        type, adapter = getFormAdapter(parser.title, parser.forms, idp, cm)
-
-        if adapter:
-            adapter.prompt()
-            request, response = adapter.submit(opener, response)
-            continue
-
-        raise("Unknown error: Shibboleth auth chain lead to nowhere")
-
-
 def set_cookies_expiries(cookiejar):
     """
     Set the shibboleth session cookies to the default SP expiry, this way
@@ -144,7 +87,6 @@ def set_cookies_expiries(cookiejar):
                 cookie.expires = int(time()) + 28800
                 cookie.discard = False
 
-from arcs.shibboleth.client.credentials import SimpleCredentialManager, Idp
 from cookielib import CookieJar
 
 try:
@@ -154,21 +96,64 @@ except:
 
 
 class Shibboleth(shib_interface):
-    def __init__(self):
-        self.cj = CookieJar()
+    """
+    return a urllib response from the service once shibboleth authentication is complete.
 
-    def shibopen(self, url, username, password, idp):
+    :param idp: the Identity Provider that will be selected at the WAYF
+    :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager` containing the URL to the service provider you want to connect to
+    :param cj: the cookie jar that will be used to store the shibboleth cookies
+    """
+    def __init__(self, idp, cm, cj=None):
+        if cj:
+            self.cookiejar = cj
+        else:
+            self.cookiejar = CookieJar()
+        self.idp = idp
+        self.cm = cm
 
-        def antiprint(*args):
-            pass
+    def openurl(self, url=None):
+        """
+        return the response object as a result of opens the url
 
-        c = SimpleCredentialManager(username, password, antiprint)
-        r = open_shibprotected_url(idp, url, c, self.cj)
-        del c, idp
-        return r
+        :param url: the URL of the service provider you want to connect to
+        """
+        self.opener = urllib2.build_opener(ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar))
+        if url:
+            self.url = url
+        request = urllib2.Request(self.url)
+        self.response = self.opener.open(request)
+        self.__follow_chain(self.response)
+        return self.response
 
-    def open(self, url):
-        opener = urllib2.build_opener(ShibbolethHandler(cookiejar=self.cj))
-        request = urllib2.Request(url)
-        return opener.open(request)
+    def __follow_chain(self, response):
+        for c in self.cookiejar:
+            if c.name.startswith('_shibsession_') and c.domain == urlsplit(self.url)[1]:
+                set_cookies_expiries(self.cookiejar)
+                self.response = response
+                return response
+
+        parser = FormParser()
+        for line in response:
+            parser.feed(line)
+        parser.close()
+        type, adapter = getFormAdapter(parser.title, parser.forms, self.idp, self.cm)
+
+        if adapter:
+            if adapter.interactive:
+                self.adapter = adapter
+                self.response = response
+                adapter.prompt(self)
+                return
+            else:
+                request, response = adapter.submit(self.opener, response)
+                return self.__follow_chain(response)
+
+        raise("Unknown error: Shibboleth auth chain lead to nowhere")
+
+    def run(self):
+        """
+        used by the :class:`~arcs.shibboleth.client.credentials.Idp` and :class:`~arcs.shibboleth.client.credentials.CredentialManager` controllers to resume the shibboleth auth.
+        """
+        request, response = self.adapter.submit(self.opener, self.response)
+        self.__follow_chain(response)
 

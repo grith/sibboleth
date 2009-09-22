@@ -15,7 +15,7 @@
 
 
 :class:`Idp` Objects
-----------------------------------
+--------------------
 .. autoclass:: Idp
    :members:
    :undoc-members:

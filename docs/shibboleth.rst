@@ -6,26 +6,27 @@
 .. module:: arcs.shibboleth.client.shibboleth
 .. moduleauthor:: Russell Sim <russell@vpac.org>
 
-.. autofunction:: open_shibprotected_url
 
-.. autofunction:: list_shibboleth_idps
-
-.. autofunction:: submitWayfForm
-
-.. autofunction:: submitIdpForm
-
-.. autofunction:: submitFormToSP
-
-:class:`ShibbolethRedirectHandler` Objects
--------------------------------------
-.. autoclass:: ShibbolethRedirectHandler
+:class:`ShibbolethHandler` Objects
+----------------------------------
+.. autoclass:: ShibbolethHandler
    :members:
    :undoc-members:
 
 
-:class:`FormParser` Objects
+:class:`ShibbolethAuthHandler` Objects
+--------------------------------------
+.. autoclass:: ShibbolethAuthHandler
+   :members:
+   :undoc-members:
+
+
+:class:`Shibboleth` Objects
 ---------------------------
-.. autoclass:: FormParser
+.. autoclass:: Shibboleth
    :members:
    :undoc-members:
 
+:func:`set_cookies_expires` Function
+----------------------------------------
+.. autofunction:: set_cookies_expiries

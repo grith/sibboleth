@@ -24,7 +24,7 @@ from os import path
 import logging
 import optparse
 from cookielib import MozillaCookieJar
-from shibboleth import open_shibprotected_url
+from shibboleth import Shibboleth
 from credentials import CredentialManager, Idp
 
 homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
@@ -38,8 +38,6 @@ def main():
     optp = optparse.OptionParser(usage=usage)
     optp.add_option("-u", "--username",
                     help="the username to login as.")
-    optp.add_option("-p", "--password",
-                    help="the password to use.")
     optp.add_option("-d", "--storedir", dest="store_dir",
                      help="the directory to store the certificate/key and \
                      config file",
@@ -75,16 +73,18 @@ def main():
 
 
     idp = Idp(opts.idp)
+    c = CredentialManager()
+    if opts.username:
+        c.username = opts.username
 
     # if the cookies file exists load it
-    c = CredentialManager(opts.username, opts.password, log.info)
     cookies_file = path.join(opts.store_dir, 'cookies.txt')
     cj = MozillaCookieJar(filename=cookies_file)
     if path.exists(cookies_file):
         cj.load()
 
-    log.info("Using IdP: %s" % idp)
-    resp = open_shibprotected_url(idp, sp, c, cj)
+    shibboleth = Shibboleth(idp, c)
+    shibboleth.openurl(sp)
     print("Successfully authenticated to %s" % sp)
 
     cj.save()

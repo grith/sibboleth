@@ -22,33 +22,6 @@
 import os
 from getpass import getpass
 
-class SimpleCredentialManager:
-    """
-    This class is responsible for displaying information about the location
-    being authed too, and receiving user name and password from the user.
-    """
-
-    def __init__(self, username, password, printfunc):
-        self.username = username
-        self.password = password
-        self.printfunc = printfunc
-        self.tries = 0
-
-    def get_password(self):
-        """return the password of the user"""
-        return self.password
-
-    def set_password(self, verify=False):
-        return self.password
-
-    def set_username(self):
-        return self.username
-
-    def get_username(self):
-        return self.username
-
-    def reset(self):
-        pass
 
 class CredentialManager:
     """
@@ -56,48 +29,22 @@ class CredentialManager:
     being authed too, and receiving user name and password from the user.
     """
 
-    def __init__(self, username=None, password=None, printfunc=None):
-        self.username = username
-        self.password = password
-        self.printfunc = printfunc
-        self.tries = 0
+    def set_title(self, title):
+        print title
+
+    def prompt(self, controller):
+        self.controller = controller
+        user_name = os.getenv('USERNAME') or os.getenv('LOGNAME')
+        self.username = raw_input("Username [%s]:" % user_name) or user_name
+        self.password = getpass("Password:")
+        self.controller.run()
 
     def get_password(self):
         """return the password of the user"""
-        if not self.password:
-            self.set_password()
         return self.password
-
-    def set_password(self, verify=False):
-        if verify:
-            while 1:
-                p1=getpass('Enter password:')
-                p2=getpass('Verify password:')
-                if not p1:
-                    print "Password cannot be blank"
-                    continue
-                if p1==p2:
-                    self.password = p1
-                    break
-                print "Password doesn't match"
-        else:
-            self.password = getpass("Password:")
-        return self.password
-
-    def set_username(self):
-        if not self.username:
-            user_name = os.getenv('USERNAME') or os.getenv('LOGNAME')
-            self.username = raw_input("Username [%s]:" % user_name) or user_name
-        return self.username
 
     def get_username(self):
-        if not self.username:
-            self.set_username()
         return self.username
-
-    def reset(self):
-        self.username = None
-        self.password = None
 
 
 class Idp:
@@ -115,11 +62,11 @@ class Idp:
         self.idps = idps.keys()
         self.idps.sort()
 
-
-    def choose_idp(self):
+    def prompt(self, controller):
         """
-        some how decide what idp to authenticat to
+        some how decide what idp to authenticate to
         """
+        self.controller = controller
         if self.idp:
             return
 
@@ -156,7 +103,6 @@ class Idp:
 
 
         idp_list = []
-        print self.idps
         for n in range(0, len(self.idps)):
             idp_list.append("%s: %s" % (n + 1, self.idps[n]))
         print_list_wide(idp_list)
@@ -164,6 +110,7 @@ class Idp:
         while not idp_n - 1 in range(0, len(self.idps)):
             idp_n = int(raw_input("Idp (1-%i):" % (len(self.idps))))
         self.idp = self.idps[idp_n - 1]
+        self.controller.run()
 
 
     def get_idp(self):
@@ -171,15 +118,4 @@ class Idp:
         return the selected idp
         """
         return self.idp
-
-    def __repr__(self):
-        return self.idp
-
-    __str__ = __repr__
-
-    def __eq__(self, value):
-        return self.idp.__eq__(value)
-
-    def __hash__(self):
-        return self.idp.__hash__()
 

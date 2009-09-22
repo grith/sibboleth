@@ -38,8 +38,6 @@ class TestShibboleth(unittest.TestCase):
             for line in html:
                 parser.feed(line)
             parser.close()
-            if type == 'ds':
-                print parser.forms
             rname, adapter = forms.getFormAdapter(parser.title, parser.forms, None, None)
             self.assertEqual('_'.join([rname, name]), i)
 

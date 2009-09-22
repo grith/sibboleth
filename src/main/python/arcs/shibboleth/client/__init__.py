@@ -1,3 +1,3 @@
-from shibboleth import open_shibprotected_url, list_shibboleth_idps
+from shibboleth import Shibboleth
 from credentials import CredentialManager, Idp
 

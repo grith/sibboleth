@@ -100,6 +100,8 @@ form_handler_registry = []
 class FormHandler(object):
     # The list of form parts to detect
     signature = None
+    interactive = False
+
     class __metaclass__(type):
         def __init__(cls, name, bases, dict):
             type.__init__(name, bases, dict)
@@ -114,15 +116,11 @@ class FormHandler(object):
     def submit(self, res):
         raise NotImplementedError
 
-    def prompt(self, printer=None):
-        if printer:
-            printer(self.title)
-        else:
-            print(self.title)
 
 class DS(FormHandler):
     form_type = 'ds'
     signature = ['ds', 'Select', 'form', 'session', 'permanent']
+    interactive = True
 
     def __init__(self, title, data, **kwargs):
         FormHandler.__init__(self, title, data)
@@ -171,10 +169,15 @@ class DS(FormHandler):
 class WAYF(FormHandler):
     form_type = 'wayf'
     signature = ['origin', 'providerId', 'shire', 'target', 'time']
+    interactive = True
 
     def __init__(self, title, data, **kwargs):
         FormHandler.__init__(self, title, data)
         self.idp = kwargs['idp']
+
+    def prompt(self, shibboleth):
+        self.idp.set_idps(self.data['origin'])
+        self.idp.prompt(shibboleth)
 
     def submit(self, opener, res):
         """
@@ -193,10 +196,8 @@ class WAYF(FormHandler):
         wayf_data = {}
         idp = self.idp
         data = self.data
-        idp.set_idps(data['origin'])
-        idp.choose_idp()
         if not data['origin'].has_key(idp.get_idp()):
-            raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
+            raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp.get_idp())
         wayf_data['origin'] = data['origin'][idp.get_idp()]
         wayf_data['shire'] = data['shire']['value']
         wayf_data['providerId'] = data['providerId']['value']
@@ -217,10 +218,15 @@ class IdPFormLogin(FormHandler):
     signature = ['j_password', 'j_username']
     username_field = signature[1]
     password_field = signature[0]
+    interactive = True
 
     def __init__(self, title, data, **kwargs):
         FormHandler.__init__(self, title, data)
         self.cm = kwargs['credentialmanager']
+
+    def prompt(self, shibboleth):
+        self.cm.set_title(self.title)
+        self.cm.prompt(shibboleth)
 
     def submit(self, opener, res):
         """
@@ -231,9 +237,6 @@ class IdPFormLogin(FormHandler):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        if self.cm.tries > 2:
-            raise Exception("Too Many Failed Attempts to Authenticate")
-        self.cm.tries += 1
         headers = {
         "Referer": res.url
         }
@@ -242,8 +245,8 @@ class IdPFormLogin(FormHandler):
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         log.info("Form Authentication from: %s" % url)
-        idp_data[self.username_field] = cm.set_username()
-        idp_data[self.password_field] = cm.set_password()
+        idp_data[self.username_field] = cm.get_username()
+        idp_data[self.password_field] = cm.get_password()
         data = urllib.urlencode(idp_data)
         request = urllib2.Request(url, data=data)
         log.info('Submitting login form')
