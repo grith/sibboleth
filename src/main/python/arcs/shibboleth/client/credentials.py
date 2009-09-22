@@ -22,8 +22,14 @@
 import os
 from getpass import getpass
 
+try:
+    from au.org.arcs.auth.shibboleth import CredentialManager as ICredentialManager
+    from au.org.arcs.auth.shibboleth import IdpObject as IIdp
+except:
+    ICredentialManager = object
+    IIdp = object
 
-class CredentialManager:
+class CredentialManager(ICredentialManager):
     """
     This class is responsible for displaying information about the location
     being authed too, and receiving user name and password from the user.
@@ -47,7 +53,7 @@ class CredentialManager:
         return self.username
 
 
-class Idp:
+class Idp(IIdp):
     """
     This class responds to the WAYF form with the selected idp
     """

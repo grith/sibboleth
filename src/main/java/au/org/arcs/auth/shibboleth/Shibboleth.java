@@ -3,6 +3,7 @@ package au.org.arcs.auth.shibboleth;
 import java.security.Security;
 import java.util.Iterator;
 
+import org.python.core.Py;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
@@ -11,29 +12,23 @@ public class Shibboleth {
 
 	private final ShibbolethClient shibClient;
 
-	private final String url;
+	public Shibboleth(IdpObject idp, CredentialManager cm) {
 
-	public Shibboleth(String url) {
 
-		this.url = url;
 		PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter
 				.exec("from arcs.shibboleth.client.shibboleth import Shibboleth");
 		PyObject shibbolethClientClass = interpreter.get("Shibboleth");
-		PyObject shibObject = shibbolethClientClass.__call__();
-		shibClient = (ShibbolethClient) shibObject
-				.__tojava__(ShibbolethClient.class);
+
+		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp), Py.java2py(cm));
+		shibClient = (ShibbolethClient) shibObject.__tojava__(ShibbolethClient.class);
 	}
 
-	public PyInstance shibOpen(String username, char[] password, IdpObject idp) {
 
-		return shibClient.shibopen(url, username, new String(password), idp);
 
-	}
+	public PyInstance openurl(String url) {
 
-	public PyInstance open() {
-
-		return shibClient.open(url);
+		return shibClient.openurl(url);
 	}
 
 	public static void main(String[] args) {
@@ -43,10 +38,13 @@ public class Shibboleth {
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 				"TrustAllCertificates");
 
-		Shibboleth shib = new Shibboleth("https://slcs1.arcs.org.au/SLCS/login");
+		IdpObject idp = new StaticIdpObject("VPAC");
+		CredentialManager cm = new StaticCredentialManager(args[0], args[1]);
+		
+		Shibboleth shib = new Shibboleth(idp, cm);
 
-		PyInstance returnValue = shib.shibOpen(args[0], args[1].toCharArray(),
-				new StaticIdpObject("VPAC"));
+		String url = "https://slcs1.arcs.org.au/SLCS/login";
+		PyInstance returnValue = shib.openurl(url);
 
 		Iterable<PyObject> it = returnValue.asIterable();
 
@@ -56,15 +54,7 @@ public class Shibboleth {
 
 		}
 
-		returnValue = shib.open();
 
-		it = returnValue.asIterable();
-
-		for (Iterator i = it.iterator(); i.hasNext();) {
-
-			System.out.println(i.next());
-
-		}
 
 	}
 

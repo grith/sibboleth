@@ -41,4 +41,9 @@ public class DummyIdpObject implements IdpObject {
 		
 	}
 
+	public void prompt(ShibbolethClient shibboleth) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
