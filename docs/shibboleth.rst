@@ -7,6 +7,24 @@
 .. moduleauthor:: Russell Sim <russell@vpac.org>
 
 
+:class:`Shibboleth` Objects
+---------------------------
+
+Using the shibboleth handler is a bit different to the urllib2 handlers because the shibboleth auth chain is far more complex.
+
+::
+
+    from arcs.shibboleth.client import Shibboleth, CredentialManager, Idp
+    idp = Idp()
+    c = CredentialManager()
+    shibboleth = Shibboleth(idp, c, cj)
+    response = shibboleth.openurl(sp)
+
+.. autoclass:: Shibboleth
+   :members:
+   :undoc-members:
+
+
 :class:`ShibbolethHandler` Objects
 ----------------------------------
 .. autoclass:: ShibbolethHandler
@@ -20,12 +38,6 @@
    :members:
    :undoc-members:
 
-
-:class:`Shibboleth` Objects
----------------------------
-.. autoclass:: Shibboleth
-   :members:
-   :undoc-members:
 
 :func:`set_cookies_expires` Function
 ----------------------------------------
