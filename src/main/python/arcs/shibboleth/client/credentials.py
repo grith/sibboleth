@@ -74,6 +74,7 @@ class Idp(IIdp):
         """
         self.controller = controller
         if self.idp:
+            self.controller.run()
             return
 
         try:
