@@ -4,10 +4,10 @@ import java.util.Map;
 
 public interface IdpObject {
 
-	public abstract void set_idps(Map idps);
+	public abstract void prompt(ShibbolethClient shibboleth);
 
 	public abstract String get_idp();
 
-	public abstract void choose_idp();
+	public abstract void set_idps(Map idps);
 
 }
