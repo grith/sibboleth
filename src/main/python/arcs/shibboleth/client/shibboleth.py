@@ -103,9 +103,9 @@ class Shibboleth(shib_interface):
     :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager` containing the URL to the service provider you want to connect to
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
-    def __init__(self, idp, cm, cj=None):
-        if cj:
-            self.cookiejar = cj
+    def __init__(self, idp, cm, cookiejar=None):
+        if not cookiejar == None:
+            self.cookiejar = cookiejar
         else:
             self.cookiejar = CookieJar()
         self.idp = idp
