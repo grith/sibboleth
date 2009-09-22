@@ -83,7 +83,7 @@ def main():
     if path.exists(cookies_file):
         cj.load()
 
-    shibboleth = Shibboleth(idp, c)
+    shibboleth = Shibboleth(idp, c, cj)
     shibboleth.openurl(sp)
     print("Successfully authenticated to %s" % sp)
 
