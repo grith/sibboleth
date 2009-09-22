@@ -57,7 +57,7 @@ class Idp(IIdp):
     """
     This class responds to the WAYF form with the selected idp
     """
-    def __init__(self, idp=''):
+    def __init__(self, idp=None):
         self.idp = idp or ''
 
     def set_idps(self, idps):
