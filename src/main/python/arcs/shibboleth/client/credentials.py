@@ -86,7 +86,7 @@ class CredentialManager(ICredentialManager):
         user_name = os.getenv('USERNAME') or os.getenv('LOGNAME')
         self.username = raw_input("Username [%s]:" % user_name) or user_name
         self.password = getpass("Password:")
-        controller.run()
+        return controller.run()
 
     def get_password(self):
         """return the password of the user"""
@@ -163,7 +163,7 @@ class Idp(IIdp):
         while not idp_n - 1 in range(0, len(self.idps)):
             idp_n = int(raw_input("Idp (1-%i):" % (len(self.idps))))
         self.idp = self.idps[idp_n - 1]
-        controller.run()
+        return controller.run()
 
 
     def get_idp(self):
