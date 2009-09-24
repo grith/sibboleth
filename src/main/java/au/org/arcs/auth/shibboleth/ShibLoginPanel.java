@@ -1,5 +1,8 @@
 package au.org.arcs.auth.shibboleth;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Map;
 
 import javax.swing.JComboBox;
@@ -9,7 +12,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.python.core.PyInstance;
-
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -153,5 +155,13 @@ public class ShibLoginPanel extends JPanel implements IdpObject {
 			passwordField = new JPasswordField();
 		}
 		return passwordField;
+	}
+	
+	public void addKeyListener(KeyListener l) {
+		getUsernameTextfield().addKeyListener(l);
+	}
+	
+	public void removeKeyListener(KeyListener l) {
+		getUsernameTextfield().removeKeyListener(l);
 	}
 }
