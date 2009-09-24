@@ -1,6 +1,9 @@
 package au.org.arcs.auth.shibboleth;
 
+import java.util.Iterator;
+
 import org.python.core.PyInstance;
+import org.python.core.PyObject;
 
 public interface ShibbolethClient {
 	
@@ -8,6 +11,10 @@ public interface ShibbolethClient {
 	
 	public PyInstance openurl(String url);
 	
-	public void run();
+	public PyInstance run();
+	
+	public void add_listener(PyObject listener);
+	
+	public PyInstance get_response();
 	
 }

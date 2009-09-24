@@ -126,20 +126,20 @@ class Shibboleth(shib_interface):
 
         :param url: the URL of the service provider you want to connect to
         """
+              
         self.opener = urllib2.build_opener(ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar))
         if url:
             self.url = url
         request = urllib2.Request(self.url)
         self.response = self.opener.open(request)
-        self.__follow_chain(self.response)
-        return self.response
+        return self.__follow_chain(self.response)
 
     def __follow_chain(self, response):
         for c in self.cookiejar:
             if c.name.startswith('_shibsession_') and c.domain == urlsplit(self.url)[1]:
                 set_cookies_expiries(self.cookiejar)
                 self.response = response
-                for l in self.listeners:
+                for l in self.__listeners:
                     try:
                         l(response)
                     except TypeError:

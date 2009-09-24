@@ -3,6 +3,8 @@ package au.org.arcs.auth.shibboleth;
 import java.util.Map;
 import java.util.Set;
 
+import org.python.core.PyInstance;
+
 public class DummyIdpObject implements IdpObject {
 	
 	private Set<String> idps = null;
@@ -41,9 +43,9 @@ public class DummyIdpObject implements IdpObject {
 		
 	}
 
-	public void prompt(ShibbolethClient shibboleth) {
+	public PyInstance prompt(ShibbolethClient shibboleth) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

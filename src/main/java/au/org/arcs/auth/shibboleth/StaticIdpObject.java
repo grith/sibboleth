@@ -2,6 +2,9 @@ package au.org.arcs.auth.shibboleth;
 
 import java.util.Map;
 
+import org.python.core.Py;
+import org.python.core.PyInstance;
+
 public class StaticIdpObject implements IdpObject {
 
 	private final String idpName;
@@ -22,11 +25,11 @@ public class StaticIdpObject implements IdpObject {
 		System.out.println("Set idp");
 	}
 
-	public void prompt(ShibbolethClient shibboleth) {
+	public PyInstance prompt(ShibbolethClient shibboleth) {
 		
 		System.out.println("Idp prompt");
-		
 		shibboleth.run();
+		return null;
 		
 	}
 

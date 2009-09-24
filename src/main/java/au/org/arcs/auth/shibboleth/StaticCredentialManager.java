@@ -1,5 +1,7 @@
 package au.org.arcs.auth.shibboleth;
 
+import org.python.core.PyInstance;
+
 public class StaticCredentialManager implements CredentialManager {
 	
 	private String password;
@@ -21,11 +23,13 @@ public class StaticCredentialManager implements CredentialManager {
 		return username;
 	}
 
-	public void prompt(ShibbolethClient shibboleth) {
+	public PyInstance prompt(ShibbolethClient shibboleth) {
 
 		System.out.println("Credentialmanager prompt.");
 		
 		shibboleth.run();
+		
+		return null;
 
 	}
 

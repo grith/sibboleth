@@ -177,7 +177,7 @@ class WAYF(FormHandler):
 
     def prompt(self, shibboleth):
         self.idp.set_idps(self.data['origin'])
-        self.idp.prompt(shibboleth)
+        return self.idp.prompt(shibboleth)
 
     def submit(self, opener, res):
         """
@@ -226,7 +226,7 @@ class IdPFormLogin(FormHandler):
 
     def prompt(self, shibboleth):
         self.cm.set_title(self.title)
-        self.cm.prompt(shibboleth)
+        return self.cm.prompt(shibboleth)
 
     def submit(self, opener, res):
         """
