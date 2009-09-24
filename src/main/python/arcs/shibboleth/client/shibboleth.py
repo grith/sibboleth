@@ -110,6 +110,15 @@ class Shibboleth(shib_interface):
             self.cookiejar = CookieJar()
         self.idp = idp
         self.cm = cm
+        self.__listeners = []
+
+    def add_listener(self, listener):
+        """
+        add a listner that will be called when the shibboleth authentication process is finished.
+
+        the method signature of the listner can optionally take one argument which will be the response.
+        """
+        self.__listeners.append(listener)
 
     def openurl(self, url=None):
         """
@@ -130,6 +139,11 @@ class Shibboleth(shib_interface):
             if c.name.startswith('_shibsession_') and c.domain == urlsplit(self.url)[1]:
                 set_cookies_expiries(self.cookiejar)
                 self.response = response
+                for l in self.listeners:
+                    try:
+                        l(response)
+                    except TypeError:
+                        l()
                 return response
 
         parser = FormParser()
@@ -159,3 +173,5 @@ class Shibboleth(shib_interface):
         request, response = self.adapter.submit(self.opener, self.response)
         return self.__follow_chain(response)
 
+    def get_response(self):
+        return self.response
