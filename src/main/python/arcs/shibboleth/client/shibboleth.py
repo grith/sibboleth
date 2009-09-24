@@ -142,7 +142,9 @@ class Shibboleth(shib_interface):
             if adapter.interactive:
                 self.adapter = adapter
                 self.response = response
-                adapter.prompt(self)
+                response = adapter.prompt(self)
+                if response:
+                    return response
                 return
             else:
                 request, response = adapter.submit(self.opener, response)
@@ -155,5 +157,5 @@ class Shibboleth(shib_interface):
         used by the :class:`~arcs.shibboleth.client.credentials.Idp` and :class:`~arcs.shibboleth.client.credentials.CredentialManager` controllers to resume the shibboleth auth.
         """
         request, response = self.adapter.submit(self.opener, self.response)
-        self.__follow_chain(response)
+        return self.__follow_chain(response)
 
