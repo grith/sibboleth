@@ -17,7 +17,7 @@ public class StaticIdpObject implements IdpObject {
 		return idpName;
 	}
 
-	public void set_idps(Map idps) {
+	public void set_idps(Map<String, String> idps) {
 		// do nothing
 		System.out.println("Set idp");
 	}
