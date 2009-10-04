@@ -18,6 +18,10 @@ public class DummyIdpObject implements IdpObject {
 		this.idps = idps.keySet();
 	}
 	
+	public Set<String> get_idps() {
+		return idps;
+	}
+	
 	/* (non-Javadoc)
 	 * @see au.org.arcs.auth.shibboleth.IdpObject#get_idp()
 	 */
@@ -34,11 +38,11 @@ public class DummyIdpObject implements IdpObject {
 			throw new RuntimeException("idps not set yet");
 		}
 		
-		if ( idps.contains("VPAC") ) {
-			sel = "VPAC";
-		} else {
-			sel = idps.iterator().next();
-		}
+//		if ( idps.contains("VPAC") ) {
+//			sel = "VPAC";
+//		} else {
+//			sel = idps.iterator().next();
+//		}
 		
 		
 	}

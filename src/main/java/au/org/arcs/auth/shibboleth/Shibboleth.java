@@ -9,7 +9,7 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
-public class Shibboleth {
+public class Shibboleth implements ShibLoginEventSource {
 
 	private final ShibbolethClient shibClient;
 	
@@ -43,9 +43,26 @@ public class Shibboleth {
 				"TrustAllCertificates");
 
 		IdpObject idp = new StaticIdpObject("VPAC");
-		CredentialManager cm = new StaticCredentialManager(args[0], args[1]);
+		CredentialManager cm = new StaticCredentialManager(args[0], args[1].toCharArray());
 		
 		Shibboleth shib = new Shibboleth(idp, cm);
+		shib.addShibListener(new ShibListener() {
+			
+			public void shibLoginComplete(PyInstance response) {
+
+				Iterable<PyObject> it = response.asIterable();
+				
+				StringBuffer responseString = new StringBuffer();
+				
+				for (Iterator i = it.iterator(); i.hasNext();) {
+					responseString.append(i.next());
+				}
+				
+				System.out.println(responseString.toString());
+				
+				
+			}
+		});
 
 		String url = "https://slcs1.arcs.org.au/SLCS/login";
 		PyInstance returnValue = shib.openurl(url);

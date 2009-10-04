@@ -2,27 +2,32 @@ package au.org.arcs.auth.shibboleth;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
-import javax.swing.Action;
 
-public class ShibLoginDialog extends JDialog {
+import org.python.core.PyInstance;
+import org.python.core.PyObject;
+
+public class ShibLoginDialogOld extends JDialog implements ShibListener {
 
 	private final JPanel contentPanel = new JPanel();
-	private final Action action = new LoginAction();
-	private ShibLoginPanel shibLoginPanel;
+	
+	private Shibboleth shib;
+	private ShibLoginPanelOld slcsLoginPanel = null;
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ShibLoginDialog dialog = new ShibLoginDialog();
+			ShibLoginDialogOld dialog = new ShibLoginDialogOld();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -33,7 +38,7 @@ public class ShibLoginDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ShibLoginDialog() {
+	public ShibLoginDialogOld() {
 		
 		java.security.Security.addProvider(new ArcsSecurityProvider());
 
@@ -46,8 +51,8 @@ public class ShibLoginDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
-			shibLoginPanel = new ShibLoginPanel();
-			contentPanel.add(shibLoginPanel, BorderLayout.CENTER);
+			slcsLoginPanel = new ShibLoginPanelOld();
+			contentPanel.add(slcsLoginPanel, BorderLayout.CENTER);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -55,7 +60,13 @@ public class ShibLoginDialog extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.setAction(action);
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						slcsLoginPanel.run();
+						
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -66,17 +77,26 @@ public class ShibLoginDialog extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		
+		shib = new Shibboleth(slcsLoginPanel, slcsLoginPanel.getCredentialManager());
+		shib.addShibListener(this);
+		shib.openurl("https://slcs1.arcs.org.au/SLCS/login");
 	}
 
-	private class LoginAction extends AbstractAction {
-		public LoginAction() {
-			putValue(NAME, "Login");
-			putValue(SHORT_DESCRIPTION, "Logging in");
+
+	public void shibLoginComplete(PyInstance response) {
+
+		Iterable<PyObject> it = response.asIterable();
+		
+		StringBuffer responseString = new StringBuffer();
+		
+		for (Iterator i = it.iterator(); i.hasNext();) {
+			responseString.append(i.next());
 		}
-		public void actionPerformed(ActionEvent e) {
-			
-			shibLoginPanel.login();
-			
-		}
+		
+		System.out.println(responseString.toString());
+		
+		
 	}
+
 }

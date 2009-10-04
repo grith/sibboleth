@@ -1,167 +1,200 @@
 package au.org.arcs.auth.shibboleth;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.python.core.PyInstance;
+import org.python.core.PyObject;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class ShibLoginPanel extends JPanel implements IdpObject {
-	private JLabel lblIdp;
-	private JLabel lblIdpUsername;
-	private JLabel lblIdpPassword;
-	private JComboBox comboBox;
-	private JTextField usernameTextfield;
+public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, ShibLoginEventSource {
+	
+	private JTextField usernameTextField;
 	private JPasswordField passwordField;
-	
-	private ShibbolethClient shibClient = null;
-	
-	private final CredentialManager cm = new CredentialManager() {
-		
-		public void set_title(String title) {
-			// do nothing
-		}
-		
-		public PyInstance prompt(ShibbolethClient shibboleth) {
-			return shibboleth.run();
-		}
-		
-		public String get_username() {
-			return getUsernameTextfield().getText();
-		}
-		
-		public String get_password() {
-			return new String(getPasswordField().getPassword());
-		}
-	};
+	private JComboBox idpComboBox;
+
+	private Shibboleth idpListShibClient = null;
+	private Shibboleth realShibClient = null;
+
+	private DefaultComboBoxModel idpModel = new DefaultComboBoxModel();
 
 	/**
 	 * Create the panel.
 	 */
 	public ShibLoginPanel() {
+
+		idpListShibClient = new Shibboleth(this, new DummyCredentialManager());
+
+		new Thread() {
+			public void run() {
+
+				idpListShibClient
+						.openurl("https://slcs1.arcs.org.au/SLCS/login");
+			}
+		}.start();
+
 		setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,}));
-		add(getLblIdp(), "2, 2, right, default");
-		add(getComboBox(), "4, 2, fill, default");
-		add(getLblIdpUsername(), "2, 4, right, default");
-		add(getUsernameTextfield(), "4, 4, fill, default");
-		add(getLblIdpPassword(), "2, 6, right, default");
-		add(getPasswordField(), "4, 6, fill, default");
+				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, }));
+		{
+			JLabel lblIdp = new JLabel("Idp:");
+			add(lblIdp, "2, 2, right, default");
+		}
+		{
+			idpComboBox = new JComboBox(idpModel);
+			idpModel.addElement("Loading idp list...");
+			idpComboBox.setEnabled(false);
+			
+			add(idpComboBox, "4, 2, fill, default");
+			
+		}
+		{
+			JLabel lblUsername = new JLabel("Username:");
+			add(lblUsername, "2, 4");
+		}
+		{
+			usernameTextField = new JTextField();
+			add(usernameTextField, "4, 4, fill, default");
+			usernameTextField.setColumns(10);
+		}
+		{
+			JLabel lblPassword = new JLabel("Password:");
+			add(lblPassword, "2, 6, right, default");
+		}
+		{
+			passwordField = new JPasswordField();
+			add(passwordField, "4, 6, fill, default");
+		}
 
 	}
-
-	public String get_password() {
-		return new String(getPasswordField().getPassword());
-	}
-
-	public String get_username() {
-		return getUsernameTextfield().getText();
-	}
-
-	public PyInstance prompt(ShibbolethClient shibboleth) {
-
-		this.shibClient = shibboleth;
+	
+	public void lockUI(boolean lock) {
 		
-		return null;
+		usernameTextField.setEnabled(!lock);
+		passwordField.setEnabled(!lock);
+		idpComboBox.setEnabled(!lock);
 		
 	}
 	
-	public CredentialManager getCredentialManager() {
+	public void login() {
 		
-		return cm;
+		lockUI(true);
 		
-	}
+		new Thread() {
+		public void run() {
 
-	public void set_title(String title) {
+				String idp = (String)(idpModel.getSelectedItem());
+				String username = usernameTextField.getText().trim();
+				char[] password = passwordField.getPassword();
+				
+				realShibClient = new Shibboleth(new StaticIdpObject(idp), new StaticCredentialManager(username, password));
+				realShibClient.addShibListener(ShibLoginPanel.this);
+				realShibClient.openurl("https://slcs1.arcs.org.au/SLCS/login");
+								
+			}
+		}.start();
 
-		System.out.println(title);
 	}
 
 	public String get_idp() {
-		return (String)getComboBox().getSelectedItem();
+		return (String) (idpModel.getSelectedItem());
+	}
+
+	public PyInstance prompt(ShibbolethClient shibboleth) {
+		return null;
 	}
 
 	public void set_idps(Map<String, String> idps) {
 
-		getComboBox().removeAllItems();
-		for ( String key : idps.keySet() ) {
-			getComboBox().addItem(key);
+		idpModel.removeAllElements();
+		
+		for (String idp : new TreeSet<String>(idps.keySet())) {
+			idpModel.addElement(idp);
 		}
+		
+		idpComboBox.setEnabled(true);
 	}
 	
-	public void run() {
-		
-		shibClient.run();
-		
+	// Event stuff
+	
+	private Vector<ShibListener> shibListeners;
+
+	private void fireShibLoginComplete(PyInstance response) {
+
+		if (shibListeners != null && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+						.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = (ShibListener) e.nextElement();
+				valueChanged_l.shibLoginComplete(response);
+			}
+		}
 	}
 
-	private JLabel getLblIdp() {
-		if (lblIdp == null) {
-			lblIdp = new JLabel("Idp");
-		}
-		return lblIdp;
+	// register a listener
+	synchronized public void addShibListener(ShibListener l) {
+		if (shibListeners == null)
+			shibListeners = new Vector<ShibListener>();
+		shibListeners.addElement(l);
 	}
-	private JLabel getLblIdpUsername() {
-		if (lblIdpUsername == null) {
-			lblIdpUsername = new JLabel("Idp username");
+
+	// remove a listener
+	synchronized public void removeShibListener(ShibListener l) {
+		if (shibListeners == null) {
+			shibListeners = new Vector<ShibListener>();
 		}
-		return lblIdpUsername;
-	}
-	private JLabel getLblIdpPassword() {
-		if (lblIdpPassword == null) {
-			lblIdpPassword = new JLabel("Idp password");
-		}
-		return lblIdpPassword;
-	}
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-		}
-		return comboBox;
-	}
-	private JTextField getUsernameTextfield() {
-		if (usernameTextfield == null) {
-			usernameTextfield = new JTextField();
-			usernameTextfield.setColumns(10);
-		}
-		return usernameTextfield;
-	}
-	private JPasswordField getPasswordField() {
-		if (passwordField == null) {
-			passwordField = new JPasswordField();
-		}
-		return passwordField;
+		shibListeners.removeElement(l);
 	}
 	
+	
 	public void addKeyListener(KeyListener l) {
-		getUsernameTextfield().addKeyListener(l);
+		usernameTextField.addKeyListener(l);
 	}
 	
 	public void removeKeyListener(KeyListener l) {
-		getUsernameTextfield().removeKeyListener(l);
+		usernameTextField.removeKeyListener(l);
 	}
+
+	public void shibLoginComplete(PyInstance response) {
+		
+		realShibClient.removeShibListener(this);
+		realShibClient = null;
+		
+		fireShibLoginComplete(response);		
+		
+		lockUI(false);
+	}
+
 }
