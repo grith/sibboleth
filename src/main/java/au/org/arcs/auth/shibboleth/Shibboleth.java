@@ -32,7 +32,35 @@ public class Shibboleth implements ShibLoginEventSource {
 
 	public PyInstance openurl(String url) {
 
-		return shibClient.openurl(url);
+		try {
+			return shibClient.openurl(url);
+		} catch (CredentialManagerException e) {
+			fireShibLoginFailed(e);
+			return null;
+		}
+	}
+	
+	private void fireShibLoginFailed(Exception ex) {
+		
+		if (shibListeners != null && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+						.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = (ShibListener) e.nextElement();
+				valueChanged_l.shibLoginFailed(ex);
+			}
+		}
+		
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -61,6 +89,17 @@ public class Shibboleth implements ShibLoginEventSource {
 				System.out.println(responseString.toString());
 				
 				
+			}
+
+			public void shibLoginFailed(Exception e) {
+
+				e.printStackTrace();
+				
+			}
+
+			public void shibLoginStarted() {
+
+				System.out.println("Shib login started.");
 			}
 		});
 
@@ -100,6 +139,29 @@ public class Shibboleth implements ShibLoginEventSource {
 	// Event stuff
 	
 	private Vector<ShibListener> shibListeners;
+	
+	private void fireShibLoginStarted() {
+		
+		if (shibListeners != null && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+						.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = (ShibListener) e.nextElement();
+				valueChanged_l.shibLoginStarted();
+			}
+		}
+		
+	}
 
 	private void fireShibLoginComplete(PyInstance response) {
 
