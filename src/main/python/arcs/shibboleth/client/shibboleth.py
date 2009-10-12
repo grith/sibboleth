@@ -66,7 +66,7 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
         matchobj = authobj.match(authline)
         self.realm = matchobj.group(2)
         self.credentialmanager.set_title(self.realm)
-        self.credentialmanager.prompt(self)
+        return self.credentialmanager.prompt(self)
 
     def run(self):
         url = self.__req.get_full_url()
