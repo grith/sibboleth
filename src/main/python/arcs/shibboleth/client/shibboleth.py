@@ -57,20 +57,24 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
 
     def http_error_401(self, req, fp, code, msg, headers):
         """Basic Auth handler"""
-        url = req.get_full_url()
+        self.__req = req
+        self.__headers = headers
         authline = headers.getheader('www-authenticate')
         authobj = re.compile(
             r'''(?:\s*www-authenticate\s*:)?\s*(\w*)\s+realm=['"]([^'"]+)['"]''',
             re.IGNORECASE)
         matchobj = authobj.match(authline)
-        realm = matchobj.group(2)
-        self.credentialmanager.print_realm(realm)
-        user = self.credentialmanager.get_username()
-        self.credentialmanager.get_password()
-        passwd = self.credentialmanager.get_password()
-        self.add_password(realm=realm, uri=url, user=user, passwd=passwd)
+        self.realm = matchobj.group(2)
+        self.credentialmanager.set_title(self.realm)
+        self.credentialmanager.prompt(self)
+
+    def run(self):
+        url = self.__req.get_full_url()
+        self.add_password(realm=self.realm, uri=url,
+                          user=self.credentialmanager.get_username(),
+                          passwd=self.credentialmanager.get_password())
         return self.http_error_auth_reqed('www-authenticate',
-                                          url, req, headers)
+                                          url, self.__req, self.__headers)
 
 
 def set_cookies_expiries(cookiejar):
