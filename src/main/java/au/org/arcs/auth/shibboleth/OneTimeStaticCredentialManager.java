@@ -1,6 +1,8 @@
 package au.org.arcs.auth.shibboleth;
 
+import org.python.core.Py;
 import org.python.core.PyInstance;
+import org.python.core.PyObject;
 
 public class OneTimeStaticCredentialManager implements CredentialManager {
 	
@@ -22,14 +24,16 @@ public class OneTimeStaticCredentialManager implements CredentialManager {
 		return username;
 	}
 
-	public PyInstance prompt(ShibbolethClient shibboleth) {
+	public PyObject prompt(Object response) {
 
 		if ( usernameAndPasswordAlreadyRead ) {
 			throw new CredentialManagerException("Login failed. Probably wrong username and/or password.");
 		}
 		usernameAndPasswordAlreadyRead = true;
-		shibboleth.run();
-		return null;
+		return Py.java2py(response).invoke("run");
+//		Py.java2py(response).__call__(Py.java2py("run"));
+//		shibboleth.run();
+//		return null;
 
 	}
 

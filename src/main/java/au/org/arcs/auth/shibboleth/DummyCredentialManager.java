@@ -14,7 +14,7 @@ public class DummyCredentialManager implements CredentialManager {
 		return null;
 	}
 
-	public PyInstance prompt(ShibbolethClient shibboleth) {
+	public PyInstance prompt(Object response) {
 		// TODO Auto-generated method stub
 		return null;
 	}

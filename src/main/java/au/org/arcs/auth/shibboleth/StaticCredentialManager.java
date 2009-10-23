@@ -1,6 +1,8 @@
 package au.org.arcs.auth.shibboleth;
 
+import org.python.core.Py;
 import org.python.core.PyInstance;
+import org.python.core.PyObject;
 
 public class StaticCredentialManager implements CredentialManager {
 	
@@ -21,10 +23,12 @@ public class StaticCredentialManager implements CredentialManager {
 		return username;
 	}
 
-	public PyInstance prompt(ShibbolethClient shibboleth) {
+	public PyObject prompt(Object response) {
 
-		shibboleth.run();
-		return null;
+//		Py.java2py(response).__call__(Py.java2py("run"));
+		return Py.java2py(response).invoke("run");
+//		shibboleth.run();
+//		return null;
 
 	}
 

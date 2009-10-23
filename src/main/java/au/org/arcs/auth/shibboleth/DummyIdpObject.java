@@ -5,6 +5,10 @@ import java.util.Set;
 
 import org.python.core.PyInstance;
 
+import au.org.arcs.auth.shibboleth.IdpObject;
+import au.org.arcs.auth.shibboleth.ShibbolethClient;
+
+
 public class DummyIdpObject implements IdpObject {
 	
 	private Set<String> idps = null;
