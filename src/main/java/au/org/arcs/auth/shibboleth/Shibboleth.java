@@ -184,7 +184,29 @@ public class Shibboleth implements ShibLoginEventSource {
 			}
 		}
 	}
+	
+	
+	private void fireIdpsLoaded(PyInstance response) {
 
+		if (shibListeners != null && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+						.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = (ShibListener) e.nextElement();
+				valueChanged_l.shibLoginComplete(response);
+			}
+		}
+	}
 	// register a listener
 	synchronized public void addShibListener(ShibListener l) {
 		if (shibListeners == null)

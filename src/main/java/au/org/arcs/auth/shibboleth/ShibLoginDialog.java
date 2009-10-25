@@ -52,6 +52,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			shibLoginPanel = new ShibLoginPanel(url);
+			shibLoginPanel.refreshIdpList();
 			addWindowListener(shibLoginPanel.getWindowListener());
 			contentPanel.add(shibLoginPanel, BorderLayout.CENTER);
 			shibLoginPanel.addShibListener(this);

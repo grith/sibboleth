@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -26,7 +27,9 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, ShibLoginEventSource {
+public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener {
+	
+	private static final long serialVersionUID = 3143352249184524656L;
 	
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
@@ -40,6 +43,20 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 	private boolean showLoginFailedDialog = false;
 
 	private DefaultComboBoxModel idpModel = new DefaultComboBoxModel();
+	
+	// implement idplistener exchange if you want to remove final here...
+	final private IdpObject idpObject = new IdpObject() {
+		
+		@Override
+		public PyInstance prompt(ShibbolethClient shibboleth) {
+			return null;
+		}
+		
+		@Override
+		public String get_idp() {
+			return ShibLoginPanel.this.get_idp();
+		}
+	};
 
 	public ShibLoginPanel(String url, boolean showLoginFailedDialog) {
 		this(url);
@@ -50,6 +67,7 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 	 */
 	public ShibLoginPanel(String url) {
 		
+		idpObject.addIdpListener(this);
 		this.url = url;
 
 		setLayout(new FormLayout(new ColumnSpec[] {
@@ -97,7 +115,6 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 			passwordField = new JPasswordField();
 			add(passwordField, "3, 6, fill, default");
 		}
-		refreshIdpList();
 
 	}
 	
@@ -108,7 +125,8 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 		idpModel.removeAllElements();
 		idpModel.addElement("Loading idps...");
 		
-		idpListShibClient = new Shibboleth(this, new DummyCredentialManager());
+		
+		idpListShibClient = new Shibboleth(idpObject, new DummyCredentialManager());
 
 		new Thread() {
 			public void run() {
@@ -180,23 +198,6 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 		return null;
 	}
 
-	public void set_idps(Map<String, String> idps) {
-
-		idpModel.removeAllElements();
-		
-		for (String idp : new TreeSet<String>(idps.keySet())) {
-			idpModel.addElement(idp);
-		}
-		
-		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
-		if ( defaultIdp != null && !"".equals(defaultIdp) ) {
-			if ( idpModel.getIndexOf(defaultIdp) >= 0 ) {
-				idpModel.setSelectedItem(defaultIdp);
-			}
-		}
-		
-		idpComboBox.setEnabled(true);
-	}
 	
 	// Event stuff
 	
@@ -326,4 +327,31 @@ public class ShibLoginPanel extends JPanel implements IdpObject, ShibListener, S
 		fireShibLoginStarted();
 	}
 
+	
+	synchronized public void addIdpListener(IdpListener l) {
+		idpObject.addIdpListener(l);
+	}
+
+	// remove a listener
+	synchronized public void removeIdpListener(IdpListener l) {
+		idpObject.removeIdpListener(l);
+	}
+	
+	public void idpListLoaded(SortedSet<String> idpList) {
+
+		idpModel.removeAllElements();
+		
+		for (String idp : idpList) {
+			idpModel.addElement(idp);
+		}
+		
+		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
+		if ( defaultIdp != null && !"".equals(defaultIdp) ) {
+			if ( idpModel.getIndexOf(defaultIdp) >= 0 ) {
+				idpModel.setSelectedItem(defaultIdp);
+			}
+		}
+		
+		idpComboBox.setEnabled(true);
+	}
 }

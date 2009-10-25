@@ -1,9 +1,13 @@
 package au.org.arcs.auth.shibboleth;
 
-public class ArcsShibClientPackageIndicator {
-	
-	public Integer getPackageVersion() {
-		return 1;
+import au.org.arcs.jcommons.dependencies.PackageIndicator;
+
+public class ArcsShibClientPackageIndicator implements PackageIndicator {
+
+	public String getCurrentVersion() {
+		return "0.1-SNAPSHOT";
 	}
+	
+
 
 }

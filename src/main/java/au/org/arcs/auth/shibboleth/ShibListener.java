@@ -15,5 +15,5 @@ public interface ShibListener {
 	public void shibLoginComplete(PyInstance response);
 	
 	public void shibLoginFailed(Exception e);
-	
+
 }
