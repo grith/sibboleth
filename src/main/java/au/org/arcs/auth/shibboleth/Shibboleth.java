@@ -9,7 +9,17 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
+import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
+
 public class Shibboleth implements ShibLoginEventSource {
+	
+	public static void initDefaultSecurityProvider() {
+		
+		java.security.Security.addProvider(new ArcsSecurityProvider());
+
+		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
+				"TrustAllCertificates");
+	}
 
 	private final ShibbolethClient shibClient;
 	
@@ -71,6 +81,7 @@ public class Shibboleth implements ShibLoginEventSource {
 				"TrustAllCertificates");
 
 		IdpObject idp = new StaticIdpObject("VPAC");
+		
 		CredentialManager cm = new StaticCredentialManager(args[0], args[1].toCharArray());
 		
 		Shibboleth shib = new Shibboleth(idp, cm);
@@ -105,6 +116,8 @@ public class Shibboleth implements ShibLoginEventSource {
 
 		String url = "https://slcs1.arcs.org.au/SLCS/login";
 		PyInstance returnValue = shib.openurl(url);
+		
+		System.out.println(shib.getResponseAsString());
 
 		System.out.println("Finished.");
 

@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
+import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
+
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
 	private final JPanel contentPanel = new JPanel();
