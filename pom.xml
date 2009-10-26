@@ -16,6 +16,13 @@
 		</repository>
 	</repositories>
 
+    <scm>
+        <connection>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
+        </connection>
+        <url>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
+        </url>
+    </scm>
+
     <distributionManagement>
         <repository>
             <id>arcs.release</id>
