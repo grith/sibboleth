@@ -126,11 +126,17 @@ class DS(FormHandler):
         FormHandler.__init__(self, title, data)
         self.idp = kwargs['idp']
 
+    def prompt(self, shibboleth):
+        idps = {}
+        for d in self.data['ds']:
+            idps.update(self.data['ds'][d])
+        self.idp.set_idps(idps)
+        return self.idp.prompt(shibboleth)
+
     def submit(self, opener, res):
         """
         submit WAYF form with IDP
 
-        :param idp: the Identity Provider that will be selected at the WAYF
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
@@ -146,12 +152,9 @@ class DS(FormHandler):
         idps = {}
         for d in data['ds']:
             idps.update(data['ds'][d])
-        idp.set_idps(idps)
-        idp.choose_idp()
-        idp.get_idp()
-        if not idps.has_key(idp):
+        if not idps.has_key(idp.get_idp()):
             raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
-        wayf_data['user_idp'] = idps[idp]
+        wayf_data['user_idp'] = idps[idp.get_idp()]
         wayf_data['Select'] = 'Select'
         if data['form']['action'].startswith('?'):
             urlsp = urlparse.urlsplit(res.url)
@@ -183,7 +186,6 @@ class WAYF(FormHandler):
         """
         submit WAYF form with IDP
 
-        :param idp: the Identity Provider that will be selected at the WAYF
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
