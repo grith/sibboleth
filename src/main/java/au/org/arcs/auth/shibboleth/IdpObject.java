@@ -8,6 +8,8 @@ import java.util.Vector;
 
 import org.python.core.PyInstance;
 
+import au.org.arcs.jcommons.interfaces.IdpListener;
+
 public abstract class IdpObject {
 	
 	protected SortedSet<String> idpList = null;

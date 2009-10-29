@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import org.python.core.PyInstance;
 
 import au.org.arcs.jcommons.configuration.CommonArcsProperties;
+import au.org.arcs.jcommons.interfaces.IdpListener;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
