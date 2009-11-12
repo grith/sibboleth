@@ -1,10 +1,14 @@
 from setuptools import setup, find_packages
 from xml.dom.minidom import parse
-from xml import xpath
 from os import path
 
 pom = parse('pom.xml')
-version = xpath.Evaluate('//project/version/text()', pom)[0].data.rstrip('-SNAPSHOT')
+# Get version from common file
+pom = parse('pom.xml')
+for t in pom.getElementsByTagName('project')[0].childNodes:
+    if t.nodeName == 'version':
+        version = t.childNodes[0].nodeValue.rstrip('-SNAPSHOT')
+        break
 
 
 setup(name='arcs.shibboleth.client',
