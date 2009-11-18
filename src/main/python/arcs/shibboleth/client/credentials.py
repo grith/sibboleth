@@ -120,8 +120,7 @@ class Idp(IIdp):
         """
         controller = controller
         if self.idp:
-            controller.run()
-            return
+            return controller.run()
 
         try:
             import struct, fcntl, termios
