@@ -107,13 +107,14 @@ class Shibboleth(shib_interface):
     :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager` containing the URL to the service provider you want to connect to
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
-    def __init__(self, idp, cm, cookiejar=None):
+    def __init__(self, idp, cm, cookiejar=None, proxies=None):
         if not cookiejar == None:
             self.cookiejar = cookiejar
         else:
             self.cookiejar = CookieJar()
         self.idp = idp
         self.cm = cm
+        self.proxies = proxies
         self.__listeners = []
 
     def add_listener(self, listener):
@@ -130,8 +131,12 @@ class Shibboleth(shib_interface):
 
         :param url: the URL of the service provider you want to connect to
         """
-              
-        self.opener = urllib2.build_opener(ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar))
+
+        shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar)
+        proxy_support = urllib2.ProxyHandler(proxies=self.proxies)
+        self.opener = urllib2.build_opener()
+        self.opener.add_handler(proxy_support)
+        self.opener.add_handler(shib_auth_handler)
         if url:
             self.url = url
         request = urllib2.Request(self.url)
