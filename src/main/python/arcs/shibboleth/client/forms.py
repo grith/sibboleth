@@ -104,7 +104,7 @@ class FormHandler(object):
 
     class __metaclass__(type):
         def __init__(cls, name, bases, dict):
-            type.__init__(name, bases, dict)
+            type.__init__(cls, name, bases, dict)
             if object not in bases:
                 form_handler_registry.append((name, cls))
 
