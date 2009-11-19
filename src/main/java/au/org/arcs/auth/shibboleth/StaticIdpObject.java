@@ -19,5 +19,7 @@ public class StaticIdpObject extends IdpObject {
 		shibboleth.run();
 		return null;
 	}
+	
+	
 
 }
