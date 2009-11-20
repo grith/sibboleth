@@ -31,7 +31,7 @@ class TestShibboleth(unittest.TestCase):
         pass
 
     def testFormAdapterDetection(self):
-        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3', 'login_uq', 'cas_login_usa', 'ds_aaf', 'ds_pilottest']:
+        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3', 'login_uq', 'cas_login_usa', 'ds_aaf']:
             type, name = i.rsplit('_', 1)
             html = open(path.join(here, i + '.html'))
             parser = shibboleth.FormParser()
