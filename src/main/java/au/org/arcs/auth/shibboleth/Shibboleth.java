@@ -4,14 +4,20 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.commons.httpclient.ProxyHost;
+import org.apache.commons.lang.StringUtils;
+import org.bushe.swing.event.EventBus;
+import org.bushe.swing.event.EventSubscriber;
+import org.bushe.swing.event.Prioritized;
 import org.python.core.Py;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
 import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
+import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
 
-public class Shibboleth implements ShibLoginEventSource {
+public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttpProxyEvent>, Prioritized {
 	
 	public static void initDefaultSecurityProvider() {
 		
@@ -26,6 +32,8 @@ public class Shibboleth implements ShibLoginEventSource {
 	private PyInstance response = null;
 
 	public Shibboleth(IdpObject idp, CredentialManager cm) {
+		
+		EventBus.subscribe(NewHttpProxyEvent.class, this);
 
 		PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter
@@ -233,6 +241,36 @@ public class Shibboleth implements ShibLoginEventSource {
 			shibListeners = new Vector<ShibListener>();
 		}
 		shibListeners.removeElement(l);
+	}
+
+
+
+	public void onEvent(NewHttpProxyEvent arg0) {
+		// TODO Auto-generated method stub
+		PythonInterpreter interpreter = new PythonInterpreter();
+		
+		System.out.println("Python proxy...."+arg0.getProxyHost());
+		
+		String proxyString = null;
+		if ( StringUtils.isBlank(arg0.getProxyHost()) ) {
+			proxyString = "";
+		} else {	
+			if ( StringUtils.isBlank(arg0.getUsername()) ) {
+				proxyString = "http://"+arg0.getProxyHost()+":"+arg0.getProxyPort()+"/";
+			} else {
+				proxyString = "http://"+arg0.getUsername()+":"+arg0.getPassword()+"@"+arg0.getProxyHost()+":"+arg0.getProxyPort()+"/";
+			}
+		}
+		interpreter.exec("import os");
+		interpreter.exec("os.putenv('http_proxy', "+proxyString+") ");
+		interpreter.exec("os.putenv('https_proxy', "+proxyString+") ");
+		
+	}
+
+
+
+	public int getPriority() {
+		return -100;
 	}
 
 }

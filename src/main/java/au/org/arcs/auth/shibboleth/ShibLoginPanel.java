@@ -18,17 +18,21 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
+import org.bushe.swing.event.EventBus;
+import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 
 import au.org.arcs.jcommons.configuration.CommonArcsProperties;
 import au.org.arcs.jcommons.interfaces.IdpListener;
+import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener {
+public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 	
 	private static final long serialVersionUID = 3143352249184524656L;
 	
@@ -68,6 +72,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	 */
 	public ShibLoginPanel(String url) {
 		
+		EventBus.subscribe(NewHttpProxyEvent.class, this);
 		idpObject.addIdpListener(this);
 		this.url = url;
 
@@ -116,6 +121,8 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			passwordField = new JPasswordField();
 			add(passwordField, "3, 6, fill, default");
 		}
+		
+		refreshIdpList();
 
 	}
 	
@@ -124,7 +131,15 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		lockUI(true);
 		
 		idpModel.removeAllElements();
-		idpModel.addElement("Loading idps...");
+		
+		final String lastIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
+		
+		if ( StringUtils.isNotBlank(lastIdp) ) {
+			idpModel.addElement(lastIdp);
+			lockUI(false);
+		} else {
+			idpModel.addElement("Loading idps...");
+		}
 		
 		
 		idpListShibClient = new Shibboleth(idpObject, new DummyCredentialManager());
@@ -136,6 +151,10 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 					idpListShibClient
 						.openurl(url);
 				} catch (Exception e) {
+					if ( StringUtils.isBlank(lastIdp) ) {
+						idpModel.removeAllElements();
+						idpModel.addElement("Failed to get list of idps.");
+					}
 					e.printStackTrace();
 				} finally {
 					lockUI(false);
@@ -354,5 +373,12 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		}
 		
 		idpComboBox.setEnabled(true);
+	}
+	public void onEvent(NewHttpProxyEvent arg0) {
+
+		System.out.println("Shibloginpanel refresh.");
+		// try to reload idplist
+		refreshIdpList();
+		
 	}
 }
