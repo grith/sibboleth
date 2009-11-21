@@ -249,9 +249,10 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 		// TODO Auto-generated method stub
 		PythonInterpreter interpreter = new PythonInterpreter();
 		
-		System.out.println("Python proxy...."+arg0.getProxyHost());
-		
 		String proxyString = null;
+		
+		try {
+		
 		if ( StringUtils.isBlank(arg0.getProxyHost()) ) {
 			proxyString = "";
 		} else {	
@@ -262,9 +263,15 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 			}
 		}
 		interpreter.exec("import os");
-		interpreter.exec("os.putenv('http_proxy', "+proxyString+") ");
-		interpreter.exec("os.putenv('https_proxy', "+proxyString+") ");
+		interpreter.exec("os.putenv('http_proxy', "+"\""+proxyString+"\") ");
+		interpreter.exec("os.putenv('https_proxy', "+"\""+proxyString+"\") ");
 		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+
+
 	}
 
 

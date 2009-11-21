@@ -36,6 +36,9 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	
 	private static final long serialVersionUID = 3143352249184524656L;
 	
+	public static final String LOADING_IDPS_STRING = "Loading idps...";
+	public static final String COULD_NOT_LOAD_IDP_LIST_STRING = "Failed to get list of idps.";
+	
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
 	private JComboBox idpComboBox;
@@ -48,6 +51,8 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	private boolean showLoginFailedDialog = false;
 
 	private DefaultComboBoxModel idpModel = new DefaultComboBoxModel();
+	
+	private Thread refreshIdpThread;
 	
 	// implement idplistener exchange if you want to remove final here...
 	final private IdpObject idpObject = new IdpObject() {
@@ -138,13 +143,19 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			idpModel.addElement(lastIdp);
 			lockUI(false);
 		} else {
-			idpModel.addElement("Loading idps...");
+			idpModel.addElement(LOADING_IDPS_STRING);
 		}
 		
 		
 		idpListShibClient = new Shibboleth(idpObject, new DummyCredentialManager());
+		
+		try {
+			refreshIdpThread.interrupt();
+		} catch (Exception e) {
+			// doesn't matter
+		}
 
-		new Thread() {
+		refreshIdpThread = new Thread() {
 			public void run() {
 
 				try {
@@ -153,7 +164,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 				} catch (Exception e) {
 					if ( StringUtils.isBlank(lastIdp) ) {
 						idpModel.removeAllElements();
-						idpModel.addElement("Failed to get list of idps.");
+						idpModel.addElement(COULD_NOT_LOAD_IDP_LIST_STRING);
 					}
 					e.printStackTrace();
 				} finally {
@@ -161,7 +172,9 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 				}
 				
 			}
-		}.start();
+		};
+		
+		refreshIdpThread.start();
 		
 	}
 	
@@ -194,11 +207,16 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		public void run() {
 
 				String idp = (String)(idpModel.getSelectedItem());
+				if ( StringUtils.isBlank(idp) || LOADING_IDPS_STRING.equals(idp) ) {
+					return;
+				}
 				String username = usernameTextField.getText().trim();
 				char[] password = passwordField.getPassword();
 				
 				CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME, username);
-				CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
+				if ( ! idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING) && ! idp.equals(LOADING_IDPS_STRING) ) {
+					CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
+				}
 				
 				realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
 				shibLoginStarted();
@@ -376,7 +394,6 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	}
 	public void onEvent(NewHttpProxyEvent arg0) {
 
-		System.out.println("Shibloginpanel refresh.");
 		// try to reload idplist
 		refreshIdpList();
 		

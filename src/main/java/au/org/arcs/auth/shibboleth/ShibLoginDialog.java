@@ -36,10 +36,13 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 	public static void main(String[] args) {
 		try {
 			
-
+			
 			ShibLoginDialog dialog = new ShibLoginDialog(
 					"https://slcstest.arcs.org.au/SLCS/login");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+			HttpProxyManager.setDefaultHttpProxy();
+
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
