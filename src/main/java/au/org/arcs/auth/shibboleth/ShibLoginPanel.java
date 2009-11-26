@@ -31,6 +31,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import com.ziclix.python.sql.handler.MySQLDataHandler;
 
 public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 	
@@ -218,10 +219,21 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 					CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
 				}
 				
-				realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
-				shibLoginStarted();
-				realShibClient.addShibListener(ShibLoginPanel.this);
-				realShibClient.openurl(url);
+				try {
+					realShibClient.removeShibListener(ShibLoginPanel.this);
+				} catch (Exception e) {
+					//
+				}
+				
+				try {
+					realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
+					realShibClient.addShibListener(ShibLoginPanel.this);
+					shibLoginStarted();
+					realShibClient.openurl(url);
+				} catch (Exception e) {
+					shibLoginFailed(e);
+//					fireShibLoginFailed(e);
+				}
 								
 			}
 		}.start();
