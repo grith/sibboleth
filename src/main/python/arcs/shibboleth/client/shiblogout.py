@@ -31,7 +31,7 @@ homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
 
 log = logging.getLogger('shib-logout')
 
-def main():
+def main(*args):
 
     # Populate our options, -h/--help is already there for you.
     usage = "usage: %prog [options] URL"
