@@ -2,13 +2,19 @@ from setuptools import setup, find_packages
 from xml.dom.minidom import parse
 from os import path
 
-pom = parse('pom.xml')
 # Get version from common file
 pom = parse('pom.xml')
 for t in pom.getElementsByTagName('project')[0].childNodes:
     if t.nodeName == 'version':
         version = t.childNodes[0].nodeValue.rstrip('-SNAPSHOT')
         break
+
+extra_deps = []
+
+
+if sys.version_info[0] == 2:
+    if sys.version_info[1] <= 6:
+        extra_deps.append('httpsproxy_urllib2')
 
 
 setup(name='arcs.shibboleth.client',
@@ -34,9 +40,8 @@ setup(name='arcs.shibboleth.client',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'httpsproxy_urllib2',
           # -*- Extra requirements: -*-
-      ],
+      ] + extra_deps,
       entry_points="""
       # -*- Entry points: -*-
       [console_scripts]
