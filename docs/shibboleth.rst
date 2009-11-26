@@ -26,6 +26,7 @@ Using the shibboleth handler is a bit different to the urllib2 handlers because 
 To manually specify proxies, use
 
 ::
+
     proxies = {'http': 'http://user1:pass@localhost:3128/'}
     shibboleth = Shibboleth(idp, c, proxies=proxies)
 
