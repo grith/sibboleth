@@ -134,9 +134,7 @@ class Shibboleth(shib_interface):
 
         shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar)
         proxy_support = urllib2.ProxyHandler(proxies=self.proxies)
-        self.opener = urllib2.build_opener()
-        self.opener.add_handler(proxy_support)
-        self.opener.add_handler(shib_auth_handler)
+        self.opener = urllib2.build_opener(proxy_support, shib_auth_handler)
         if url:
             self.url = url
         request = urllib2.Request(self.url)
