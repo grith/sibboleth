@@ -34,6 +34,7 @@ setup(name='arcs.shibboleth.client',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'httpsproxy_urllib2',
           # -*- Extra requirements: -*-
       ],
       entry_points="""
