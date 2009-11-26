@@ -17,6 +17,12 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
 import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
+import au.org.arcs.jcommons.utils.HttpProxyManager;
+
+import java.awt.GridLayout;
+import au.org.arcs.jcommons.utils.HttpProxyPanel;
+import javax.swing.BoxLayout;
+import javax.swing.border.TitledBorder;
 
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
@@ -29,8 +35,14 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 	 */
 	public static void main(String[] args) {
 		try {
-			ShibLoginDialog dialog = new ShibLoginDialog("https://slcs1.arcs.org.au/SLCS/login");
+			
+			
+			ShibLoginDialog dialog = new ShibLoginDialog(
+					"https://slcstest.arcs.org.au/SLCS/login");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+			HttpProxyManager.setDefaultHttpProxy();
+
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,40 +53,42 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 	 * Create the dialog.
 	 */
 	public ShibLoginDialog(String url) {
-		
+
 		java.security.Security.addProvider(new ArcsSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 				"TrustAllCertificates");
-		
-		setBounds(100, 100, 450, 300);
+
+		setBounds(100, 100, 529, 431);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			shibLoginPanel = new ShibLoginPanel(url);
 			shibLoginPanel.refreshIdpList();
 			addWindowListener(shibLoginPanel.getWindowListener());
-			contentPanel.add(shibLoginPanel, BorderLayout.CENTER);
-			shibLoginPanel.addShibListener(this);
-		}
-		{
+			contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+			contentPanel.add(shibLoginPanel);
+
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setAction(action);
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
+
+			JButton okButton = new JButton("OK");
+			okButton.setAction(action);
+			okButton.setActionCommand("OK");
+			buttonPane.add(okButton);
+			getRootPane().setDefaultButton(okButton);
+
+			JButton cancelButton = new JButton("Cancel");
+			cancelButton.setActionCommand("Cancel");
+			buttonPane.add(cancelButton);
+			contentPanel.add(buttonPane);
+
+			HttpProxyPanel httpProxyPanel = new HttpProxyPanel();
+			httpProxyPanel.setBorder(new TitledBorder(null, "Http Proxy settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			contentPanel.add(httpProxyPanel);
+
+			shibLoginPanel.addShibListener(this);
 		}
 	}
 
@@ -83,36 +97,36 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			putValue(NAME, "Login");
 			putValue(SHORT_DESCRIPTION, "Logging in");
 		}
+
 		public void actionPerformed(ActionEvent e) {
-			
+
 			shibLoginPanel.login();
-			
+
 		}
 	}
 
 	public void shibLoginComplete(PyInstance response) {
 
 		Iterable<PyObject> it = response.asIterable();
-		
+
 		StringBuffer responseString = new StringBuffer();
-		
+
 		for (Iterator i = it.iterator(); i.hasNext();) {
 			responseString.append(i.next());
 		}
-		
+
 		System.out.println(responseString.toString());
 	}
 
 	public void shibLoginFailed(Exception e) {
 
-		JOptionPane.showMessageDialog(ShibLoginDialog.this,
-			    e.getLocalizedMessage(),
-			    "Login error",
-			    JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(ShibLoginDialog.this, e
+				.getLocalizedMessage(), "Login error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void shibLoginStarted() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
