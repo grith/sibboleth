@@ -257,9 +257,9 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 			proxyString = "";
 		} else {	
 			if ( StringUtils.isBlank(arg0.getUsername()) ) {
-				proxyString = "http://"+arg0.getProxyHost()+":"+arg0.getProxyPort()+"/";
+				proxyString = "http://"+arg0.getProxyHost()+":"+arg0.getProxyPort();
 			} else {
-				proxyString = "http://"+arg0.getUsername()+":"+arg0.getPassword()+"@"+arg0.getProxyHost()+":"+arg0.getProxyPort()+"/";
+				proxyString = "http://"+arg0.getUsername()+":"+new String(arg0.getPassword())+"@"+arg0.getProxyHost()+":"+arg0.getProxyPort();
 			}
 		}
 		interpreter.exec("import os");

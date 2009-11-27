@@ -13,11 +13,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.bushe.swing.event.EventBus;
+import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
 import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
 import au.org.arcs.jcommons.utils.HttpProxyManager;
+import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
 
 import java.awt.GridLayout;
 import au.org.arcs.jcommons.utils.HttpProxyPanel;
@@ -36,6 +39,16 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 	public static void main(String[] args) {
 		try {
 			
+			EventBus.subscribe(NewHttpProxyEvent.class, new EventSubscriber<NewHttpProxyEvent>() {
+
+				public void onEvent(NewHttpProxyEvent arg0) {
+
+					System.out.println("new proxy: "+arg0.getProxyHost());
+					
+				}
+				
+				
+			});
 			
 			ShibLoginDialog dialog = new ShibLoginDialog(
 					"https://slcstest.arcs.org.au/SLCS/login");

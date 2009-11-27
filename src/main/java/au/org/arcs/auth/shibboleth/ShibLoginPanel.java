@@ -167,7 +167,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 						idpModel.removeAllElements();
 						idpModel.addElement(COULD_NOT_LOAD_IDP_LIST_STRING);
 					}
-					e.printStackTrace();
+					e.printStackTrace(System.err);
 				} finally {
 					lockUI(false);
 				}
