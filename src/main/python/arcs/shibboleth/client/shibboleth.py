@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from urlparse import urlsplit
+from urlparse import urlsplit, urljoin
 import urllib2
 from urllib2 import HTTPCookieProcessor, HTTPRedirectHandler
 from urllib2 import HTTPBasicAuthHandler
@@ -40,9 +40,15 @@ class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
         HTTPCookieProcessor.__init__(self, cookiejar ,**kwargs)
 
     def http_error_302(self, req, fp, code, msg, headers):
-        log.debug("GET %s" % req.get_full_url())
+        if 'location' in headers:
+            newurl = headers.getheaders('location')[0]
+        elif 'uri' in headers:
+            newurl = headers.getheaders('uri')[0]
+        newurl = urljoin(req.get_full_url(), newurl)
+        log.debug("302 %s" % newurl)
+
         result = HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
-        result.status = code
+
         return result
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302
@@ -137,6 +143,7 @@ class Shibboleth(shib_interface):
         self.opener = urllib2.build_opener(proxy_support, shib_auth_handler)
         if url:
             self.url = url
+        log.debug("GET %s" % self.url)
         request = urllib2.Request(self.url)
         self.response = self.opener.open(request)
         return self.__follow_chain(self.response)
