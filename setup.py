@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from xml.dom.minidom import parse
 from os import path
+import sys
 
 # Get version from common file
 pom = parse('pom.xml')
