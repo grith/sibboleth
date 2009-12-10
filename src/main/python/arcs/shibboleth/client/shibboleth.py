@@ -27,17 +27,17 @@ from time import time
 import logging
 import re
 from arcs.shibboleth.client.forms import FormParser, getFormAdapter
+import sys
 
+is_jython = sys.platform.startswith('java')
 
 log = logging.getLogger('arcs.shibboleth.client')
-
-
 
 
 class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
 
     def __init__(self, cookiejar=None, **kwargs):
-        HTTPCookieProcessor.__init__(self, cookiejar ,**kwargs)
+        HTTPCookieProcessor.__init__(self, cookiejar, **kwargs)
 
     def http_error_302(self, req, fp, code, msg, headers):
         if 'location' in headers:
@@ -60,6 +60,8 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
         HTTPBasicAuthHandler.__init__(self)
         ShibbolethHandler.__init__(self, cookiejar=cookiejar)
         self.credentialmanager = credentialmanager
+        self.__req = None
+        self.__headers = None
 
     def http_error_401(self, req, fp, code, msg, headers):
         """Basic Auth handler"""
@@ -99,9 +101,9 @@ def set_cookies_expiries(cookiejar):
 
 from cookielib import CookieJar
 
-try:
+if is_jython:
     from au.org.arcs.auth.shibboleth import ShibbolethClient as shib_interface
-except:
+else:
     shib_interface = object
 
 
@@ -120,7 +122,11 @@ class Shibboleth(shib_interface):
             self.cookiejar = CookieJar()
         self.idp = idp
         self.cm = cm
-        self.proxies = proxies
+
+        shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar)
+        proxy_support = urllib2.ProxyHandler(proxies=proxies)
+        self.opener = urllib2.build_opener(proxy_support, shib_auth_handler)
+
         self.__listeners = []
 
     def add_listener(self, listener):
@@ -137,10 +143,6 @@ class Shibboleth(shib_interface):
 
         :param url: the URL of the service provider you want to connect to
         """
-
-        shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar)
-        proxy_support = urllib2.ProxyHandler(proxies=self.proxies)
-        self.opener = urllib2.build_opener(proxy_support, shib_auth_handler)
         if url:
             self.url = url
         log.debug("GET %s" % self.url)

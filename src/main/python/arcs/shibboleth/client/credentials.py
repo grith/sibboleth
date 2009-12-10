@@ -21,11 +21,14 @@
 
 import os
 from getpass import getpass
+import sys
 
-try:
+is_jython = sys.platform.startswith('java')
+
+if is_jython:
     from au.org.arcs.auth.shibboleth import CredentialManager as ICredentialManager
     from au.org.arcs.auth.shibboleth import IdpObject as IIdp
-except:
+else:
     ICredentialManager = object
     IIdp = object
 
@@ -41,6 +44,9 @@ class SimpleCredentialManager(ICredentialManager):
         self.password = password
 
     def set_title(self, title):
+        """
+        show the title of the Basic Auth or Form that the user is presented with.
+        """
         pass
 
     def prompt(self, controller):
@@ -93,6 +99,7 @@ class CredentialManager(ICredentialManager):
         return self.password
 
     def get_username(self):
+        """return the username of the user"""
         return self.username
 
 
@@ -102,6 +109,8 @@ class Idp(IIdp):
     """
     def __init__(self, idp=None):
         self.idp = idp or ''
+        self.raw_idps = {}
+        self.idps = []
 
     def set_idps(self, idps):
         """
@@ -125,6 +134,7 @@ class Idp(IIdp):
         try:
             import struct, fcntl, termios
             def terminal_dimensions():
+                """return the dimensions of the terminal"""
                 fd = os.open(os.ctermid(), os.O_RDONLY)
                 if not os.isatty(fd):
                     return (0,0)
@@ -132,24 +142,26 @@ class Idp(IIdp):
 
 
             def print_list_wide(items):
+                """print the list as columns"""
                 lmax = max([len(x) for x in items]) + 1
                 width = terminal_dimensions()[1]
                 if width:
                     col = width/lmax
                     i = 1
                     for item in items:
-                        if not i%col:
+                        if not i % col:
                             print item
                         else:
                             print item.ljust(lmax),
                         i = i + 1
-                    if i-1%col:
+                    if i - 1 % col:
                         print('')
                 else:
                     for item in items:
                         print item
         except:
             def print_list_wide(items):
+                """print the list"""
                 for item in items:
                     print item
 
