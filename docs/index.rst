@@ -13,10 +13,10 @@ Contents:
    :numbered:
 
    intro
-   history
    shibboleth
    credentials
    forms
+   history
 
 Indices and tables
 ==================
