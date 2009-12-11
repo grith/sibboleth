@@ -1,2 +1,4 @@
+include pom.xml
+recursive-include docs/*.rst
 prune src/main/resources/*
 prune src/main/java/*
