@@ -32,6 +32,9 @@ else:
     ICredentialManager = object
     IIdp = object
 
+class AuthenticationException(Exception):
+    pass
+
 
 class SimpleCredentialManager(ICredentialManager):
     """
@@ -54,8 +57,9 @@ class SimpleCredentialManager(ICredentialManager):
         check that we havent tried to authenticate more then once, if we have then raise and exception
         """
         if self.tries < 1:
+            self.tries += 1
             controller.run()
-        raise Exception("Authentication Failure, number of tries exceeded")
+        raise AuthenticationException("Authentication Failure, number of tries exceeded")
 
     def get_password(self):
         """return the password of the user"""
