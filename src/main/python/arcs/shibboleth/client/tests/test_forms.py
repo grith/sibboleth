@@ -25,7 +25,7 @@ import inspect
 
 from os import path
 here = path.join(path.dirname(inspect.getsourcefile(shibboleth)), 'tests/')
-class TestShibboleth(unittest.TestCase):
+class TestForms(unittest.TestCase):
 
     def setUp(self):
         pass
