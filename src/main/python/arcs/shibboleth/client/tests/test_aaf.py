@@ -73,8 +73,6 @@ def add_test(cls,i):
 
 
 for i in idps.idps:
-    if i.startswith('Macquarie'):
-        continue
     if i.startswith('Bootstrapped IdP'):
         continue
     add_test(TestShibboleth, i)
