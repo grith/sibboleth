@@ -21,7 +21,7 @@ if sys.version_info[0] == 2:
 setup(name='arcs.shibboleth.client',
       version=version,
       description="Shibboleth authentication handler",
-      long_description=open(path.join("docs", "intro.rst")).read() + "\n" +
+      long_description=".. contents::\n\n" + open(path.join("docs", "intro.rst")).read() + "\n" +
                        open(path.join("docs", "history.rst")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
