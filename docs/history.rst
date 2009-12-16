@@ -6,6 +6,7 @@ Changelog
 * added https proxy support via httpsproxy_urllib2 [Russell]
 * buildout now used for testing [Russell]
 * removed dependency on xpath, adds 2.6 compatability [Russell]
+* changed name of https proxy urllib2 egg to match names recognised by eggproxy [Russell]
 
 0.1 - 2009-10-27
 ----------------
