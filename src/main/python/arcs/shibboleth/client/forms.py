@@ -74,7 +74,7 @@ def soup_parser(buf):
                 formdict[field.get('name', 'input')] = field
         formlist.append(formdict)
         r.forms = formlist
-    return r
+    return soup, r
 
 
 form_handler_registry = []
@@ -89,7 +89,6 @@ class FormHandler(object):
             type.__init__(cls, name, bases, dict)
             if object not in bases:
                 form_handler_registry.append((name, cls))
-
 
     def __init__(self, title, data, **kwargs):
         self.title = title
@@ -303,7 +302,91 @@ class IdPSPFormRelayState(FormHandler):
         return request, response
 
 
-def getFormAdapter(title, forms, idp, cm):
+class SAMLRequest(FormHandler):
+    """
+    Slight variation on the IdPSPForm
+    """
+    form_type = 'samlrequest'
+    signature = ['SAMLRequest']
+
+
+    def submit(self, opener, res):
+        """
+        submit IdP form to SP
+
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        """
+        log.info('Submitting SAML Verification form')
+        headers = {
+        "Referer": res.url
+        }
+        data = self.data
+        url = urlparse.urljoin(res.url, data['form']['action'])
+        data = urllib.urlencode({'SAMLRequest':data['SAMLRequest']['value']})
+        request = urllib2.Request(url, data=data)
+        log.debug("POST: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
+
+
+page_handler_registry = []
+
+class PageHandler(object):
+    # The list of form parts to detect
+    signature = None
+    interactive = False
+
+    class __metaclass__(type):
+        def __init__(cls, name, bases, dict):
+            type.__init__(cls, name, bases, dict)
+            if object not in bases:
+                page_handler_registry.append((name, cls))
+
+    def __init__(self, page, **kwargs):
+        self.page = page
+
+    def submit(self, res):
+        raise NotImplementedError
+
+
+class ESOEChooser(PageHandler):
+    """
+    Slight variation on the IdPSPForm
+    """
+    type = 'esoe'
+
+    def __init__(self, *args, **kwargs):
+        PageHandler.__init__(self, *args, **kwargs)
+        self.url = ''
+
+    def can_adapt(self):
+        links = self.page.findAll('a')
+
+        for l in links:
+            if l.get('href') == 'enterpriselogin.htm':
+                self.url = l.get('href')
+                return True
+        return False
+
+
+    def submit(self, opener, res):
+        """
+        follow login link on ESOE Chooser page
+
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        """
+        url = urlparse.urljoin(res.url, self.url)
+        request = urllib2.Request(url)
+        log.debug("GET: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
+
+
+def getFormAdapter(response, idp, cm):
     """
     try to guess what type of form we have encountered
 
@@ -311,6 +394,9 @@ def getFormAdapter(title, forms, idp, cm):
 
     return an adapter that can be used to submit the form
     """
+
+    parser, result = soup_parser(response)
+    title, forms = (result.title, result.forms)
 
     def match_form(form, items):
         for i in items:
@@ -325,6 +411,12 @@ def getFormAdapter(title, forms, idp, cm):
             radapter = match_form(form, adapter.signature)
             if radapter:
                 return adapter.form_type, adapter(title, form, idp=idp, credentialmanager=cm)
+
+    for name, adapter in page_handler_registry:
+        radapter = adapter(parser, idp=idp, credentialmanager=cm)
+        if radapter.can_adapt():
+            return radapter.type, radapter
+
     return '', None
 
 

@@ -32,13 +32,11 @@ class TestForms(unittest.TestCase):
 
     def testFormAdapterDetection(self):
         for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3',
-                  'login_uq', 'cas_login_usa', 'ds_aaf',]: # 'login_auckland']:
+                  'login_uq', 'cas_login_usa', 'ds_aaf', 'esoe_chooser']: # 'login_auckland']:
             type, name = i.rsplit('_', 1)
             html = open(path.join(here, i + '.html'))
 
-            parser = forms.soup_parser(html)
-
-            rname, adapter = forms.getFormAdapter(parser.title, parser.forms, None, None)
+            rname, adapter = forms.getFormAdapter(html, None, None)
             self.assertEqual('_'.join([rname, name]), i)
 
 

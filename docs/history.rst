@@ -8,6 +8,7 @@ Changelog
 * removed dependency on xpath, adds 2.6 compatability [Russell]
 * changed name of https proxy urllib2 egg to match names recognised by eggproxy [Russell]
 * replaced custom parser with BeautifulSoup [Russell]
+* added more handlers to approach the QUT login page [Russell]
 
 0.1 - 2009-10-27
 ----------------
