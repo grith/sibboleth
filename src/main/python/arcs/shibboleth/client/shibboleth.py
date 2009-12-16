@@ -26,7 +26,7 @@ from urllib2 import HTTPBasicAuthHandler
 from time import time
 import logging
 import re
-from arcs.shibboleth.client.forms import FormParser, getFormAdapter
+from arcs.shibboleth.client.forms import soup_parser, getFormAdapter
 import sys
 
 is_jython = sys.platform.startswith('java')
@@ -162,10 +162,8 @@ class Shibboleth(shib_interface):
                         l()
                 return response
 
-        parser = FormParser()
-        for line in response:
-            parser.feed(line)
-        parser.close()
+        parser = soup_parser(response)
+
         type, adapter = getFormAdapter(parser.title, parser.forms, self.idp, self.cm)
 
         if adapter:

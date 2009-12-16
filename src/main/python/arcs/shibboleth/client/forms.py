@@ -20,7 +20,7 @@
 #############################################################################
 
 
-from HTMLParser import HTMLParser
+from BeautifulSoup import BeautifulSoup
 from urllib2 import urlparse
 import urllib2, urllib
 import logging
@@ -28,71 +28,53 @@ from arcs.shibboleth.client.exceptions import WAYFException
 
 log = logging.getLogger('arcs.shibboleth.client')
 
-class FormParser(HTMLParser):
 
+class Result(object):
     def __init__(self):
-        HTMLParser.__init__(self)
-        self.in_title = False
-        self.in_form = False
-        self.in_wayf = False
-        self.in_ds = False
         self.ds_optgroup = ''
         self.title = ''
         self.forms = []
-        self.data = {}
 
-    def handle_starttag(self, tag, attrs):
-        self.origin_idp = None
-        self.ds_idp = None
-        if tag == "title":
-            self.in_title = True
-        if tag == "form":
-            if self.data:
-                self.data = {}
-            self.in_form = True
-            self.data['form'] = dict(attrs)
-        if self.in_form and tag == "select" and ('name','origin') in attrs:
-            self.in_wayf = True
-            self.data['origin'] = {}
-        if self.in_form and tag == "select" and ('name',"user_idp") in attrs:
-            self.in_ds = True
-            self.data['ds'] = {}
-        if self.in_form and self.in_ds and tag == "optgroup":
-            self.ds_optgroup = dict(attrs)['label']
-            self.data['ds'][self.ds_optgroup] = {}
-        if self.in_form and self.in_ds and tag == "option":
-            origin_idp = dict(attrs)
-            if not origin_idp['value'] in ['-', '']:
-                self.origin_idp = origin_idp['value']
 
-        if self.in_form and self.in_wayf and tag == "option":
-            self.origin_idp = attrs
-        if self.in_form and tag == "input":
-            attrs = dict(attrs)
-            if 'name' in attrs:
-                self.data[attrs['name']] = attrs
+def soup_parser(buf):
+    soup = BeautifulSoup(buf)
+    r = Result()
 
-    def handle_data(self, data):
-        if self.in_form and self.in_wayf and self.origin_idp and data.strip():
-            self.data['origin'][data.strip()] = self.origin_idp[0][1]
-        if self.in_form and self.in_ds and self.origin_idp and data.strip():
-            self.data['ds'][self.ds_optgroup][data.strip()] = self.origin_idp
-        if self.in_title:
-            self.title += data
+    if soup.find('title'):
+        r.title = soup.find('title').renderContents()
 
-    def handle_endtag(self, tag):
-        if tag == "title":
-            self.in_title = False
-        if tag == "form":
-            self.in_form = False
-            self.forms.append(self.data)
-        if self.in_form and self.in_wayf and tag == "select":
-            self.in_wayf = False
-        if self.in_form and self.in_ds and tag == "optgroup":
-            self.ds_optgroup = ''
-        if self.in_form and self.in_ds and tag == "select":
-            self.in_ds = False
+    forms = soup.findAll('form')
+    formlist = []
+    for form in forms:
+        formdict = {}
+        formdict['form'] = dict(form.attrs)
 
+        for s in form.findAll('select'):
+            field = dict(s.attrs)
+            def to_dict(tag):
+                r = {}
+                for child in tag.childGenerator():
+                    if hasattr(child, 'name'):
+                        if child.name == 'optgroup':
+                            label = child.get('label')
+                            r[label] = to_dict(child)
+                        if child.name == 'option':
+                            name = child.renderContents()
+                            url = child.get('value')
+                            r.update({name.strip(): url})
+                return r
+
+            formdict[s.get('name')] = to_dict(s)
+
+        for i in form.findAll('input'):
+            field = dict(i.attrs)
+            if field['type'] == 'submit':
+                formdict[i.get('name', 'submit')] = field
+            else:
+                formdict[field.get('name', 'input')] = field
+        formlist.append(formdict)
+        r.forms = formlist
+    return r
 
 
 form_handler_registry = []
@@ -119,7 +101,7 @@ class FormHandler(object):
 
 class DS(FormHandler):
     form_type = 'ds'
-    signature = ['ds', 'Select', 'form', 'session', 'permanent']
+    signature = ['user_idp', 'Select', 'form', 'session', 'permanent']
     interactive = True
 
     def __init__(self, title, data, **kwargs):
@@ -128,8 +110,9 @@ class DS(FormHandler):
 
     def prompt(self, shibboleth):
         idps = {}
-        for d in self.data['ds']:
-            idps.update(self.data['ds'][d])
+        for d in self.data['user_idp']:
+            if isinstance(self.data['user_idp'][d], dict):
+                idps.update(self.data['user_idp'][d])
         self.idp.set_idps(idps)
         return self.idp.prompt(shibboleth)
 
@@ -150,8 +133,9 @@ class DS(FormHandler):
         idp = self.idp
         data = self.data
         idps = {}
-        for d in data['ds']:
-            idps.update(data['ds'][d])
+        for d in data['user_idp']:
+            if isinstance(data['user_idp'][d], dict):
+                idps.update(data['user_idp'][d])
         if not idps.has_key(idp.get_idp()):
             raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
         wayf_data['user_idp'] = idps[idp.get_idp()]

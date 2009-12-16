@@ -31,13 +31,13 @@ class TestForms(unittest.TestCase):
         pass
 
     def testFormAdapterDetection(self):
-        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3', 'login_uq', 'cas_login_usa', 'ds_aaf']:
+        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3',
+                  'login_uq', 'cas_login_usa', 'ds_aaf',]: # 'login_auckland']:
             type, name = i.rsplit('_', 1)
             html = open(path.join(here, i + '.html'))
-            parser = shibboleth.FormParser()
-            for line in html:
-                parser.feed(line)
-            parser.close()
+
+            parser = forms.soup_parser(html)
+
             rname, adapter = forms.getFormAdapter(parser.title, parser.forms, None, None)
             self.assertEqual('_'.join([rname, name]), i)
 

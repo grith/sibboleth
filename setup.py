@@ -41,6 +41,7 @@ setup(name='arcs.shibboleth.client',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'BeautifulSoup',
           # -*- Extra requirements: -*-
       ] + extra_deps,
       entry_points="""
