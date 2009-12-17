@@ -20,7 +20,8 @@
 #############################################################################
 
 
-from BeautifulSoup import BeautifulSoup
+import HTMLParser
+import BeautifulSoup
 from urllib2 import urlparse
 import urllib2, urllib
 import logging
@@ -28,16 +29,79 @@ from arcs.shibboleth.client.exceptions import WAYFException
 
 log = logging.getLogger('arcs.shibboleth.client')
 
+import re
+endtagfind = re.compile("""
+  </\s*([a-zA-Z][-.a-zA-Z0-9:_]*)
+  (?:\s+                             # whitespace before attribute name
+    (?:[a-zA-Z_][-.:a-zA-Z0-9_]*     # attribute name
+      (?:\s*=\s*                     # value indicator
+        (?:'[^']*'                   # LITA-enclosed value
+          |\"[^\"]*\"                # LIT-enclosed value
+          |[^'\">\s]+                # bare value
+         )
+       )?
+     )*
+   )*
+\s*>
+""", re.VERBOSE)
+HTMLParser.endtagfind = endtagfind
+
+locatestarttagend = re.compile(r"""
+  <[a-zA-Z][-.a-zA-Z0-9:_]*          # tag name
+  (?:\s+                             # whitespace before attribute name
+    (?:[a-zA-Z_][-.:a-zA-Z0-9_]*     # attribute name
+      (?:\s*=\s*                     # value indicator
+        (?:'[^']*'                   # LITA-enclosed value
+          |\"[^\"]*\"                # LIT-enclosed value
+          |\\"[^\"]*\\"                # LIT-enclosed value
+          |[^'\">\s]+                # bare value
+         )
+       )?
+     )*
+   )*
+  \s*                                # trailing whitespace
+""", re.VERBOSE)
+HTMLParser.locatestarttagend = locatestarttagend
+
+attrfind = re.compile(
+    r'\s*([a-zA-Z_][-.:a-zA-Z_0-9]*)(\s*=\s*'
+    r'(\'[^\']*\'|"[^"]*"|\\"[^"]*\\"|[-a-zA-Z0-9./,:;+*%?!&$\(\)_#=~@]*))?')
+HTMLParser.attrfind = attrfind
+
+NESTABLE_TABLE_TAGS = {'table' : [],
+                       'tr' : ['table', 'tbody', 'tfoot', 'thead', 'form'],
+                       'td' : ['tr'],
+                       'th' : ['tr'],
+                       'thead' : ['table'],
+                       'tbody' : ['table'],
+                       'tfoot' : ['table'],
+                       }
+
+#If one of these tags is encountered, all tags up to the next tag of
+#this type are popped.
+RESET_NESTING_TAGS = BeautifulSoup.buildTagMap(None, BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS, 'noscript',
+                                 BeautifulSoup.BeautifulSoup.NON_NESTABLE_BLOCK_TAGS,
+                                 BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
+                                 NESTABLE_TABLE_TAGS)
+
+NESTABLE_TAGS = BeautifulSoup.buildTagMap([], BeautifulSoup.BeautifulSoup.NESTABLE_INLINE_TAGS,
+                                BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS,
+                                BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
+                                NESTABLE_TABLE_TAGS)
+
+BeautifulSoup.BeautifulSoup.NESTABLE_TABLE_TAGS = NESTABLE_TABLE_TAGS
+BeautifulSoup.BeautifulSoup.NESTABLE_TAGS = NESTABLE_TAGS
+BeautifulSoup.BeautifulSoup.RESET_NESTING_TAGS = RESET_NESTING_TAGS
+
 
 class Result(object):
     def __init__(self):
-        self.ds_optgroup = ''
         self.title = ''
         self.forms = []
 
 
 def soup_parser(buf):
-    soup = BeautifulSoup(buf)
+    soup = BeautifulSoup.BeautifulSoup(buf)
     r = Result()
 
     if soup.find('title'):
@@ -68,7 +132,7 @@ def soup_parser(buf):
 
         for i in form.findAll('input'):
             field = dict(i.attrs)
-            if field['type'] == 'submit':
+            if field.get('type') == 'submit':
                 formdict[i.get('name', 'submit')] = field
             else:
                 formdict[field.get('name', 'input')] = field
@@ -243,6 +307,20 @@ class IdPFormLogin(FormHandler):
 class CASFormLogin(IdPFormLogin):
     form_type = 'cas_login'
     signature = ['password', 'username']
+    username_field = signature[1]
+    password_field = signature[0]
+
+
+class ESOEFormLogin(IdPFormLogin):
+    form_type = 'esoe_login'
+    signature = ['esoeauthn_pw', 'esoeauthn_user']
+    username_field = signature[1]
+    password_field = signature[0]
+
+
+class COSignFormLogin(IdPFormLogin):
+    form_type = 'cosign_login'
+    signature = ['password', 'login']
     username_field = signature[1]
     password_field = signature[0]
 

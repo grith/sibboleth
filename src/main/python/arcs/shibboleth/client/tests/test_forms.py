@@ -30,14 +30,25 @@ class TestForms(unittest.TestCase):
     def setUp(self):
         pass
 
-    def testFormAdapterDetection(self):
-        for i in ['wayf_level1', 'login_vpac', 'cas_login_jcu', 'login_ac3',
-                  'login_uq', 'cas_login_usa', 'ds_aaf', 'esoe_chooser']: # 'login_auckland']:
-            type, name = i.rsplit('_', 1)
-            html = open(path.join(here, i + '.html'))
+    def _formadapter(self, file_name):
+        type, name = file_name.rsplit('_', 1)
+        html = open(path.join(here, file_name + '.html'))
 
-            rname, adapter = forms.getFormAdapter(html, None, None)
-            self.assertEqual('_'.join([rname, name]), i)
+        rname, adapter = forms.getFormAdapter(html, None, None)
+        self.assertEqual('_'.join([rname, name]), file_name)
+
+    def testFormAdapterDetection(self):
+        self._formadapter('wayf_level1')
+        self._formadapter('login_vpac')
+        self._formadapter('cas_login_jcu')
+        self._formadapter('login_ac3')
+        self._formadapter('login_uq')
+        self._formadapter('cas_login_usa')
+        self._formadapter('ds_aaf')
+        self._formadapter('esoe_chooser')
+        self._formadapter('esoe_login_qut')
+        self._formadapter('cosign_login_auckland')
+        self._formadapter('login_murdoch')
 
 
 if __name__ == '__main__':
