@@ -324,6 +324,34 @@ class COSignFormLogin(IdPFormLogin):
     username_field = signature[1]
     password_field = signature[0]
 
+    def submit(self, opener, res):
+        """
+        submit login form to COSign IdP
+
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
+        """
+        headers = {
+        "Referer": res.url
+        }
+        idp_data = {}
+        cm = self.cm
+        data = self.data
+        url = urlparse.urljoin(res.url, data['form']['action'])
+        log.info("Form Authentication from: %s" % url)
+        idp_data[self.username_field] = cm.get_username()
+        idp_data[self.password_field] = cm.get_password()
+        idp_data['service'] = data['service']['value']
+        idp_data['ref'] = data['ref']['value']
+        data = urllib.urlencode(idp_data)
+        request = urllib2.Request(url, data=data)
+        log.info('Submitting login form')
+        log.debug("POST: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
+
 
 class IdPSPForm(FormHandler):
     form_type = 'idp'
