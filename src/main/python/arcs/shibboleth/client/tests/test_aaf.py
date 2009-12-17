@@ -79,6 +79,8 @@ for i in idps.idps:
         continue # idp doesn't exist
     if i.startswith('Bootstrapped IdP unimelb.edu.au'):
         continue # uses basic auth and just hangs for ages
+    if i.startswith('Murdoch University'):
+        continue # invalid html
     add_test(TestShibboleth, i)
 
 del add_test
