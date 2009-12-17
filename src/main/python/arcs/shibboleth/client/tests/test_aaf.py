@@ -73,8 +73,12 @@ def add_test(cls,i):
 
 
 for i in idps.idps:
-    if i.startswith('Bootstrapped IdP'):
-        continue
+    if i.startswith('Bootstrapped IdP aarnet.edu.au'):
+        continue # idp doesn't respond
+    if i.startswith('Bootstrapped IdP csiro.au'):
+        continue # idp doesn't exist
+    if i.startswith('Bootstrapped IdP unimelb.edu.au'):
+        continue # uses basic auth and just hangs for ages
     add_test(TestShibboleth, i)
 
 del add_test
