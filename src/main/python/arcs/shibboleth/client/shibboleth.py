@@ -35,6 +35,9 @@ log = logging.getLogger('arcs.shibboleth.client')
 
 
 class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
+    """
+    Logging Redirect Handler
+    """
 
     def __init__(self, cookiejar=None, **kwargs):
         HTTPCookieProcessor.__init__(self, cookiejar, **kwargs)
@@ -55,6 +58,9 @@ class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
 
 
 class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
+    """
+    IDP Basic Auth Handler
+    """
 
     def __init__(self, credentialmanager=None, cookiejar=None, **kwargs):
         HTTPBasicAuthHandler.__init__(self)
@@ -176,7 +182,7 @@ class Shibboleth(shib_interface):
                 request, response = adapter.submit(self.opener, response)
                 return self.__follow_chain(response)
 
-        raise("Unknown error: Shibboleth auth chain lead to nowhere")
+        raise Exception("Unknown error: Shibboleth auth chain lead to nowhere")
 
     def run(self):
         """
@@ -186,4 +192,8 @@ class Shibboleth(shib_interface):
         return self.__follow_chain(response)
 
     def get_response(self):
+        """
+        return the current response object
+        """
         return self.response
+
