@@ -474,7 +474,7 @@ class PageHandler(object):
     def __init__(self, page, **kwargs):
         self.page = page
 
-    def submit(self, res):
+    def submit(self, opener, res):
         raise NotImplementedError
 
 
