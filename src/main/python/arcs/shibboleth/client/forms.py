@@ -53,7 +53,7 @@ locatestarttagend = re.compile(r"""
       (?:\s*=\s*                     # value indicator
         (?:'[^']*'                   # LITA-enclosed value
           |\"[^\"]*\"                # LIT-enclosed value
-          |\\"[^\"]*\\"                # LIT-enclosed value
+          |\\"[^\"]*\\"              # Escaped " , i.e. \"
           |[^'\">\s]+                # bare value
          )
        )?
@@ -94,18 +94,11 @@ BeautifulSoup.BeautifulSoup.NESTABLE_TAGS = NESTABLE_TAGS
 BeautifulSoup.BeautifulSoup.RESET_NESTING_TAGS = RESET_NESTING_TAGS
 
 
-class Result(object):
-    def __init__(self):
-        self.title = ''
-        self.forms = []
-
-
 def soup_parser(buf):
     soup = BeautifulSoup.BeautifulSoup(buf)
-    r = Result()
 
     if soup.find('title'):
-        r.title = soup.find('title').renderContents()
+        title = soup.find('title').renderContents()
 
     forms = soup.findAll('form')
     formlist = []
@@ -137,8 +130,8 @@ def soup_parser(buf):
             else:
                 formdict[field.get('name', 'input')] = field
         formlist.append(formdict)
-        r.forms = formlist
-    return soup, r
+        forms = formlist
+    return soup, title, forms
 
 
 form_handler_registry = []
@@ -501,8 +494,7 @@ def getFormAdapter(response, idp, cm):
     return an adapter that can be used to submit the form
     """
 
-    parser, result = soup_parser(response)
-    title, forms = (result.title, result.forms)
+    parser, title, forms = soup_parser(response)
 
     def match_form(form, items):
         for i in items:
