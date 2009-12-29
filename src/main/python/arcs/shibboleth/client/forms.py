@@ -95,6 +95,9 @@ BeautifulSoup.BeautifulSoup.RESET_NESTING_TAGS = RESET_NESTING_TAGS
 
 
 def soup_parser(buf):
+    """
+    Form parser based on Beautiful Soup
+    """
     soup = BeautifulSoup.BeautifulSoup(buf)
 
     if soup.find('title'):
@@ -109,6 +112,7 @@ def soup_parser(buf):
         for s in form.findAll('select'):
             field = dict(s.attrs)
             def to_dict(tag):
+                """return a dict from select tag contents"""
                 r = {}
                 for child in tag.childGenerator():
                     if hasattr(child, 'name'):
@@ -137,6 +141,9 @@ def soup_parser(buf):
 form_handler_registry = []
 
 class FormHandler(object):
+    """
+    Base Form Handler Class
+    """
     # The list of form parts to detect
     signature = None
     interactive = False
@@ -156,6 +163,9 @@ class FormHandler(object):
 
 
 class DS(FormHandler):
+    """
+    Discovery Service Handler
+    """
     form_type = 'ds'
     signature = ['user_idp', 'Select', 'form', 'session', 'permanent']
     interactive = True
@@ -210,6 +220,9 @@ class DS(FormHandler):
 
 
 class WAYF(FormHandler):
+    """
+    Where Are You From Handler
+    """
     form_type = 'wayf'
     signature = ['origin', 'providerId', 'shire', 'target', 'time']
     interactive = True
@@ -256,6 +269,9 @@ class WAYF(FormHandler):
 
 
 class IdPFormLogin(FormHandler):
+    """
+    IDP Form Login Handler
+    """
     form_type = 'login'
     signature = ['j_password', 'j_username']
     username_field = signature[1]
@@ -298,6 +314,9 @@ class IdPFormLogin(FormHandler):
 
 
 class CASFormLogin(IdPFormLogin):
+    """
+    CAS Form Login Handler
+    """
     form_type = 'cas_login'
     signature = ['password', 'username']
     username_field = signature[1]
@@ -305,6 +324,9 @@ class CASFormLogin(IdPFormLogin):
 
 
 class ESOEFormLogin(IdPFormLogin):
+    """
+    ESOE Form Login Handler
+    """
     form_type = 'esoe_login'
     signature = ['esoeauthn_pw', 'esoeauthn_user']
     username_field = signature[1]
@@ -312,6 +334,9 @@ class ESOEFormLogin(IdPFormLogin):
 
 
 class COSignFormLogin(IdPFormLogin):
+    """
+    COSign Form Login Handler
+    """
     form_type = 'cosign_login'
     signature = ['password', 'login']
     username_field = signature[1]
@@ -347,6 +372,9 @@ class COSignFormLogin(IdPFormLogin):
 
 
 class IdPSPForm(FormHandler):
+    """
+    IDP Post-back Form Handler
+    """
     form_type = 'idp'
     signature = ['SAMLResponse', 'TARGET']
 
