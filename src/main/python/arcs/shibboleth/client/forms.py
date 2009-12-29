@@ -191,9 +191,6 @@ class DS(FormHandler):
         :param res: the response object
         """
         log.info('Submitting form to wayf')
-        headers = {
-        "Referer": res.url
-        }
         #Set IDP to correct IDP
         wayf_data = {}
         idp = self.idp
@@ -244,9 +241,6 @@ class WAYF(FormHandler):
         :param res: the response object
         """
         log.info('Submitting form to wayf')
-        headers = {
-        "Referer": res.url
-        }
         #Set IDP to correct IDP
         wayf_data = {}
         idp = self.idp
@@ -295,9 +289,6 @@ class IdPFormLogin(FormHandler):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        headers = {
-        "Referer": res.url
-        }
         idp_data = {}
         cm = self.cm
         data = self.data
@@ -351,9 +342,6 @@ class COSignFormLogin(IdPFormLogin):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        headers = {
-        "Referer": res.url
-        }
         idp_data = {}
         cm = self.cm
         data = self.data
@@ -388,9 +376,6 @@ class IdPSPForm(FormHandler):
         :param res: the response object
         """
         log.info('Submitting IdP SAML form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'TARGET':'cookie'})
@@ -417,9 +402,6 @@ class IdPSPFormRelayState(FormHandler):
         :param res: the response object
         """
         log.info('Submitting IdP SAML form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'RelayState':'cookie'})
@@ -446,9 +428,6 @@ class SAMLRequest(FormHandler):
         :param res: the response object
         """
         log.info('Submitting SAML Verification form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLRequest':data['SAMLRequest']['value']})
