@@ -158,7 +158,7 @@ class FormHandler(object):
         self.title = title
         self.data = data
 
-    def submit(self, res):
+    def submit(self, opener, res):
         raise NotImplementedError
 
 
