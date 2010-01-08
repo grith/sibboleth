@@ -73,6 +73,7 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
         """Basic Auth handler"""
         self.__req = req
         self.__headers = headers
+        log.debug("401 %s" % req.get_full_url())
         authline = headers.getheader('www-authenticate')
         authobj = re.compile(
             r'''(?:\s*www-authenticate\s*:)?\s*(\w*)\s+realm=['"]([^'"]+)['"]''',
