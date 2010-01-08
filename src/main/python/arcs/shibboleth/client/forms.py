@@ -100,12 +100,12 @@ def soup_parser(buf):
     """
     soup = BeautifulSoup.BeautifulSoup(buf)
 
+    title = ""
     if soup.find('title'):
         title = soup.find('title').renderContents()
 
-    forms = soup.findAll('form')
-    formlist = []
-    for form in forms:
+    forms = []
+    for form in soup.findAll('form'):
         formdict = {}
         formdict['form'] = dict(form.attrs)
 
@@ -133,8 +133,7 @@ def soup_parser(buf):
                 formdict[i.get('name', 'submit')] = field
             else:
                 formdict[field.get('name', 'input')] = field
-        formlist.append(formdict)
-        forms = formlist
+        forms.append(formdict)
     return soup, title, forms
 
 
