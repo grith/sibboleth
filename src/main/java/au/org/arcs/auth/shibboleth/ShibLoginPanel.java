@@ -5,9 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -31,53 +29,49 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import com.ziclix.python.sql.handler.MySQLDataHandler;
 
 public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
-	
+
 	private static final long serialVersionUID = 3143352249184524656L;
-	
+
 	public static final String LOADING_IDPS_STRING = "Loading idps...";
 	public static final String COULD_NOT_LOAD_IDP_LIST_STRING = "Failed to get list of idps.";
-	
+
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
 	private JComboBox idpComboBox;
 
 	private Shibboleth idpListShibClient = null;
 	private Shibboleth realShibClient = null;
-	
+
 	private final String url;
-	
+
 	private boolean showLoginFailedDialog = false;
 
-	private DefaultComboBoxModel idpModel = new DefaultComboBoxModel();
-	
+	private final DefaultComboBoxModel idpModel = new DefaultComboBoxModel();
+
 	private Thread refreshIdpThread;
-	
+
 	// implement idplistener exchange if you want to remove final here...
 	final private IdpObject idpObject = new IdpObject() {
-		
-		@Override
-		public PyInstance prompt(ShibbolethClient shibboleth) {
-			return null;
-		}
-		
+
 		@Override
 		public String get_idp() {
 			return ShibLoginPanel.this.get_idp();
 		}
+
+		@Override
+		public PyInstance prompt(ShibbolethClient shibboleth) {
+			return null;
+		}
 	};
 
-	public ShibLoginPanel(String url, boolean showLoginFailedDialog) {
-		this(url);
-		this.showLoginFailedDialog = showLoginFailedDialog;
-	}
+	private Vector<ShibListener> shibListeners;
 	/**
 	 * Create the panel.
 	 */
 	public ShibLoginPanel(String url) {
-		
+
 		EventBus.subscribe(NewHttpProxyEvent.class, this);
 		idpObject.addIdpListener(this);
 		this.url = url;
@@ -86,7 +80,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 				ColumnSpec.decode("max(72dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
-			new RowSpec[] {
+				new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -102,9 +96,9 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			idpComboBox = new JComboBox(idpModel);
 			idpModel.addElement("Loading idp list...");
 			idpComboBox.setEnabled(false);
-			
+
 			add(idpComboBox, "3, 2, fill, default");
-			
+
 		}
 		{
 			JLabel lblUsername = new JLabel("Username:");
@@ -113,7 +107,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		String defaultUsername = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME);
 		{
 			usernameTextField = new JTextField();
-			if ( defaultUsername != null && ! "".equals(defaultUsername) ) {
+			if ( (defaultUsername != null) && ! "".equals(defaultUsername) ) {
 				usernameTextField.setText(defaultUsername);
 			}
 			add(usernameTextField, "3, 4, fill, default");
@@ -127,29 +121,220 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			passwordField = new JPasswordField();
 			add(passwordField, "3, 6, fill, default");
 		}
-		
+
 		refreshIdpList();
 
 	}
-	
-	public void refreshIdpList() {
-		
-		lockUI(true);
-		
+
+	public ShibLoginPanel(String url, boolean showLoginFailedDialog) {
+		this(url);
+		this.showLoginFailedDialog = showLoginFailedDialog;
+	}
+
+	synchronized public void addIdpListener(IdpListener l) {
+		idpObject.addIdpListener(l);
+	}
+
+	@Override
+	public void addKeyListener(KeyListener l) {
+		usernameTextField.addKeyListener(l);
+	}
+
+	// register a listener
+	synchronized public void addShibListener(ShibListener l) {
+		if (shibListeners == null) {
+			shibListeners = new Vector<ShibListener>();
+		}
+		shibListeners.addElement(l);
+	}
+
+	private void fireShibLoginComplete(PyInstance response) {
+
+		if ((shibListeners != null) && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+				.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = e.nextElement();
+				valueChanged_l.shibLoginComplete(response);
+			}
+		}
+	}
+
+	private void fireShibLoginFailed(Exception ex) {
+
+		if ((shibListeners != null) && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+				.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = e.nextElement();
+				valueChanged_l.shibLoginFailed(ex);
+			}
+		}
+
+	}
+
+
+	// Event stuff
+
+	private void fireShibLoginStarted() {
+
+		if ((shibListeners != null) && !shibListeners.isEmpty()) {
+
+			// make a copy of the listener list in case
+			// anyone adds/removes mountPointsListeners
+			Vector<ShibListener> shibChangeTargets;
+			synchronized (this) {
+				shibChangeTargets = (Vector<ShibListener>) shibListeners
+				.clone();
+			}
+
+			// walk through the listener list and
+			// call the gridproxychanged method in each
+			Enumeration<ShibListener> e = shibChangeTargets.elements();
+			while (e.hasMoreElements()) {
+				ShibListener valueChanged_l = e.nextElement();
+				valueChanged_l.shibLoginStarted();
+			}
+		}
+
+	}
+
+	public String get_idp() {
+		return (String) (idpModel.getSelectedItem());
+	}
+
+	public WindowListener getWindowListener() {
+
+		return new WindowAdapter() {
+			@Override
+			public void windowOpened( WindowEvent e ){
+				if ( (usernameTextField.getText() != null) && !"".equals(usernameTextField.getText()) ) {
+					passwordField.requestFocus();
+				}
+			}
+		};
+
+	}
+
+	public void idpListLoaded(SortedSet<String> idpList) {
+
 		idpModel.removeAllElements();
-		
+
+		for (String idp : idpList) {
+			idpModel.addElement(idp);
+		}
+
+		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
+		if ( (defaultIdp != null) && !"".equals(defaultIdp) ) {
+			if ( idpModel.getIndexOf(defaultIdp) >= 0 ) {
+				idpModel.setSelectedItem(defaultIdp);
+			}
+		}
+
+		idpComboBox.setEnabled(true);
+	}
+
+	public void lockUI(boolean lock) {
+
+		usernameTextField.setEnabled(!lock);
+		passwordField.setEnabled(!lock);
+		idpComboBox.setEnabled(!lock);
+
+	}
+
+	public void login() {
+
+		fireShibLoginStarted();
+
+		new Thread() {
+
+			@Override
+			public void run() {
+
+				String idp = (String)(idpModel.getSelectedItem());
+				if ( StringUtils.isBlank(idp) || LOADING_IDPS_STRING.equals(idp) ) {
+					return;
+				}
+				String username = usernameTextField.getText().trim();
+				char[] password = passwordField.getPassword();
+
+				CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME, username);
+				if ( ! idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING) && ! idp.equals(LOADING_IDPS_STRING) ) {
+					CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
+				}
+
+				try {
+					realShibClient.removeShibListener(ShibLoginPanel.this);
+				} catch (Exception e) {
+					//
+				}
+
+				try {
+					realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
+					realShibClient.addShibListener(ShibLoginPanel.this);
+					shibLoginStarted();
+					realShibClient.openurl(url);
+				} catch (Exception e) {
+					e.printStackTrace();
+					shibLoginFailed(e);
+					//					fireShibLoginFailed(e);
+				}
+
+			}
+		}.start();
+
+	}
+
+
+	public void onEvent(NewHttpProxyEvent arg0) {
+
+		// try to reload idplist
+		refreshIdpList();
+
+	}
+
+	public PyInstance prompt(ShibbolethClient shibboleth) {
+		return null;
+	}
+
+	public void refreshIdpList() {
+
+		lockUI(true);
+
+		idpModel.removeAllElements();
+
 		final String lastIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
-		
+
 		if ( StringUtils.isNotBlank(lastIdp) ) {
 			idpModel.addElement(lastIdp);
 			lockUI(false);
 		} else {
 			idpModel.addElement(LOADING_IDPS_STRING);
 		}
-		
-		
+
+
 		idpListShibClient = new Shibboleth(idpObject, new DummyCredentialManager());
-		
+
 		try {
 			refreshIdpThread.interrupt();
 		} catch (Exception e) {
@@ -157,11 +342,12 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		}
 
 		refreshIdpThread = new Thread() {
+			@Override
 			public void run() {
 
 				try {
 					idpListShibClient
-						.openurl(url);
+					.openurl(url);
 				} catch (Exception e) {
 					if ( StringUtils.isBlank(lastIdp) ) {
 						idpModel.removeAllElements();
@@ -171,162 +357,23 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 				} finally {
 					lockUI(false);
 				}
-				
+
 			}
 		};
-		
+
 		refreshIdpThread.start();
-		
-	}
-	
-	public WindowListener getWindowListener() {
-		
-		return new WindowAdapter() {
-			public void windowOpened( WindowEvent e ){
-				if ( usernameTextField.getText() != null && !"".equals(usernameTextField.getText()) ) {
-					passwordField.requestFocus();
-				}
-			}
-		};
-		
-	}
-	
-	public void lockUI(boolean lock) {
-		
-		usernameTextField.setEnabled(!lock);
-		passwordField.setEnabled(!lock);
-		idpComboBox.setEnabled(!lock);
-		
-	}
-	
-	public void login() {
-		
-		fireShibLoginStarted();
-
-		new Thread() {
-			
-		public void run() {
-
-				String idp = (String)(idpModel.getSelectedItem());
-				if ( StringUtils.isBlank(idp) || LOADING_IDPS_STRING.equals(idp) ) {
-					return;
-				}
-				String username = usernameTextField.getText().trim();
-				char[] password = passwordField.getPassword();
-				
-				CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME, username);
-				if ( ! idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING) && ! idp.equals(LOADING_IDPS_STRING) ) {
-					CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
-				}
-				
-				try {
-					realShibClient.removeShibListener(ShibLoginPanel.this);
-				} catch (Exception e) {
-					//
-				}
-				
-				try {
-					realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
-					realShibClient.addShibListener(ShibLoginPanel.this);
-					shibLoginStarted();
-					realShibClient.openurl(url);
-				} catch (Exception e) {
-					shibLoginFailed(e);
-//					fireShibLoginFailed(e);
-				}
-								
-			}
-		}.start();
 
 	}
 
-	public String get_idp() {
-		return (String) (idpModel.getSelectedItem());
+	// remove a listener
+	synchronized public void removeIdpListener(IdpListener l) {
+		idpObject.removeIdpListener(l);
+	}
+	@Override
+	public void removeKeyListener(KeyListener l) {
+		usernameTextField.removeKeyListener(l);
 	}
 
-	public PyInstance prompt(ShibbolethClient shibboleth) {
-		return null;
-	}
-
-	
-	// Event stuff
-	
-	private Vector<ShibListener> shibListeners;
-	
-	private void fireShibLoginStarted() {
-		
-		if (shibListeners != null && !shibListeners.isEmpty()) {
-
-			// make a copy of the listener list in case
-			// anyone adds/removes mountPointsListeners
-			Vector<ShibListener> shibChangeTargets;
-			synchronized (this) {
-				shibChangeTargets = (Vector<ShibListener>) shibListeners
-						.clone();
-			}
-
-			// walk through the listener list and
-			// call the gridproxychanged method in each
-			Enumeration<ShibListener> e = shibChangeTargets.elements();
-			while (e.hasMoreElements()) {
-				ShibListener valueChanged_l = (ShibListener) e.nextElement();
-				valueChanged_l.shibLoginStarted();
-			}
-		}
-		
-	}
-	
-	private void fireShibLoginFailed(Exception ex) {
-		
-		if (shibListeners != null && !shibListeners.isEmpty()) {
-
-			// make a copy of the listener list in case
-			// anyone adds/removes mountPointsListeners
-			Vector<ShibListener> shibChangeTargets;
-			synchronized (this) {
-				shibChangeTargets = (Vector<ShibListener>) shibListeners
-						.clone();
-			}
-
-			// walk through the listener list and
-			// call the gridproxychanged method in each
-			Enumeration<ShibListener> e = shibChangeTargets.elements();
-			while (e.hasMoreElements()) {
-				ShibListener valueChanged_l = (ShibListener) e.nextElement();
-				valueChanged_l.shibLoginFailed(ex);
-			}
-		}
-		
-	}
-
-	private void fireShibLoginComplete(PyInstance response) {
-
-		if (shibListeners != null && !shibListeners.isEmpty()) {
-
-			// make a copy of the listener list in case
-			// anyone adds/removes mountPointsListeners
-			Vector<ShibListener> shibChangeTargets;
-			synchronized (this) {
-				shibChangeTargets = (Vector<ShibListener>) shibListeners
-						.clone();
-			}
-
-			// walk through the listener list and
-			// call the gridproxychanged method in each
-			Enumeration<ShibListener> e = shibChangeTargets.elements();
-			while (e.hasMoreElements()) {
-				ShibListener valueChanged_l = (ShibListener) e.nextElement();
-				valueChanged_l.shibLoginComplete(response);
-			}
-		}
-	}
-
-	// register a listener
-	synchronized public void addShibListener(ShibListener l) {
-		if (shibListeners == null)
-			shibListeners = new Vector<ShibListener>();
-		shibListeners.addElement(l);
-	}
 
 	// remove a listener
 	synchronized public void removeShibListener(ShibListener l) {
@@ -335,23 +382,14 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		}
 		shibListeners.removeElement(l);
 	}
-	
-	
-	public void addKeyListener(KeyListener l) {
-		usernameTextField.addKeyListener(l);
-	}
-	
-	public void removeKeyListener(KeyListener l) {
-		usernameTextField.removeKeyListener(l);
-	}
 
 	public void shibLoginComplete(PyInstance response) {
-		
+
 		realShibClient.removeShibListener(this);
 		realShibClient = null;
-		
-		fireShibLoginComplete(response);		
-		
+
+		fireShibLoginComplete(response);
+
 		lockUI(false);
 	}
 
@@ -359,55 +397,21 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 
 		fireShibLoginFailed(e);
 		lockUI(false);
-		
+
 		if ( showLoginFailedDialog ) {
 			JOptionPane.showMessageDialog(ShibLoginPanel.this,
-			    e.getLocalizedMessage(),
-			    "Login error",
-			    JOptionPane.ERROR_MESSAGE);
+					e.getLocalizedMessage(),
+					"Login error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 	public void shibLoginStarted() {
-		
+
 		lockUI(true);
 
 		passwordField.setText(null);
-		
+
 		fireShibLoginStarted();
-	}
-
-	
-	synchronized public void addIdpListener(IdpListener l) {
-		idpObject.addIdpListener(l);
-	}
-
-	// remove a listener
-	synchronized public void removeIdpListener(IdpListener l) {
-		idpObject.removeIdpListener(l);
-	}
-	
-	public void idpListLoaded(SortedSet<String> idpList) {
-
-		idpModel.removeAllElements();
-		
-		for (String idp : idpList) {
-			idpModel.addElement(idp);
-		}
-		
-		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
-		if ( defaultIdp != null && !"".equals(defaultIdp) ) {
-			if ( idpModel.getIndexOf(defaultIdp) >= 0 ) {
-				idpModel.setSelectedItem(defaultIdp);
-			}
-		}
-		
-		idpComboBox.setEnabled(true);
-	}
-	public void onEvent(NewHttpProxyEvent arg0) {
-
-		// try to reload idplist
-		refreshIdpList();
-		
 	}
 }

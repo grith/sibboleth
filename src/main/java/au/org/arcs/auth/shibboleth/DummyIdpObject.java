@@ -31,39 +31,44 @@ public class DummyIdpObject extends IdpObject {
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 				"TrustAllCertificates");
 
-		IdpObject idp = new IdpObject() {
-			
-			@Override
-			public void set_idps(Map<String, String> idps) {
-				
-				this.idpList = new TreeSet<String>(idps.keySet());
-				
-				for ( String idp : idpList ) {
-					System.out.println(idp);
-				}
-				
-			}
-			
-			@Override
-			public PyInstance prompt(ShibbolethClient shibboleth) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String get_idp() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
+//		IdpObject idp = new IdpObject() {
+//			
+//			@Override
+//			public void set_idps(Map<String, String> idps) {
+//				
+//				this.idpList = new TreeSet<String>(idps.keySet());
+//				
+//				for ( String idp : idpList ) {
+//					System.out.println(idp);
+//				}
+//				
+//			}
+//			
+//			@Override
+//			public PyInstance prompt(ShibbolethClient shibboleth) {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//			
+//			@Override
+//			public String get_idp() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//		};
+		
+		IdpObject idpO = new DummyIdpObject();
 		
 		CredentialManager cm = new DummyCredentialManager();
 		
-		Shibboleth shib = new Shibboleth(idp, cm);
+		Shibboleth shib = new Shibboleth(idpO, cm);
 
-		String url = "https://slcstest.arcs.org.au/SLCS/login";
-		PyInstance returnValue = shib.openurl(url);
+		String url = "https://slcs1.arcs.org.au/SLCS/login";
+		shib.openurl(url);
 		
+		for (String idp : idpO.getIdps() ) {
+			System.out.println(idp);
+		}
 
 		System.out.println("Finished.");
 
