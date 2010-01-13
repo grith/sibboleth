@@ -73,6 +73,8 @@ def add_test(cls,i):
 
 
 for i in idps.idps:
+    if i.startswith('Bootstrapped IdP utas.edu.au'):
+        continue # idp doesn't respond
     if i.startswith('Bootstrapped IdP aarnet.edu.au'):
         continue # idp doesn't respond
     if i.startswith('Bootstrapped IdP csiro.au'):

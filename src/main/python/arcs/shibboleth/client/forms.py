@@ -53,7 +53,7 @@ locatestarttagend = re.compile(r"""
       (?:\s*=\s*                     # value indicator
         (?:'[^']*'                   # LITA-enclosed value
           |\"[^\"]*\"                # LIT-enclosed value
-          |\\"[^\"]*\\"                # LIT-enclosed value
+          |\\"[^\"]*\\"              # Escaped " , i.e. \"
           |[^'\">\s]+                # bare value
          )
        )?
@@ -94,28 +94,25 @@ BeautifulSoup.BeautifulSoup.NESTABLE_TAGS = NESTABLE_TAGS
 BeautifulSoup.BeautifulSoup.RESET_NESTING_TAGS = RESET_NESTING_TAGS
 
 
-class Result(object):
-    def __init__(self):
-        self.title = ''
-        self.forms = []
-
-
 def soup_parser(buf):
+    """
+    Form parser based on Beautiful Soup
+    """
     soup = BeautifulSoup.BeautifulSoup(buf)
-    r = Result()
 
+    title = ""
     if soup.find('title'):
-        r.title = soup.find('title').renderContents()
+        title = soup.find('title').renderContents()
 
-    forms = soup.findAll('form')
-    formlist = []
-    for form in forms:
+    forms = []
+    for form in soup.findAll('form'):
         formdict = {}
         formdict['form'] = dict(form.attrs)
 
         for s in form.findAll('select'):
             field = dict(s.attrs)
             def to_dict(tag):
+                """return a dict from select tag contents"""
                 r = {}
                 for child in tag.childGenerator():
                     if hasattr(child, 'name'):
@@ -136,14 +133,16 @@ def soup_parser(buf):
                 formdict[i.get('name', 'submit')] = field
             else:
                 formdict[field.get('name', 'input')] = field
-        formlist.append(formdict)
-        r.forms = formlist
-    return soup, r
+        forms.append(formdict)
+    return soup, title, forms
 
 
 form_handler_registry = []
 
 class FormHandler(object):
+    """
+    Base Form Handler Class
+    """
     # The list of form parts to detect
     signature = None
     interactive = False
@@ -158,11 +157,14 @@ class FormHandler(object):
         self.title = title
         self.data = data
 
-    def submit(self, res):
+    def submit(self, opener, res):
         raise NotImplementedError
 
 
 class DS(FormHandler):
+    """
+    Discovery Service Handler
+    """
     form_type = 'ds'
     signature = ['user_idp', 'Select', 'form', 'session', 'permanent']
     interactive = True
@@ -188,9 +190,6 @@ class DS(FormHandler):
         :param res: the response object
         """
         log.info('Submitting form to wayf')
-        headers = {
-        "Referer": res.url
-        }
         #Set IDP to correct IDP
         wayf_data = {}
         idp = self.idp
@@ -217,6 +216,9 @@ class DS(FormHandler):
 
 
 class WAYF(FormHandler):
+    """
+    Where Are You From Handler
+    """
     form_type = 'wayf'
     signature = ['origin', 'providerId', 'shire', 'target', 'time']
     interactive = True
@@ -238,9 +240,6 @@ class WAYF(FormHandler):
         :param res: the response object
         """
         log.info('Submitting form to wayf')
-        headers = {
-        "Referer": res.url
-        }
         #Set IDP to correct IDP
         wayf_data = {}
         idp = self.idp
@@ -263,6 +262,9 @@ class WAYF(FormHandler):
 
 
 class IdPFormLogin(FormHandler):
+    """
+    IDP Form Login Handler
+    """
     form_type = 'login'
     signature = ['j_password', 'j_username']
     username_field = signature[1]
@@ -286,9 +288,6 @@ class IdPFormLogin(FormHandler):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        headers = {
-        "Referer": res.url
-        }
         idp_data = {}
         cm = self.cm
         data = self.data
@@ -305,6 +304,9 @@ class IdPFormLogin(FormHandler):
 
 
 class CASFormLogin(IdPFormLogin):
+    """
+    CAS Form Login Handler
+    """
     form_type = 'cas_login'
     signature = ['password', 'username']
     username_field = signature[1]
@@ -312,6 +314,9 @@ class CASFormLogin(IdPFormLogin):
 
 
 class ESOEFormLogin(IdPFormLogin):
+    """
+    ESOE Form Login Handler
+    """
     form_type = 'esoe_login'
     signature = ['esoeauthn_pw', 'esoeauthn_user']
     username_field = signature[1]
@@ -319,6 +324,9 @@ class ESOEFormLogin(IdPFormLogin):
 
 
 class COSignFormLogin(IdPFormLogin):
+    """
+    COSign Form Login Handler
+    """
     form_type = 'cosign_login'
     signature = ['password', 'login']
     username_field = signature[1]
@@ -333,9 +341,6 @@ class COSignFormLogin(IdPFormLogin):
         :param res: the response object
         :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
         """
-        headers = {
-        "Referer": res.url
-        }
         idp_data = {}
         cm = self.cm
         data = self.data
@@ -354,6 +359,9 @@ class COSignFormLogin(IdPFormLogin):
 
 
 class IdPSPForm(FormHandler):
+    """
+    IDP Post-back Form Handler
+    """
     form_type = 'idp'
     signature = ['SAMLResponse', 'TARGET']
 
@@ -367,9 +375,6 @@ class IdPSPForm(FormHandler):
         :param res: the response object
         """
         log.info('Submitting IdP SAML form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'TARGET':'cookie'})
@@ -396,9 +401,6 @@ class IdPSPFormRelayState(FormHandler):
         :param res: the response object
         """
         log.info('Submitting IdP SAML form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'RelayState':'cookie'})
@@ -425,9 +427,6 @@ class SAMLRequest(FormHandler):
         :param res: the response object
         """
         log.info('Submitting SAML Verification form')
-        headers = {
-        "Referer": res.url
-        }
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLRequest':data['SAMLRequest']['value']})
@@ -453,7 +452,7 @@ class PageHandler(object):
     def __init__(self, page, **kwargs):
         self.page = page
 
-    def submit(self, res):
+    def submit(self, opener, res):
         raise NotImplementedError
 
 
@@ -501,8 +500,7 @@ def getFormAdapter(response, idp, cm):
     return an adapter that can be used to submit the form
     """
 
-    parser, result = soup_parser(response)
-    title, forms = (result.title, result.forms)
+    parser, title, forms = soup_parser(response)
 
     def match_form(form, items):
         for i in items:
