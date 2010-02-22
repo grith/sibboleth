@@ -14,7 +14,7 @@ extra_deps = []
 
 
 if sys.version_info[0] == 2:
-    if sys.version_info[1] <= 6:
+    if sys.version_info[1] < 6:
         extra_deps.append('httpsproxy-urllib2')
 
 
