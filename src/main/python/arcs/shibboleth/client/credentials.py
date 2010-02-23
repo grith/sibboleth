@@ -58,7 +58,7 @@ class SimpleCredentialManager(ICredentialManager):
         """
         if self.tries < 1:
             self.tries += 1
-            controller.run()
+            return controller.run()
         raise AuthenticationException("Authentication Failure, number of tries exceeded")
 
     def get_password(self):
