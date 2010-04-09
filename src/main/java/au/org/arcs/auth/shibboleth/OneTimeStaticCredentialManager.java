@@ -1,17 +1,16 @@
 package au.org.arcs.auth.shibboleth;
 
 import org.python.core.Py;
-import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
 public class OneTimeStaticCredentialManager implements CredentialManager {
-	
+
 	private boolean usernameAndPasswordAlreadyRead = false;
-	private char[] password;
-	private String username;
-	
+	private final char[] password;
+	private final String username;
+
 	public OneTimeStaticCredentialManager(String username, char[] password) {
-		
+
 		this.password = password;
 		this.username = username;
 	}
@@ -31,14 +30,14 @@ public class OneTimeStaticCredentialManager implements CredentialManager {
 		}
 		usernameAndPasswordAlreadyRead = true;
 		return Py.java2py(response).invoke("run");
-//		Py.java2py(response).__call__(Py.java2py("run"));
-//		shibboleth.run();
-//		return null;
+		//		Py.java2py(response).__call__(Py.java2py("run"));
+		//		shibboleth.run();
+		//		return null;
 
 	}
 
 	public void set_title(String title) {
-		// 
+		//
 	}
 
 }

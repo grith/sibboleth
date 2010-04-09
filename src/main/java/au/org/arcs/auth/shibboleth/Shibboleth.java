@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.bushe.swing.event.Prioritized;
@@ -17,6 +18,8 @@ import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
 
 public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
+	static final Logger myLogger = Logger	.getLogger(Shibboleth.class.getName());
+
 	public static void initDefaultSecurityProvider() {
 
 		java.security.Security.addProvider(new ArcsSecurityProvider());
@@ -26,6 +29,8 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 	}
 
 	public static void main(String[] args) throws InterruptedException {
+
+		myLogger.debug("Test debug");
 
 		java.security.Security.addProvider(new ArcsSecurityProvider());
 
