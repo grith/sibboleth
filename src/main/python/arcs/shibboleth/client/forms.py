@@ -19,13 +19,22 @@
 #
 #############################################################################
 
-
+import sys
 import HTMLParser
 import BeautifulSoup
 from urllib2 import urlparse
 import urllib2, urllib
-import logging
 from arcs.shibboleth.client.exceptions import WAYFException
+
+is_jython = sys.platform.startswith('java')
+
+if is_jython:
+    try:
+        from org.apache.log4j import Logger as logging
+    except:
+        import logging
+else:
+    import logging
 
 log = logging.getLogger('arcs.shibboleth.client')
 

@@ -24,12 +24,19 @@ import urllib2
 from urllib2 import HTTPCookieProcessor, HTTPRedirectHandler
 from urllib2 import HTTPBasicAuthHandler
 from time import time
-import logging
 import re
 from arcs.shibboleth.client.forms import getFormAdapter
 import sys
 
 is_jython = sys.platform.startswith('java')
+
+if is_jython:
+    try:
+        from org.apache.log4j import Logger as logging
+    except:
+        import logging
+else:
+    import logging
 
 log = logging.getLogger('arcs.shibboleth.client')
 
