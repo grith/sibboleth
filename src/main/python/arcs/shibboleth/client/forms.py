@@ -300,6 +300,13 @@ class IdPFormLogin(FormHandler):
         idp_data = {}
         cm = self.cm
         data = self.data
+
+        # insert the hidden fields into the post data
+        for k,v in data.items():
+            if v.has_key('type') and v.has_key('value'):
+                if v.get('type') == 'hidden':
+                    idp_data[k] = v.get('value')
+
         url = urlparse.urljoin(res.url, data['form']['action'])
         log.info("Form Authentication from: %s" % url)
         idp_data[self.username_field] = cm.get_username()
