@@ -507,6 +507,41 @@ class ESOEChooser(PageHandler):
         return request, response
 
 
+class CASJSRedirect(PageHandler):
+    """
+    Handles the JavaScript redirect of a CAS page.
+    """
+    type = 'cas_redirect'
+    re = re.compile("""\s+<!--\s+window.location.replace \("([\D\d]*)"\);\s+-->\s+""")
+
+    def __init__(self, *args, **kwargs):
+        PageHandler.__init__(self, *args, **kwargs)
+        self.url = ''
+
+    def can_adapt(self):
+        redirect_js = self.page.find('head').find('script').string
+        match = self.re.match(redirect_js)
+        if match:
+            self.url = self.re.match(redirect_js).groups()[0]
+            return True
+
+        return False
+
+
+    def submit(self, opener, res):
+        """
+        follow login link on ESOE Chooser page
+
+        :param opener: the urllib2 opener
+        :param data: the form data as a dictionary
+        :param res: the response object
+        """
+        request = urllib2.Request(self.url)
+        log.debug("GET: %s" % request.get_full_url())
+        response = opener.open(request)
+        return request, response
+
+
 def getFormAdapter(response, idp, cm):
     """
     try to guess what type of form we have encountered

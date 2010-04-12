@@ -48,8 +48,9 @@ class TestForms(unittest.TestCase):
         self._formadapter('esoe_chooser')
         self._formadapter('esoe_login_qut')
         self._formadapter('cosign_login_auckland')
-        # TODO make the unittest below pass
-        #self._formadapter('login_murdoch')
+
+    def testCASRedirect(self):
+        self._formadapter('cas_redirect_jcu')
 
 
 if __name__ == '__main__':
