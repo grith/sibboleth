@@ -519,10 +519,17 @@ class CASJSRedirect(PageHandler):
         self.url = ''
 
     def can_adapt(self):
-        redirect_js = self.page.find('head').find('script').string
-        match = self.re.match(redirect_js)
+        head = self.page.find('head')
+        if not head:
+            return False
+
+        redirect_js = head.find('script')
+        if not redirect_js:
+            return False
+
+        match = self.re.match(redirect_js.string)
         if match:
-            self.url = self.re.match(redirect_js).groups()[0]
+            self.url = match.groups()[0]
             return True
 
         return False
