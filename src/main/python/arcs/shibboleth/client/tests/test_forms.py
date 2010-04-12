@@ -37,16 +37,28 @@ class TestForms(unittest.TestCase):
         rname, adapter = forms.getFormAdapter(html, None, None)
         self.assertEqual('_'.join([rname, name]), file_name)
 
-    def testFormAdapterDetection(self):
+    def testWAYF(self):
         self._formadapter('wayf_level1')
+
+    def testIDP(self):
         self._formadapter('login_vpac')
-        self._formadapter('cas_login_jcu')
         self._formadapter('login_ac3')
         self._formadapter('login_uq')
+        # TODO make the unittest below pass
+        #self._formadapter('login_murdoch')
+
+    def testCAS(self):
+        self._formadapter('cas_login_jcu')
         self._formadapter('cas_login_usa')
+
+    def testDS(self):
         self._formadapter('ds_aaf')
+
+    def testESOE(self):
         self._formadapter('esoe_chooser')
         self._formadapter('esoe_login_qut')
+
+    def testCOSIGN(self):
         self._formadapter('cosign_login_auckland')
 
     def testCASRedirect(self):
