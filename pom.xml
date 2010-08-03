@@ -58,9 +58,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>au.org.arcs.commons</groupId>
-			<artifactId>arcs-jcommons</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<groupId>org.bestgrid</groupId>
+			<artifactId>grid-jcommons</artifactId>
+			<version>1.1</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
