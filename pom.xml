@@ -2,6 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>au.org.arcs.auth</groupId>
 	<artifactId>arcs-shibboleth-client</artifactId>
+	<name>Shibboleth client</name>
 	<version>0.2-SNAPSHOT</version>
 
 	<repositories>
@@ -15,7 +16,8 @@
 		</repository>
 	</repositories>
 
-    <scm>
+	<description>Shibboleth client written in Python (incl. Java wrapper)</description>
+	<scm>
         <connection>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
         </connection>
         <url>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
