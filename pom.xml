@@ -3,7 +3,7 @@
 	<groupId>au.org.arcs.auth</groupId>
 	<artifactId>arcs-shibboleth-client</artifactId>
 	<name>Shibboleth client</name>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 
 	<repositories>
 		<repository>
