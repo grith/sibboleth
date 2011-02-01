@@ -91,7 +91,7 @@
 								<descriptor>sibboleth.assembly.xml</descriptor>
 							</descriptors>
 							<finalName>sibboleth-client</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
+<!--							<appendAssemblyId>false</appendAssemblyId>-->
 							<archive>
 								<index>true</index>
 								<manifest>
