@@ -90,7 +90,8 @@
 							<descriptors>
 								<descriptor>sibboleth.assembly.xml</descriptor>
 							</descriptors>
-							<finalName>arcs-shibboleth-client</finalName>
+							<finalName>sibboleth-client</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
 							<archive>
 								<index>true</index>
 								<manifest>
