@@ -1,0 +1,58 @@
+<assembly>
+	<id>lib-without-jython</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<unpack>true</unpack>
+			<useTransitiveDependencies>true</useTransitiveDependencies>
+			<useTransitiveFiltering>true</useTransitiveFiltering>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>au.org.arcs.auth:arcs-shibboleth-client</include>
+			</includes>
+			<excludes>
+			 	<exclude>jython:jython</exclude>
+			    <exclude>jython:jythonLib</exclude>
+			    <exclude>jython:jythonLibWithHttpProxy</exclude>
+				<exclude>junit:junit</exclude>
+				<exclude>bouncycastle:bcprov-jdk15</exclude>
+				<exclude>com.jgoodies:forms</exclude>
+			</excludes>
+			<unpackOptions>
+				<excludes>
+					<exclude>**/INDEX.LIST</exclude>
+					<exclude>**/MANIFEST.MF</exclude>
+					<exclude>**/LICENSE.txt</exclude>
+					<exclude>**/NOTICE.txt</exclude>
+				</excludes>
+			</unpackOptions>
+		</dependencySet>
+	</dependencySets>
+
+<!--	<fileSets>-->
+<!--		<fileSet>-->
+<!--			<directory>src/main/python</directory>-->
+<!--			<outputDirectory>Lib</outputDirectory>-->
+<!--		</fileSet>-->
+<!--	</fileSets>-->
+
+
+	<!-- probably unnecessary -->
+	<!--	<files>-->
+	<!--		<file>-->
+	<!--			<source>src/main/resources/log4j.properties</source>-->
+	<!--			<outputDirectory>/</outputDirectory>-->
+	<!--		</file>-->
+	<!--		<file>-->
+	<!--
+		<source>src/main/resources/gluev12r2-ext-class-map.properties</source>
+	-->
+	<!--			<outputDirectory>/</outputDirectory>-->
+	<!--		</file>-->
+	<!--	</files>-->
+
+</assembly>
