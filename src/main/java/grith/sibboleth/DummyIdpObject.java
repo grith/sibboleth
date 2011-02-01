@@ -1,6 +1,6 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
-import grisu.jcommons.utils.ArcsSecurityProvider;
+import grisu.jcommons.utils.DefaultGridSecurityProvider;
 
 import org.python.core.PyInstance;
 
@@ -8,7 +8,7 @@ public class DummyIdpObject extends IdpObject {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		java.security.Security.addProvider(new ArcsSecurityProvider());
+		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");

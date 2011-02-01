@@ -1,6 +1,6 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
-import grisu.jcommons.utils.ArcsSecurityProvider;
+import grisu.jcommons.utils.DefaultGridSecurityProvider;
 import grisu.jcommons.utils.NewHttpProxyEvent;
 
 import java.util.Enumeration;
@@ -23,7 +23,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 	public static void initDefaultSecurityProvider() {
 
-		java.security.Security.addProvider(new ArcsSecurityProvider());
+		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");
@@ -33,7 +33,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 		myLogger.debug("Test debug");
 
-		java.security.Security.addProvider(new ArcsSecurityProvider());
+		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");

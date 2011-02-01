@@ -1,13 +1,12 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
 import org.python.core.Py;
-import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
 public class StaticCredentialManager implements CredentialManager {
 
-	private char[] password;
-	private String username;
+	private final char[] password;
+	private final String username;
 
 	public StaticCredentialManager(String username, char[] password) {
 

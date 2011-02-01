@@ -1,4 +1,4 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
 public class TestClass {
 

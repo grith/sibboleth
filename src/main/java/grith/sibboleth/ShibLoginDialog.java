@@ -1,6 +1,6 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
-import grisu.jcommons.utils.ArcsSecurityProvider;
+import grisu.jcommons.utils.DefaultGridSecurityProvider;
 import grisu.jcommons.utils.HttpProxyManager;
 import grisu.jcommons.utils.HttpProxyPanel;
 import grisu.jcommons.utils.NewHttpProxyEvent;
@@ -78,7 +78,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 	 */
 	public ShibLoginDialog(String url) {
 
-		java.security.Security.addProvider(new ArcsSecurityProvider());
+		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");

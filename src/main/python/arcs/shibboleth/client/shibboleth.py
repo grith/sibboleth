@@ -119,7 +119,7 @@ def set_cookies_expiries(cookiejar):
 from cookielib import CookieJar
 
 if is_jython:
-    from au.org.arcs.auth.shibboleth import ShibbolethClient as shib_interface
+    from grith.sibboleth import ShibbolethClient as shib_interface
 else:
     shib_interface = object
 

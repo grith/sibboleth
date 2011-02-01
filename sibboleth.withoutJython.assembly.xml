@@ -12,7 +12,7 @@
 			<useProjectArtifact>true</useProjectArtifact>
 			<outputDirectory>/</outputDirectory>
 			<includes>
-				<include>au.org.arcs.auth:arcs-shibboleth-client</include>
+				<include>grith:sibboleth</include>
 			</includes>
 			<excludes>
 			 	<exclude>jython:jython</exclude>

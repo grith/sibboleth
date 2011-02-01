@@ -1,4 +1,5 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
+
 
 public interface ShibLoginEventSource {
 

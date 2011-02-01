@@ -1,6 +1,6 @@
-package au.org.arcs.auth.shibboleth;
+package grith.sibboleth;
 
-import grisu.jcommons.configuration.CommonArcsProperties;
+import grisu.jcommons.configuration.CommonGridProperties;
 import grisu.jcommons.interfaces.IdpListener;
 import grisu.jcommons.utils.NewHttpProxyEvent;
 
@@ -102,8 +102,8 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			JLabel lblUsername = new JLabel("Username:");
 			add(lblUsername, "1, 4, right, default");
 		}
-		String defaultUsername = CommonArcsProperties.getDefault()
-		.getArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME);
+		String defaultUsername = CommonGridProperties.getDefault()
+		.getArcsProperty(CommonGridProperties.Property.SHIB_USERNAME);
 		{
 			usernameTextField = new JTextField();
 			if ((defaultUsername != null) && !"".equals(defaultUsername)) {
@@ -243,8 +243,8 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			idpModel.addElement(idp);
 		}
 
-		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(
-				CommonArcsProperties.Property.SHIB_IDP);
+		String defaultIdp = CommonGridProperties.getDefault().getArcsProperty(
+				CommonGridProperties.Property.SHIB_IDP);
 		if ((defaultIdp != null) && !"".equals(defaultIdp)) {
 			if (idpModel.getIndexOf(defaultIdp) >= 0) {
 				idpModel.setSelectedItem(defaultIdp);
@@ -278,12 +278,12 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 				String username = usernameTextField.getText().trim();
 				char[] password = passwordField.getPassword();
 
-				CommonArcsProperties.getDefault().setArcsProperty(
-						CommonArcsProperties.Property.SHIB_USERNAME, username);
+				CommonGridProperties.getDefault().setArcsProperty(
+						CommonGridProperties.Property.SHIB_USERNAME, username);
 				if (!idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING)
 						&& !idp.equals(LOADING_IDPS_STRING)) {
-					CommonArcsProperties.getDefault().setArcsProperty(
-							CommonArcsProperties.Property.SHIB_IDP, idp);
+					CommonGridProperties.getDefault().setArcsProperty(
+							CommonGridProperties.Property.SHIB_IDP, idp);
 				}
 
 				try {
@@ -327,8 +327,8 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 		idpModel.removeAllElements();
 
-		final String lastIdp = CommonArcsProperties.getDefault()
-		.getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
+		final String lastIdp = CommonGridProperties.getDefault()
+		.getArcsProperty(CommonGridProperties.Property.SHIB_IDP);
 
 		if (StringUtils.isNotBlank(lastIdp)) {
 			idpModel.addElement(lastIdp);

@@ -64,7 +64,6 @@
 			<artifactId>grid-jcommons</artifactId>
 			<version>1.2.3-SNAPSHOT</version>
 			<type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
