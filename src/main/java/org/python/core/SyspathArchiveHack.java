@@ -5,17 +5,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class SyspathArchiveHack extends SyspathArchive {
-	
 
-    private ZipFile zipfileToo;
+	private ZipFile zipfileToo;
 
-    public SyspathArchiveHack(ZipFile zipFile, String archiveName) throws IOException {
-        super(zipFile, archiveName);
-        zipfileToo = zipFile;
-    }
+	public SyspathArchiveHack(ZipFile zipFile, String archiveName)
+			throws IOException {
+		super(zipFile, archiveName);
+		zipfileToo = zipFile;
+	}
 
-    ZipEntry getEntry(String entryName) {
-        return zipfileToo.getEntry(entryName);
-    }
+	ZipEntry getEntry(String entryName) {
+		return zipfileToo.getEntry(entryName);
+	}
 
 }

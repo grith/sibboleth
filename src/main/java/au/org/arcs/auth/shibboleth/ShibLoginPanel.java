@@ -1,5 +1,9 @@
 package au.org.arcs.auth.shibboleth;
 
+import grisu.jcommons.configuration.CommonArcsProperties;
+import grisu.jcommons.interfaces.IdpListener;
+import grisu.jcommons.utils.NewHttpProxyEvent;
+
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -21,16 +25,13 @@ import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 
-import au.org.arcs.jcommons.configuration.CommonArcsProperties;
-import au.org.arcs.jcommons.interfaces.IdpListener;
-import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
-
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
+public class ShibLoginPanel extends JPanel implements ShibListener,
+ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	private static final long serialVersionUID = 3143352249184524656L;
 
@@ -67,6 +68,7 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	};
 
 	private Vector<ShibListener> shibListeners;
+
 	/**
 	 * Create the panel.
 	 */
@@ -79,15 +81,11 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("max(72dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),},
-				new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				ColumnSpec.decode("default:grow"), }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, }));
 		{
 			JLabel lblIdp = new JLabel("Idp:");
 			add(lblIdp, "1, 2, right, default");
@@ -104,10 +102,11 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			JLabel lblUsername = new JLabel("Username:");
 			add(lblUsername, "1, 4, right, default");
 		}
-		String defaultUsername = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME);
+		String defaultUsername = CommonArcsProperties.getDefault()
+		.getArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME);
 		{
 			usernameTextField = new JTextField();
-			if ( (defaultUsername != null) && ! "".equals(defaultUsername) ) {
+			if ((defaultUsername != null) && !"".equals(defaultUsername)) {
 				usernameTextField.setText(defaultUsername);
 			}
 			add(usernameTextField, "3, 4, fill, default");
@@ -193,7 +192,6 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 
 	}
 
-
 	// Event stuff
 
 	private void fireShibLoginStarted() {
@@ -227,8 +225,9 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 
 		return new WindowAdapter() {
 			@Override
-			public void windowOpened( WindowEvent e ){
-				if ( (usernameTextField.getText() != null) && !"".equals(usernameTextField.getText()) ) {
+			public void windowOpened(WindowEvent e) {
+				if ((usernameTextField.getText() != null)
+						&& !"".equals(usernameTextField.getText())) {
 					passwordField.requestFocus();
 				}
 			}
@@ -244,9 +243,10 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			idpModel.addElement(idp);
 		}
 
-		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
-		if ( (defaultIdp != null) && !"".equals(defaultIdp) ) {
-			if ( idpModel.getIndexOf(defaultIdp) >= 0 ) {
+		String defaultIdp = CommonArcsProperties.getDefault().getArcsProperty(
+				CommonArcsProperties.Property.SHIB_IDP);
+		if ((defaultIdp != null) && !"".equals(defaultIdp)) {
+			if (idpModel.getIndexOf(defaultIdp) >= 0) {
 				idpModel.setSelectedItem(defaultIdp);
 			}
 		}
@@ -271,16 +271,19 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			@Override
 			public void run() {
 
-				String idp = (String)(idpModel.getSelectedItem());
-				if ( StringUtils.isBlank(idp) || LOADING_IDPS_STRING.equals(idp) ) {
+				String idp = (String) (idpModel.getSelectedItem());
+				if (StringUtils.isBlank(idp) || LOADING_IDPS_STRING.equals(idp)) {
 					return;
 				}
 				String username = usernameTextField.getText().trim();
 				char[] password = passwordField.getPassword();
 
-				CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_USERNAME, username);
-				if ( ! idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING) && ! idp.equals(LOADING_IDPS_STRING) ) {
-					CommonArcsProperties.getDefault().setArcsProperty(CommonArcsProperties.Property.SHIB_IDP, idp);
+				CommonArcsProperties.getDefault().setArcsProperty(
+						CommonArcsProperties.Property.SHIB_USERNAME, username);
+				if (!idp.equals(COULD_NOT_LOAD_IDP_LIST_STRING)
+						&& !idp.equals(LOADING_IDPS_STRING)) {
+					CommonArcsProperties.getDefault().setArcsProperty(
+							CommonArcsProperties.Property.SHIB_IDP, idp);
 				}
 
 				try {
@@ -290,21 +293,22 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 				}
 
 				try {
-					realShibClient = new Shibboleth(new StaticIdpObject(idp), new OneTimeStaticCredentialManager(username, password));
+					realShibClient = new Shibboleth(new StaticIdpObject(idp),
+							new OneTimeStaticCredentialManager(username,
+									password));
 					realShibClient.addShibListener(ShibLoginPanel.this);
 					shibLoginStarted();
 					realShibClient.openurl(url);
 				} catch (Exception e) {
 					e.printStackTrace();
 					shibLoginFailed(e);
-					//					fireShibLoginFailed(e);
+					// fireShibLoginFailed(e);
 				}
 
 			}
 		}.start();
 
 	}
-
 
 	public void onEvent(NewHttpProxyEvent arg0) {
 
@@ -323,17 +327,18 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 
 		idpModel.removeAllElements();
 
-		final String lastIdp = CommonArcsProperties.getDefault().getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
+		final String lastIdp = CommonArcsProperties.getDefault()
+		.getArcsProperty(CommonArcsProperties.Property.SHIB_IDP);
 
-		if ( StringUtils.isNotBlank(lastIdp) ) {
+		if (StringUtils.isNotBlank(lastIdp)) {
 			idpModel.addElement(lastIdp);
 			lockUI(false);
 		} else {
 			idpModel.addElement(LOADING_IDPS_STRING);
 		}
 
-
-		idpListShibClient = new Shibboleth(idpObject, new DummyCredentialManager());
+		idpListShibClient = new Shibboleth(idpObject,
+				new DummyCredentialManager());
 
 		try {
 			refreshIdpThread.interrupt();
@@ -346,10 +351,9 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 			public void run() {
 
 				try {
-					idpListShibClient
-					.openurl(url);
+					idpListShibClient.openurl(url);
 				} catch (Exception e) {
-					if ( StringUtils.isBlank(lastIdp) ) {
+					if (StringUtils.isBlank(lastIdp)) {
 						idpModel.removeAllElements();
 						idpModel.addElement(COULD_NOT_LOAD_IDP_LIST_STRING);
 					}
@@ -369,11 +373,11 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 	synchronized public void removeIdpListener(IdpListener l) {
 		idpObject.removeIdpListener(l);
 	}
+
 	@Override
 	public void removeKeyListener(KeyListener l) {
 		usernameTextField.removeKeyListener(l);
 	}
-
 
 	// remove a listener
 	synchronized public void removeShibListener(ShibListener l) {
@@ -398,14 +402,14 @@ public class ShibLoginPanel extends JPanel implements ShibListener, ShibLoginEve
 		fireShibLoginFailed(e);
 		lockUI(false);
 
-		if ( showLoginFailedDialog ) {
+		if (showLoginFailedDialog) {
 			JOptionPane.showMessageDialog(ShibLoginPanel.this,
-					e.getLocalizedMessage(),
-					"Login error",
+					e.getLocalizedMessage(), "Login error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
+
 	public void shibLoginStarted() {
 
 		lockUI(true);

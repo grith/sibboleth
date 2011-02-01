@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>au.org.arcs.auth</groupId>
-	<artifactId>arcs-shibboleth-client</artifactId>
+	<groupId>grith</groupId>
+	<artifactId>sibboleth</artifactId>
 	<name>Shibboleth client</name>
 	<version>0.3-SNAPSHOT</version>
 
@@ -16,7 +16,7 @@
 		</repository>
 	</repositories>
 
-	<description>Shibboleth client written in Python (incl. Java wrapper)</description>
+	<description>Non-web Shibboleth client written in Python (incl. Java wrapper)</description>
 	<scm>
         <connection>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
         </connection>
@@ -60,9 +60,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bestgrid</groupId>
+			<groupId>grisu</groupId>
 			<artifactId>grid-jcommons</artifactId>
-			<version>1.1</version>
+			<version>1.2.3-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -89,7 +89,7 @@
 						<phase>package</phase>
 						<configuration>
 							<descriptors>
-								<descriptor>arcs-shibboleth-client.assembly.xml</descriptor>
+								<descriptor>sibboleth.assembly.xml</descriptor>
 							</descriptors>
 							<finalName>arcs-shibboleth-client</finalName>
 							<archive>
@@ -117,27 +117,62 @@
 				</configuration>
 			</plugin>
 			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jarsigner-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>sign</id>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<alias>arcs</alias>
-					<storepass>FxAKs3p6</storepass>
-					<keypass>FxAKs3p6</keypass>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-jarsigner-plugin</artifactId>-->
+<!--				<version>1.2</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>sign</id>-->
+<!--						<goals>-->
+<!--							<goal>sign</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<alias>arcs</alias>-->
+<!--					<storepass>FxAKs3p6</storepass>-->
+<!--					<keypass>FxAKs3p6</keypass>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 			
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>sign</id>
+<!--			<activation>-->
+<!--				<property>-->
+<!--					<name>BUILD_NUMBER</name>-->
+<!--				</property>-->
+<!--			</activation> -->
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<alias>grisu</alias>
+							<storepass>FxAKs3p6</storepass>
+							<keypass>FxAKs3p6</keypass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>	
 
 
 </project>

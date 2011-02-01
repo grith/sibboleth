@@ -25,14 +25,15 @@ public class OneTimeStaticCredentialManager implements CredentialManager {
 
 	public PyObject prompt(Object response) {
 
-		if ( usernameAndPasswordAlreadyRead ) {
-			throw new CredentialManagerException("Login failed. Probably wrong username and/or password.");
+		if (usernameAndPasswordAlreadyRead) {
+			throw new CredentialManagerException(
+					"Login failed. Probably wrong username and/or password.");
 		}
 		usernameAndPasswordAlreadyRead = true;
 		return Py.java2py(response).invoke("run");
-		//		Py.java2py(response).__call__(Py.java2py("run"));
-		//		shibboleth.run();
-		//		return null;
+		// Py.java2py(response).__call__(Py.java2py("run"));
+		// shibboleth.run();
+		// return null;
 
 	}
 

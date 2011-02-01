@@ -1,57 +1,63 @@
 package au.org.arcs.auth.shibboleth;
 
+import grisu.jcommons.utils.ArcsSecurityProvider;
+import grisu.jcommons.utils.HttpProxyManager;
+import grisu.jcommons.utils.HttpProxyPanel;
+import grisu.jcommons.utils.NewHttpProxyEvent;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
-import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
-import au.org.arcs.jcommons.utils.HttpProxyManager;
-import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
-
-import java.awt.GridLayout;
-import au.org.arcs.jcommons.utils.HttpProxyPanel;
-import javax.swing.BoxLayout;
-import javax.swing.border.TitledBorder;
-
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
-	private final JPanel contentPanel = new JPanel();
-	private final Action action = new LoginAction();
-	private ShibLoginPanel shibLoginPanel;
+	private class LoginAction extends AbstractAction {
+		public LoginAction() {
+			putValue(NAME, "Login");
+			putValue(SHORT_DESCRIPTION, "Logging in");
+		}
 
+		public void actionPerformed(ActionEvent e) {
+
+			shibLoginPanel.login();
+
+		}
+	}
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			
-			EventBus.subscribe(NewHttpProxyEvent.class, new EventSubscriber<NewHttpProxyEvent>() {
+
+			EventBus.subscribe(NewHttpProxyEvent.class,
+					new EventSubscriber<NewHttpProxyEvent>() {
 
 				public void onEvent(NewHttpProxyEvent arg0) {
 
-					System.out.println("new proxy: "+arg0.getProxyHost());
-					
+					System.out.println("new proxy: "
+							+ arg0.getProxyHost());
+
 				}
-				
-				
+
 			});
-			
+
 			ShibLoginDialog dialog = new ShibLoginDialog(
-					"https://slcstest.arcs.org.au/SLCS/login");
+			"https://slcstest.arcs.org.au/SLCS/login");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 			HttpProxyManager.setDefaultHttpProxy();
@@ -61,6 +67,11 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			e.printStackTrace();
 		}
 	}
+	private final JPanel contentPanel = new JPanel();
+
+	private final Action action = new LoginAction();
+
+	private ShibLoginPanel shibLoginPanel;
 
 	/**
 	 * Create the dialog.
@@ -70,7 +81,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 		java.security.Security.addProvider(new ArcsSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
-				"TrustAllCertificates");
+		"TrustAllCertificates");
 
 		setBounds(100, 100, 529, 431);
 		getContentPane().setLayout(new BorderLayout());
@@ -80,7 +91,8 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			shibLoginPanel = new ShibLoginPanel(url);
 			shibLoginPanel.refreshIdpList();
 			addWindowListener(shibLoginPanel.getWindowListener());
-			contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+			contentPanel
+			.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 			contentPanel.add(shibLoginPanel);
 
 			JPanel buttonPane = new JPanel();
@@ -98,23 +110,12 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			contentPanel.add(buttonPane);
 
 			HttpProxyPanel httpProxyPanel = new HttpProxyPanel();
-			httpProxyPanel.setBorder(new TitledBorder(null, "Http Proxy settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			httpProxyPanel.setBorder(new TitledBorder(null,
+					"Http Proxy settings", TitledBorder.LEADING,
+					TitledBorder.TOP, null, null));
 			contentPanel.add(httpProxyPanel);
 
 			shibLoginPanel.addShibListener(this);
-		}
-	}
-
-	private class LoginAction extends AbstractAction {
-		public LoginAction() {
-			putValue(NAME, "Login");
-			putValue(SHORT_DESCRIPTION, "Logging in");
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			shibLoginPanel.login();
-
 		}
 	}
 
@@ -124,8 +125,8 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 
 		StringBuffer responseString = new StringBuffer();
 
-		for (Iterator i = it.iterator(); i.hasNext();) {
-			responseString.append(i.next());
+		for (Object element : it) {
+			responseString.append(element);
 		}
 
 		System.out.println(responseString.toString());
@@ -133,8 +134,8 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 
 	public void shibLoginFailed(Exception e) {
 
-		JOptionPane.showMessageDialog(ShibLoginDialog.this, e
-				.getLocalizedMessage(), "Login error",
+		JOptionPane.showMessageDialog(ShibLoginDialog.this,
+				e.getLocalizedMessage(), "Login error",
 				JOptionPane.ERROR_MESSAGE);
 	}
 

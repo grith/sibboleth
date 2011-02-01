@@ -5,12 +5,12 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
 public class StaticCredentialManager implements CredentialManager {
-	
+
 	private char[] password;
 	private String username;
-	
+
 	public StaticCredentialManager(String username, char[] password) {
-		
+
 		this.password = password;
 		this.username = username;
 	}
@@ -25,15 +25,15 @@ public class StaticCredentialManager implements CredentialManager {
 
 	public PyObject prompt(Object response) {
 
-//		Py.java2py(response).__call__(Py.java2py("run"));
+		// Py.java2py(response).__call__(Py.java2py("run"));
 		return Py.java2py(response).invoke("run");
-//		shibboleth.run();
-//		return null;
+		// shibboleth.run();
+		// return null;
 
 	}
 
 	public void set_title(String title) {
-		// 
+		//
 	}
 
 }

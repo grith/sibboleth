@@ -1,5 +1,8 @@
 package au.org.arcs.auth.shibboleth;
 
+import grisu.jcommons.utils.ArcsSecurityProvider;
+import grisu.jcommons.utils.NewHttpProxyEvent;
+
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -13,12 +16,10 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
-import au.org.arcs.jcommons.utils.ArcsSecurityProvider;
-import au.org.arcs.jcommons.utils.NewHttpProxyEvent;
+public class Shibboleth implements ShibLoginEventSource,
+EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
-public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttpProxyEvent>, Prioritized {
-
-	static final Logger myLogger = Logger	.getLogger(Shibboleth.class.getName());
+	static final Logger myLogger = Logger.getLogger(Shibboleth.class.getName());
 
 	public static void initDefaultSecurityProvider() {
 
@@ -39,7 +40,8 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 
 		IdpObject idp = new StaticIdpObject("VPAC");
 
-		CredentialManager cm = new StaticCredentialManager(args[0], args[1].toCharArray());
+		CredentialManager cm = new StaticCredentialManager(args[0],
+				args[1].toCharArray());
 
 		Shibboleth shib = new Shibboleth(idp, cm);
 		shib.addShibListener(new ShibListener() {
@@ -55,7 +57,6 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 				}
 
 				System.out.println(responseString.toString());
-
 
 			}
 
@@ -78,30 +79,33 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 
 		System.out.println("Finished.");
 
-
 	}
 
-	public static void setHttpProxy(String host, int port, String username, char[] password) {
+	public static void setHttpProxy(String host, int port, String username,
+			char[] password) {
 
 		String proxyString = null;
 
 		try {
 
-			if ( StringUtils.isBlank(host) ) {
+			if (StringUtils.isBlank(host)) {
 				proxyString = "";
 			} else {
-				if ( StringUtils.isBlank(username) ) {
-					proxyString = "http://"+host+":"+port;
+				if (StringUtils.isBlank(username)) {
+					proxyString = "http://" + host + ":" + port;
 				} else {
-					proxyString = "http://"+username+":"+new String(password)+"@"+host+":"+port;
+					proxyString = "http://" + username + ":"
+					+ new String(password) + "@" + host + ":" + port;
 				}
 			}
 
 			PythonInterpreter interpreter = new PythonInterpreter();
 
 			interpreter.exec("import os");
-			interpreter.exec("os.putenv('http_proxy', "+"\""+proxyString+"\") ");
-			interpreter.exec("os.putenv('https_proxy', "+"\""+proxyString+"\") ");
+			interpreter.exec("os.putenv('http_proxy', " + "\"" + proxyString
+					+ "\") ");
+			interpreter.exec("os.putenv('https_proxy', " + "\"" + proxyString
+					+ "\") ");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -124,12 +128,14 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 		.exec("from arcs.shibboleth.client.shibboleth import Shibboleth");
 		PyObject shibbolethClientClass = interpreter.get("Shibboleth");
 
-		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp), Py.java2py(cm));
-		shibClient = (ShibbolethClient) shibObject.__tojava__(ShibbolethClient.class);
+		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp),
+				Py.java2py(cm));
+		shibClient = (ShibbolethClient) shibObject
+		.__tojava__(ShibbolethClient.class);
 
-		shibClient.add_listener(Py.java2py(this).__getattr__("shibLoginComplete"));
+		shibClient.add_listener(Py.java2py(this).__getattr__(
+				"shibLoginComplete"));
 	}
-
 
 	// register a listener
 	synchronized public void addShibListener(ShibListener l) {
@@ -138,7 +144,6 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 		}
 		shibListeners.addElement(l);
 	}
-
 
 	private void fireIdpsLoaded(PyInstance response) {
 
@@ -232,10 +237,10 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 
 	}
 
-
 	public int getPriority() {
 		return -100;
 	}
+
 	public PyInstance getResponse() {
 		return response;
 	}
@@ -255,7 +260,8 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 
 	public void onEvent(NewHttpProxyEvent arg0) {
 
-		setHttpProxy(arg0.getProxyHost(), arg0.getProxyPort(), arg0.getUsername(), arg0.getPassword());
+		setHttpProxy(arg0.getProxyHost(), arg0.getProxyPort(),
+				arg0.getUsername(), arg0.getPassword());
 
 	}
 
@@ -269,8 +275,6 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 		}
 	}
 
-
-
 	// remove a listener
 	synchronized public void removeShibListener(ShibListener l) {
 		if (shibListeners == null) {
@@ -278,8 +282,6 @@ public class Shibboleth implements ShibLoginEventSource, EventSubscriber<NewHttp
 		}
 		shibListeners.removeElement(l);
 	}
-
-
 
 	public void shibLoginComplete() {
 		response = shibClient.get_response();
