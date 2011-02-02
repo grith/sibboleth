@@ -91,7 +91,6 @@
 								<descriptor>sibboleth.assembly.xml</descriptor>
 							</descriptors>
 							<finalName>sibboleth-client</finalName>
-<!--							<appendAssemblyId>false</appendAssemblyId>-->
 							<archive>
 								<index>true</index>
 								<manifest>
@@ -103,7 +102,7 @@
 							</archive>
 						</configuration>
 						<goals>
-							<goal>attached</goal>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
