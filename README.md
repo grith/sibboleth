@@ -11,7 +11,7 @@ No, the name **sibboleth** is not a typo. We deliberately chose the name.
 
 Since **sibboleth** talks *Shibboleth* not via a web-browser, but via a desktop application, we figured that might just be appropriate :-)
 
-Originally it was written in Python, but it also provides a Java wrapper to enable its functionality from Java applications (via [Jython](http://jython.org).
+Originally it was written in Python, but it also provides a Java wrapper to enable its functionality from Java applications (via [Jython](http://jython.org)).
 
 Usage
 ----------
