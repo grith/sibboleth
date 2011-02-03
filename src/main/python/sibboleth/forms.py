@@ -44,9 +44,7 @@ form_handler_registry = []
 
 
 class FormHandler(object):
-    """
-    Base Form Handler Class
-    """
+    """Base Form Handler Class"""
     # The list of form parts to detect
     signature = None
     interactive = False
@@ -66,9 +64,7 @@ class FormHandler(object):
 
 
 class DS(FormHandler):
-    """
-    Discovery Service Handler
-    """
+    """Discovery Service Handler"""
     form_type = 'ds'
     signature = ['user_idp', 'Select', 'form', 'session', 'permanent']
     interactive = True
@@ -86,12 +82,12 @@ class DS(FormHandler):
         return self.idp.prompt(shibboleth)
 
     def submit(self, opener, res):
-        """
-        submit WAYF form with IDP
+        """submit WAYF form with IDP
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         log.info('Submitting form to wayf')
         #Set IDP to correct IDP
@@ -136,12 +132,12 @@ class WAYF(FormHandler):
         return self.idp.prompt(shibboleth)
 
     def submit(self, opener, res):
-        """
-        submit WAYF form with IDP
+        """submit WAYF form with IDP
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         log.info('Submitting form to wayf')
         #Set IDP to correct IDP
@@ -168,9 +164,7 @@ class WAYF(FormHandler):
 
 
 class IdPFormLogin(FormHandler):
-    """
-    IDP Form Login Handler
-    """
+    """IDP Form Login Handler"""
     form_type = 'login'
     signature = ['j_password', 'j_username']
     username_field = signature[1]
@@ -321,12 +315,12 @@ class SAMLRequest(FormHandler):
     signature = ['SAMLRequest']
 
     def submit(self, opener, res):
-        """
-        submit IdP form to SP
+        """submit IdP form to SP
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         log.info('Submitting SAML Verification form')
         data = self.data
