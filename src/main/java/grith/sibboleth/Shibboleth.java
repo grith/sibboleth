@@ -38,7 +38,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");
 
-		IdpObject idp = new StaticIdpObject("VPAC");
+		IdpObject idp = new StaticIdpObject("The University of Auckland");
 
 		CredentialManager cm = new StaticCredentialManager(args[0],
 				args[1].toCharArray());
@@ -125,7 +125,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 		PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter
-		.exec("from arcs.shibboleth.client.shibboleth import Shibboleth");
+.exec("from sibboleth import Shibboleth");
 		PyObject shibbolethClientClass = interpreter.get("Shibboleth");
 
 		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp),
@@ -134,7 +134,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		.__tojava__(ShibbolethClient.class);
 
 		shibClient.add_listener(Py.java2py(this).__getattr__(
-				"shibLoginComplete"));
+		"shibLoginComplete"));
 	}
 
 	// register a listener
