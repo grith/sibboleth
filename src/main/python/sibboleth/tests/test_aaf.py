@@ -90,7 +90,5 @@ for i in idps.idps:
 
 del add_test
 
-print TestShibboleth.__dict__
-
 if __name__ == '__main__':
     unittest.main()

@@ -24,9 +24,10 @@ import re
 import sys
 from urllib2 import urlparse, Request
 import urllib
+from StringIO import StringIO
 
 from sibboleth.exceptions import WAYFException
-from sibboleth.parsers.soup import soup_parser
+from sibboleth.parsers import parsers
 
 is_jython = sys.platform.startswith('java')
 
@@ -432,8 +433,9 @@ def getFormAdapter(response, idp, cm):
     :returns: an adapter that can be used to submit the form
 
     """
-
-    parser, title, forms = soup_parser(response)
+    dom_parsers = []
+    pagebuffer = StringIO(''.join(response.readlines()))
+    pagebuffer.seek(0)
 
     def match_form(form, items):
         for i in items:
@@ -443,17 +445,35 @@ def getFormAdapter(response, idp, cm):
             rform = form
         return rform
 
-    for form in forms:
-        for name, adapter in form_handler_registry:
-            radapter = match_form(form, adapter.signature)
-            if radapter:
-                return adapter.form_type, adapter(title, form,
-                                                  idp=idp,
-                                                  credentialmanager=cm)
+    def try_forms(title, forms):
+        for form in forms:
+            for name, adapter in form_handler_registry:
+                radapter = match_form(form, adapter.signature)
+                if radapter:
+                    return adapter.form_type, adapter(title, form,
+                                                      idp=idp,
+                                                      credentialmanager=cm)
+        return None, None
 
-    for name, adapter in page_handler_registry:
-        radapter = adapter(parser, idp=idp, credentialmanager=cm)
-        if radapter.can_adapt():
-            return radapter.type, radapter
+    for parser in parsers:
+        pagebuffer.seek(0)
+        try:
+            dom, title, forms = parser(pagebuffer)
+        except:
+            log.debug("failed parse by %s" % parser)
+            continue
+        log.debug("Parsed by %s" % parser)
+        if dom:
+            dom_parsers.append(dom)
+        ftype, adapter = try_forms(title, forms)
+        if ftype:
+            return ftype, adapter
+
+    for dom_parser in dom_parsers:
+        for name, adapter in page_handler_registry:
+            radapter = adapter(dom_parser, idp=idp, credentialmanager=cm)
+            if radapter.can_adapt():
+                log.debug("Page can be adapted by %s" % parser)
+                return radapter.type, radapter
 
     return '', None
