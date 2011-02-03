@@ -93,5 +93,4 @@ def html_parser(html):
     for line in html:
         parser.feed(line)
     parser.close()
-    raise Exception()
     return None, parser.title, parser.forms
