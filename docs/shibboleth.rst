@@ -1,10 +1,10 @@
-:mod:`~arcs.shibboleth.client.shibboleth` -- urllib shibboleth authentication
+:mod:`~sibboleth.shibboleth` -- urllib shibboleth authentication
 =============================================================================
 
 .. _ref-shibboleth
 
-.. module:: arcs.shibboleth.client.shibboleth
-.. moduleauthor:: Russell Sim <russell@vpac.org>
+.. module:: sibboleth.shibboleth
+.. moduleauthor:: Russell Sim <russell.sim@gmail.com>
 
 
 :class:`Shibboleth` Objects
@@ -14,7 +14,7 @@ Using the shibboleth handler is a bit different to the urllib2 handlers because 
 
 ::
 
-    from arcs.shibboleth.client import Shibboleth, SimpleCredentialManager, Idp
+    from sibboleth import Shibboleth, SimpleCredentialManager, Idp
     idp = Idp('VPAC')
     c = SimpleCredentialManager('testuser', 'testpass')
     shibboleth = Shibboleth(idp, c)

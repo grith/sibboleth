@@ -1,17 +1,10 @@
-:mod:`~arcs.shibboleth.client.forms` -- shibboleth form handlers
+:mod:`~sibboleth.forms` -- shibboleth form handlers
 ================================================================
 
 .. _ref-forms
 
-.. module:: arcs.shibboleth.client.forms
-.. moduleauthor:: Russell Sim <russell@vpac.org>
-
-
-:class:`FormParser` Objects
----------------------------
-.. autoclass:: FormParser
-   :members:
-   :undoc-members:
+.. module:: sibboleth.forms
+.. moduleauthor:: Russell Sim <russell.sim@gmail.com>
 
 
 :class:`FormHandler` Objects

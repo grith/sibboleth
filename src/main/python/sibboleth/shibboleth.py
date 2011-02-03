@@ -39,7 +39,7 @@ if is_jython:
 else:
     import logging
 
-log = logging.getLogger('arcs.shibboleth.client')
+log = logging.getLogger('sibboleth')
 
 
 class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
@@ -130,7 +130,7 @@ class Shibboleth(shib_interface):
     authentication is complete.
 
     :param idp: the Identity Provider that will be selected at the WAYF
-    :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager`
+    :param cm: a :class:`~sibboleth.credentials.CredentialManager`
        containing the URL to the service provider you want to connect to
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
@@ -201,8 +201,8 @@ class Shibboleth(shib_interface):
 
     def run(self):
         """used by the
-        :class:`~arcs.shibboleth.client.credentials.Idp` and
-        :class:`~arcs.shibboleth.client.credentials.CredentialManager`
+        :class:`~sibboleth.credentials.Idp` and
+        :class:`~sibboleth.credentials.CredentialManager`
         controllers to resume the shibboleth auth.
         """
         request, response = self.adapter.submit(self.opener, self.response)

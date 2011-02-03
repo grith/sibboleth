@@ -1,10 +1,10 @@
-:mod:`~arcs.shibboleth.client.credentials` -- password management
+:mod:`~sibboleth.credentials` -- password management
 =================================================================
 
 .. _ref-credentials
 
-.. module:: arcs.shibboleth.client.credentials
-.. moduleauthor:: Russell Sim <russell@vpac.org>
+.. module:: sibboleth.credentials
+.. moduleauthor:: Russell Sim <russell.sim@gmail.com>
 
 
 :class:`SimpleCredentialManager` Objects

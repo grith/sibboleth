@@ -98,7 +98,7 @@ class CredentialManager(ICredentialManager):
         in this function to return control
 
         :param controller: the
-           :class:`~arcs.shibboleth.client.shibboleth.Shibboleth`
+           :class:`~sibboleth.shibboleth.Shibboleth`
            controller that control will be handed back to once the class
            is finshed taking input
         """
@@ -136,7 +136,7 @@ class Idp(IIdp):
         function to return control
 
         :param controller: the
-           :class:`~arcs.shibboleth.client.shibboleth.Shibboleth`
+           :class:`~sibboleth.shibboleth.Shibboleth`
            controller that control will be handed back to once the class
            is finshed taking input
         """

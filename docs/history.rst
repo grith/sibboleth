@@ -1,8 +1,12 @@
 Changelog
 =========
 
-0.2 - Unrelased
----------------
+0.3 - Unreleased
+----------------
+* refactored namespace to sibboleth [Markus, Russell]
+
+0.2 - Unreleased
+----------------
 * added https proxy support via httpsproxy_urllib2 [Russell]
 * buildout now used for testing [Russell]
 * removed dependency on xpath, adds 2.6 compatability [Russell]
@@ -16,4 +20,4 @@ Changelog
 * chain now stops when cookie is set for initial host [Russell]
 * added shib-login and shib-logout cli tools [Russell]
 * updated to use adapter like pattern for processing forms [Russell]
-* Initial release 
+* Initial release
