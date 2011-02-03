@@ -20,12 +20,13 @@
 #
 #############################################################################
 
+import re
 import sys
 import HTMLParser
 import BeautifulSoup
-from urllib2 import urlparse
+from urllib2 import urlparse, Request
 import urllib
-import urllib2
+
 from sibboleth.exceptions import WAYFException
 
 is_jython = sys.platform.startswith('java')
@@ -226,7 +227,7 @@ class DS(FormHandler):
         else:
             url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode(wayf_data)
-        request = urllib2.Request(url, data)
+        request = Request(url, data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -274,7 +275,7 @@ class WAYF(FormHandler):
         wayf_data['action'] = 'selection'
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode(wayf_data)
-        request = urllib2.Request(url + '?' + data)
+        request = Request(url + '?' + data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -323,7 +324,7 @@ class IdPFormLogin(FormHandler):
         idp_data[self.username_field] = cm.get_username()
         idp_data[self.password_field] = cm.get_password()
         data = urllib.urlencode(idp_data)
-        request = urllib2.Request(url, data=data)
+        request = Request(url, data=data)
         log.info('Submitting login form')
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
@@ -373,7 +374,7 @@ class COSignFormLogin(IdPFormLogin):
         idp_data['service'] = data['service']['value']
         idp_data['ref'] = data['ref']['value']
         data = urllib.urlencode(idp_data)
-        request = urllib2.Request(url, data=data)
+        request = Request(url, data=data)
         log.info('Submitting login form')
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
@@ -398,7 +399,7 @@ class IdPSPForm(FormHandler):
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse': data['SAMLResponse']['value'],
                                  'TARGET': 'cookie'})
-        request = urllib2.Request(url, data=data)
+        request = Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -422,7 +423,7 @@ class IdPSPFormRelayState(FormHandler):
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse': data['SAMLResponse']['value'],
                                  'RelayState': 'cookie'})
-        request = urllib2.Request(url, data=data)
+        request = Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -445,7 +446,7 @@ class SAMLRequest(FormHandler):
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLRequest': data['SAMLRequest']['value']})
-        request = urllib2.Request(url, data=data)
+        request = Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -498,7 +499,7 @@ class ESOEChooser(PageHandler):
 
         """
         url = urlparse.urljoin(res.url, self.url)
-        request = urllib2.Request(url)
+        request = Request(url)
         log.debug("GET: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
@@ -538,7 +539,7 @@ class CASJSRedirect(PageHandler):
         :param res: the response object
 
         """
-        request = urllib2.Request(self.url)
+        request = Request(self.url)
         log.debug("GET: %s" % request.get_full_url())
         response = opener.open(request)
         return request, response
