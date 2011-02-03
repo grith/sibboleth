@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<title>AAF - Select your home institution</title> 
+	<meta http-equiv="X-UA-Compatible" content="IE=8">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+	
+	body
+	{
+		background: url("/images/page_bg.jpg") repeat-x scroll center top ;
+		background-color:  #424F5B;
+		color: #000000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		# font-size: 12px;
+	}
+	
+	a 
+	{
+		color: #203781; 
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+	
+	h2.switchaai
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 17px;
+	}
+
+	h2 
+	{
+		color:#002455;
+		font-size:120%;
+		line-height:1;
+	}
+	
+	h1
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 18px;
+		padding: 10px 0px 0px 30px;
+	}
+	
+	p
+	{
+		color: #000000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		line-height: 1.2;
+		font-size: 12px;
+		padding: 0px 05px 0px 05px;
+	}
+	
+	b
+	{
+		color: #000000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		line-height: 1.2;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	tt
+	{
+		line-height: 1.2;
+		font-weight: bold;
+	}
+	
+	span.switchaai
+	{
+		line-height: 30px;
+	}
+	
+	input.switchaai
+	{
+		border-width: 1px;
+		border-style: solid;
+		border-color: #888888;
+	}
+	
+	a.switchaai
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 12px;
+	}
+	
+	.outer-box
+	{
+		margin-left:auto; margin-right:auto;
+		border-style: solid;
+		border-color: #eee;
+		border-width: 10px;
+		text-align: left;
+		background-color: #FEFFE1;
+	}
+	
+	.selectedIdP
+	{
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-size: 12px;
+		background-color: white;
+		border-color: #203781;
+		border-style: solid;
+		margin: 2px;
+		border-width: 1px;
+		width: 400px;
+		height: 25px;
+		text-align: center;
+		line-height: 25px;
+	}
+	
+	.fullheight
+	{
+		height: 100%;
+		min-height: 100%;
+	}
+	
+	.inner-box
+	{
+		border-width: 1px;
+		border-color: #203781;
+		background-color: #C79D3D;
+		border-style: solid;
+		padding: 3px;
+	}
+
+	div#header 
+	{
+		background-image: url("/AAF/images/header_banner_590.png");
+		padding:10px 10px 0px;
+		text-align:center;
+	}
+
+	div#header_left 
+	{
+		float:left;
+		# padding-top:-20px;
+		width:350px;
+	}
+
+	div#header_right 
+	{
+		float:right;
+		margin-top:-10px;
+		width:115px;
+	}
+
+	div#header_links {
+        	background-color:#CCCCCC;
+        	margin-bottom:-10px
+	}
+	
+	div#header_links ul.left {
+        	list-style-type:none;
+        	float:left;
+        	padding:0px 0 0 10px;
+        	margin:0;
+	}
+
+	div#header_links ul li {
+        	float:left;
+        	position:relative;
+	}
+
+	div#header_links li a {
+        	color:#000000;
+        	float:left;
+        	font-size:12px;
+        	line-height:18px;
+        	margin:0 13px;
+        	text-decoration:none;
+        	outline-style:none;
+	}
+
+	div#test_env {
+		float:right;
+		# width:100px;
+		padding-right:10px;
+		padding-top:1px;
+		color: #3333ff;
+		font-family: capitalsi,Verdana,Arial,Helvetica,sans-serif;
+		font-weight:bold;
+	}
+
+
+-->
+</style>
+
+</head>
+<body if (document.IdPList && document.IdPList.Select) document.IdPList.Select.focus()>
+<script language="JavaScript" type="text/javascript">
+<!--
+function showConfirmation(){
+	
+	return confirm(unescape('Are you sure that you want to set the selected entry as your default Home Institution? Don\'t do this if you use several AAF accounts.'));
+}
+
+function checkForm(){
+	if(document.IdPList.user_idp && document.IdPList.user_idp.selectedIndex == 0){
+		alert(unescape('You must select a valid Home Institution.'));
+		return false;
+	} else {
+		if (document.IdPList.permanent && document.IdPList.permanent.checked){
+			return showConfirmation();
+		} else {
+			return true;
+		}
+	}
+}
+-->
+</script>
+<img height="30px" src="/AAF/images/trans_dot.png">
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%; height:90%">
+	<tr>
+		<td align="center" valign="middle">
+			<table border="0" cellpadding="0" cellspacing="0" width="590" class="outer-box">
+				<tr>
+					<td class="switchaai">
+				    	    <div id="header">
+						<div id="header_left">
+						    <h2>Australian Access Federation</h2>
+						</div>
+					        <div id="header_right">
+						    <a target="_blank" href="http://www.aaf.edu.au">
+ 							<img border="0" src="/AAF/images/aaf_logo_115.png">
+						    </a>
+						</div>
+						<img height="53px" src="/AAF/images/trans_dot.png">
+				    	    </div>
+					    <div id="header_links">
+					        <img height="18px" src="/AAF/images/trans_dot.png">
+						<ul class="left">
+						    <li><a target="_blank" href="http://www.aaf.edu.au"><img title="AAF Home" alt="AAF Home" src="/AAF/images/home.gif" border="0"></a></li>
+						    <!-- <li><a target="_blank" href="/faqs/">FAQs</a></li> -->
+						    <li><a target="_blank" href="http://www.aaf.edu.au/index.php/services/">Services</a></li>
+						    <li><a target="_blank" href="http://www.aaf.edu.au/index.php/about/">About AAF</a></li>
+						</ul>
+						<!-- <div id="test_env">
+						   <i>AAF Test Environment</i>
+						</div> -->
+					    </div>
+
+
+<!-- Body: Start -->
+<!-- Identity Provider Selection: Start-->
+<h1>Login through your home institution</h1> 
+<p class="switchaai">
+	To access a service on host <tt>'slcs1.arcs.org.au'</tt> select your home institution.</p>
+
+<form id="IdPList" name="IdPList" method="post" onSubmit="return checkForm()" action="/discovery/DS?entityID=https%3A%2F%2Fslcs1.arcs.org.au%2Fshibboleth&amp;return=https%3A%2F%2Fslcs1.arcs.org.au%2FShibboleth.sso%2FDS%3FSAMLDS%3D1%26target%3Dcookie">
+	<p>
+		<select name="user_idp"> 
+			<option value="-" selected="selected">Select the home institution you are affiliated with ...</option>
+		
+	<optgroup label="Australian University">
+		<option value="urn:mace:federation.org.au:testfed:au-idp.adelaide.edu.au">Adelaide University</option>
+		<option value="https://shib-idp.acu.edu.au/idp/shibboleth">Australian Catholic University</option>
+		<option value="urn:mace:federation.org.au:testfed:level-2:anu.edu.au">Australian National University</option>
+		<option value="https://idp-prod.bond.edu.au/idp/shibboleth">Bond University</option>
+		<option value="https://idpp1.curtin.edu.au/idp/shibboleth">Curtin University</option>
+		<option value="https://idp.deakin.edu.au/idp/shibboleth">Deakin University</option>
+		<option value="https://shibidp.ecu.edu.au/idp/shibboleth">Edith Cowan University</option>
+		<option value="https://idp.flinders.edu.au/idp/shibboleth">Flinders University</option>
+		<option value="https://idp1.griffith.edu.au/idp/shibboleth">Griffith University</option>
+		<option value="https://idp.jcu.edu.au/idp/shibboleth">James Cook University</option>
+		<option value="https://aaf.latrobe.edu.au/idp/shibboleth">La Trobe University</option>
+		<option value="urn:mace:federation.org.au:testfed:mq.edu.au">Macquarie University</option>
+		<option value="https://idp.monash.edu.au/idp/shibboleth">Monash University</option>
+		<option value="urn:mace:federation.org.au:testfed:level-2:idp.murdoch.edu.au">Murdoch University</option>
+		<option value="https://idp.qut.edu.au/idp/shibboleth">Queensland University of Technology</option>
+		<option value="urn:mace:federation.org.au:testfed:rmit.edu.au">RMIT University</option>
+		<option value="https://idp.unimelb.edu.au/idp/shibboleth">The University of Melbourne</option>
+		<option value="https://sso.its.unimelb.edu.au/sso/aaf">The University of Melbourne (Staging)</option>
+		<option value="urn:mace:federation.org.au:testfed:uq.edu.au">The University of Queensland</option>
+		<option value="https://idp.uwa.edu.au/idp/shibboleth">The University of Western Australia</option>
+		<option value="https://unisa.edu.au/idp/shibboleth">University of South Australia</option>
+		<option value="https://idp-aaf.usq.edu.au/idp/shibboleth">University of Southern Queensland</option>
+		<option value="https://aaf1-idp.its.utas.edu.au/idp/shibboleth">University of Tasmania</option>
+		<option value="https://aaf-login.uts.edu.au/idp/shibboleth">University of Technology, Sydney</option>
+		<option value="urn:mace:federation.org.au:testfed:uws.edu.au">University of Western Sydney</option>
+	</optgroup>
+	<optgroup label="New Zealand University">
+		<option value="https://idp.aut.ac.nz/idp/shibboleth">AUT - Auckland University of Technology</option>
+		<option value="https://idp.lincoln.ac.nz/idp/shibboleth">Lincoln University NZ</option>
+		<option value="https://idp.auckland.ac.nz/idp/shibboleth">The University of Auckland</option>
+		<option value="https://idp.canterbury.ac.nz/idp/shibboleth">University of Canterbury</option>
+	</optgroup>
+	<optgroup label="Members of ARCS (MARCS)">
+		<option value="https://chief.nbi.ansto.gov.au/idp/shibboleth">ANSTO</option>
+		<option value="https://idp.arcs.org.au/idp/shibboleth">ARCS IdP</option>
+		<option value="https://arcs-a3.hpcu.uq.edu.au/idp/shibboleth">Auth Test IdP</option>
+		<option value="https://idp.intersect.org.au/idp/shibboleth">INTERSECT</option>
+		<option value="https://idp.ac3.edu.au/idp/shibboleth">Intersect_HPC</option>
+		<option value="https://idp.sf.utas.edu.au/idp/shibboleth">TPAC</option>
+		<option value="https://idp.vpac.org/idp/shibboleth">VPAC</option>
+		<option value="https://idp2.versi.edu.au/idp/shibboleth">VeRSI</option>
+		<option value="urn:mace:federation.org.au:testfed:idp.eresearchsa.edu.au">eResearch SA</option>
+		<option value="urn:mace:federation.org.au:testfed:idp.ivec.org">iVEC</option>
+	</optgroup>
+	<optgroup label="Virtual Home Organization">
+		<option value="https://vho.aaf.edu.au/idp/shibboleth">AAF Virtual Home</option>
+	</optgroup>
+	<optgroup label="Others">
+		<option value="https://shibboleth.aarnet.edu.au/idp/shibboleth">AARNet</option>
+		<option value="https://idp.aims.gov.au/idp/shibboleth">Australian Institute of Marine Science</option>
+		<option value="https://aafidp2.csiro.au/idp/shibboleth">CSIRO</option>
+		<option value="https://idp.landcareresearch.co.nz/idp/shibboleth">Landcare Research New Zealand</option>
+		<option value="https://idp.ckn.dotsec.com/idp/shibboleth">Queensland Health CKN Dotsec IDP</option>
+	</optgroup>		</select>
+		<input type="submit" name="Select" accesskey="s" tabindex="10" value="Select" > 
+	</p>
+	<p>
+		<input tabindex="8" type="checkbox"  name="session" id="rememberForSession" value="true">
+		<span class="warning"><label for="rememberForSession">Remember selection for this web browser session.</label></span><br>
+				<!-- Value permanent must be a number which is equivalent to the days the cookie shall be valid -->
+		<input type="checkbox" tabindex="9" name="permanent" id="rememberPermanent" value="100">
+		<span class="warning"><label for="rememberPermanent" />Remember selection permanently and bypass the WAYF service from now on.</label></span>
+			</p>
+</form>
+<table border="0" cellpadding="1" cellspacing="0">
+	<tr>
+		<td valign="top" width="14"><img src="https://ds.aaf.edu.au/AAF/images/aaf_button_small.png" alt="AAF"></td>
+		<td valign="top"><p class="switchaai">Your institution's identity is now accepted in more places. Look for this logo to access participating services.</p></td>
+	</tr>
+</table>
+<!-- Identity Provider Selection: End-->
+<!-- Body: End -->
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

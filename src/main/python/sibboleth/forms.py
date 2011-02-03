@@ -363,7 +363,13 @@ class ESOEChooser(PageHandler):
         self.url = ''
 
     def can_adapt(self):
-        links = self.page.findAll('a')
+        if hasattr(self.page, 'findAll'):
+            links = self.page.findAll('a')
+        elif hasattr(self.page, 'findall'):
+            # LXML
+            links = self.page.findall('../a')
+        else:
+            raise Exception("Missing findall")
 
         for l in links:
             if l.get('href') == 'enterpriselogin.htm':
@@ -435,7 +441,6 @@ def getFormAdapter(response, idp, cm):
     """
     dom_parsers = []
     pagebuffer = StringIO(''.join(response.readlines()))
-    pagebuffer.seek(0)
 
     def match_form(form, items):
         for i in items:

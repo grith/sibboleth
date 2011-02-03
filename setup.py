@@ -41,6 +41,7 @@ setup(name='sibboleth',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'lxml',
           'BeautifulSoup',
           # -*- Extra requirements: -*-
       ] + extra_deps,

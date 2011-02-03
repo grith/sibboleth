@@ -56,6 +56,7 @@ class TestForms(unittest.TestCase):
 
     def testDS(self):
         self._formadapter('ds_aaf')
+        self._formadapter('ds_aafnew')
 
     def testESOE(self):
         self._formadapter('esoe_chooser')
