@@ -27,8 +27,8 @@ import sys
 is_jython = sys.platform.startswith('java')
 
 if is_jython:
-    from sibboleth import CredentialManager as ICredentialManager
-    from sibboleth import IdpObject as IIdp
+    from grith.sibboleth import CredentialManager as ICredentialManager
+    from grith.sibboleth import IdpObject as IIdp
 else:
     ICredentialManager = object
     IIdp = object
