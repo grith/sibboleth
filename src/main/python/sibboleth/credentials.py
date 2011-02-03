@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com and Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -26,19 +27,21 @@ import sys
 is_jython = sys.platform.startswith('java')
 
 if is_jython:
-    from grith.sibboleth import CredentialManager as ICredentialManager
-    from grith.sibboleth import IdpObject as IIdp
+    from sibboleth import CredentialManager as ICredentialManager
+    from sibboleth import IdpObject as IIdp
 else:
     ICredentialManager = object
     IIdp = object
+
 
 class AuthenticationException(Exception):
     pass
 
 
 class SimpleCredentialManager(ICredentialManager):
-    """
-    This class is responsible for authenticating the user in a non interactive way.
+    """This class is responsible for authenticating the user in a non
+    interactive way.
+
     """
 
     def __init__(self, username, password):
@@ -47,19 +50,22 @@ class SimpleCredentialManager(ICredentialManager):
         self.password = password
 
     def set_title(self, title):
-        """
-        show the title of the Basic Auth or Form that the user is presented with.
+        """show the title of the Basic Auth or Form that the user is
+        presented with.
+
         """
         pass
 
     def prompt(self, controller):
-        """
-        check that we havent tried to authenticate more then once, if we have then raise and exception
+        """Check that we havent tried to authenticate more then once,
+        if we have then raise and exception
+
         """
         if self.tries < 1:
             self.tries += 1
             return controller.run()
-        raise AuthenticationException("Authentication Failure, number of tries exceeded")
+        raise AuthenticationException(
+            "Authentication Failure, number of tries exceeded")
 
     def get_password(self):
         """return the password of the user"""
@@ -70,9 +76,9 @@ class SimpleCredentialManager(ICredentialManager):
 
 
 class CredentialManager(ICredentialManager):
-    """
-    This class is responsible for displaying information about the location
-    being authed too, and receiving user name and password from the user.
+    """This class is responsible for displaying information about the
+    location being authed too, and receiving user name and password
+    from the user.
     """
 
     def __init__(self, username=None, password=None):
@@ -82,16 +88,19 @@ class CredentialManager(ICredentialManager):
             self.password = password
 
     def set_title(self, title):
-        """
-        show the title of the Basic Auth or Form that the user is presented with.
+        """show the title of the Basic Auth or Form that the user is
+        presented with.
         """
         print title
 
     def prompt(self, controller):
-        """
-        the controller.run() function is called as the last method in this function to return control
+        """the controller.run() function is called as the last method
+        in this function to return control
 
-        :param controller: the :class:`~arcs.shibboleth.client.shibboleth.Shibboleth` controller that control will be handed back to once the class is finshed taking input
+        :param controller: the
+           :class:`~arcs.shibboleth.client.shibboleth.Shibboleth`
+           controller that control will be handed back to once the class
+           is finshed taking input
         """
         user_name = os.getenv('USERNAME') or os.getenv('LOGNAME')
         self.username = raw_input("Username [%s]:" % user_name) or user_name
@@ -108,8 +117,7 @@ class CredentialManager(ICredentialManager):
 
 
 class Idp(IIdp):
-    """
-    This class responds to the WAYF form with the selected idp
+    """This class responds to the WAYF form with the selected idp
     """
     def __init__(self, idp=None):
         self.idp = idp or ''
@@ -117,40 +125,45 @@ class Idp(IIdp):
         self.idps = []
 
     def set_idps(self, idps):
-        """
-        set the list of possible idps
-        """
+        """set the list of possible idps"""
         self.raw_idps = idps
         self.idps = idps.keys()
         self.idps.sort()
 
     def prompt(self, controller):
-        """
-        some how decide what idp to authenticate to
-        the controller.run() function is called as the last method in this function to return control
+        """some how decide what idp to authenticate to the
+        ``controller.run()`` function is called as the last method in this
+        function to return control
 
-        :param controller: the :class:`~arcs.shibboleth.client.shibboleth.Shibboleth` controller that control will be handed back to once the class is finshed taking input
+        :param controller: the
+           :class:`~arcs.shibboleth.client.shibboleth.Shibboleth`
+           controller that control will be handed back to once the class
+           is finshed taking input
         """
         controller = controller
         if self.idp:
             return controller.run()
 
         try:
-            import struct, fcntl, termios
+            import struct
+            import fcntl
+            import termios
+
             def terminal_dimensions():
                 """return the dimensions of the terminal"""
                 fd = os.open(os.ctermid(), os.O_RDONLY)
                 if not os.isatty(fd):
-                    return (0,0)
-                return struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
-
+                    return (0, 0)
+                return struct.unpack('hh',
+                                     fcntl.ioctl(fd,
+                                                 termios.TIOCGWINSZ, '1234'))
 
             def print_list_wide(items):
                 """print the list as columns"""
                 lmax = max([len(x) for x in items]) + 1
                 width = terminal_dimensions()[1]
                 if width:
-                    col = width/lmax
+                    col = width / lmax
                     i = 1
                     for item in items:
                         if not i % col:
@@ -164,11 +177,11 @@ class Idp(IIdp):
                     for item in items:
                         print item
         except:
+
             def print_list_wide(items):
                 """print the list"""
                 for item in items:
                     print item
-
 
         idp_list = []
         for n in range(0, len(self.idps)):
@@ -180,10 +193,6 @@ class Idp(IIdp):
         self.idp = self.idps[idp_n - 1]
         return controller.run()
 
-
     def get_idp(self):
-        """
-        return the selected idp
-        """
+        """return the selected idp"""
         return self.idp
-

@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> and Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -22,4 +23,3 @@
 
 class WAYFException(Exception):
     """Exception raised WAYF"""
-

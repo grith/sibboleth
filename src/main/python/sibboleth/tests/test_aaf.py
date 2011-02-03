@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -20,19 +21,21 @@
 #############################################################################
 
 import unittest
-import arcs.shibboleth.client
-from arcs.shibboleth.client.shibboleth import Shibboleth
-from arcs.shibboleth.client.credentials import Idp, SimpleCredentialManager, AuthenticationException
+import sibboleth
+from sibboleth.shibboleth import Shibboleth
+from sibboleth.credentials import Idp, SimpleCredentialManager, \
+     AuthenticationException
 import inspect
 
-import sys
 from os import path
-here = path.join(path.dirname(inspect.getsourcefile(arcs.shibboleth.client)), 'tests/')
+here = path.join(path.dirname(inspect.getsourcefile(sibboleth)), 'tests/')
 
 aaf_sp_url = 'https://slcs1.arcs.org.au/SLCS/login'
 
+
 class IdpListException(Exception):
     pass
+
 
 class ListIDPs(Idp):
 
@@ -61,7 +64,7 @@ class TestShibboleth(unittest.TestCase):
         pass
 
 
-def add_test(cls,i):
+def add_test(cls, i):
     def tmpl_test_idp(self):
         idps = Idp(i)
         c = SimpleCredentialManager('ARCS_test', 'ARCS_test')
@@ -69,20 +72,20 @@ def add_test(cls,i):
         self.assertRaises(AuthenticationException, shib.openurl, aaf_sp_url)
     tmpl_test_idp.__doc__ = "%s Idp test function" % i
     tmpl_test_idp.__name__ = "test_idp_%s" % i
-    setattr(cls,tmpl_test_idp.__name__,tmpl_test_idp)
+    setattr(cls, tmpl_test_idp.__name__, tmpl_test_idp)
 
 
 for i in idps.idps:
     if i.startswith('Bootstrapped IdP utas.edu.au'):
-        continue # idp doesn't respond
+        continue  # idp doesn't respond
     if i.startswith('Bootstrapped IdP aarnet.edu.au'):
-        continue # idp doesn't respond
+        continue  # idp doesn't respond
     if i.startswith('Bootstrapped IdP csiro.au'):
-        continue # idp doesn't exist
+        continue  # idp doesn't exist
     if i.startswith('Bootstrapped IdP unimelb.edu.au'):
-        continue # uses basic auth and just hangs for ages
+        continue  # uses basic auth and just hangs for ages
     if i.startswith('Murdoch University'):
-        continue # invalid html
+        continue  # invalid html
     add_test(TestShibboleth, i)
 
 del add_test
@@ -91,5 +94,3 @@ print TestShibboleth.__dict__
 
 if __name__ == '__main__':
     unittest.main()
-
-

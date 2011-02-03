@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -23,8 +24,9 @@ import sys
 import HTMLParser
 import BeautifulSoup
 from urllib2 import urlparse
-import urllib2, urllib
-from arcs.shibboleth.client.exceptions import WAYFException
+import urllib
+import urllib2
+from sibboleth.exceptions import WAYFException
 
 is_jython = sys.platform.startswith('java')
 
@@ -77,26 +79,30 @@ attrfind = re.compile(
     r'(\'[^\']*\'|"[^"]*"|\\"[^"]*\\"|[-a-zA-Z0-9./,:;+*%?!&$\(\)_#=~@]*))?')
 HTMLParser.attrfind = attrfind
 
-NESTABLE_TABLE_TAGS = {'table' : [],
-                       'tr' : ['table', 'tbody', 'tfoot', 'thead', 'form'],
-                       'td' : ['tr'],
-                       'th' : ['tr'],
-                       'thead' : ['table'],
-                       'tbody' : ['table'],
-                       'tfoot' : ['table'],
+NESTABLE_TABLE_TAGS = {'table': [],
+                       'tr': ['table', 'tbody', 'tfoot', 'thead', 'form'],
+                       'td': ['tr'],
+                       'th': ['tr'],
+                       'thead': ['table'],
+                       'tbody': ['table'],
+                       'tfoot': ['table'],
                        }
 
 #If one of these tags is encountered, all tags up to the next tag of
 #this type are popped.
-RESET_NESTING_TAGS = BeautifulSoup.buildTagMap(None, BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS, 'noscript',
-                                 BeautifulSoup.BeautifulSoup.NON_NESTABLE_BLOCK_TAGS,
-                                 BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
-                                 NESTABLE_TABLE_TAGS)
+RESET_NESTING_TAGS = BeautifulSoup.buildTagMap(
+    None,
+    BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS, 'noscript',
+    BeautifulSoup.BeautifulSoup.NON_NESTABLE_BLOCK_TAGS,
+    BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
+    NESTABLE_TABLE_TAGS)
 
-NESTABLE_TAGS = BeautifulSoup.buildTagMap([], BeautifulSoup.BeautifulSoup.NESTABLE_INLINE_TAGS,
-                                BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS,
-                                BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
-                                NESTABLE_TABLE_TAGS)
+NESTABLE_TAGS = BeautifulSoup.buildTagMap(
+    [],
+    BeautifulSoup.BeautifulSoup.NESTABLE_INLINE_TAGS,
+    BeautifulSoup.BeautifulSoup.NESTABLE_BLOCK_TAGS,
+    BeautifulSoup.BeautifulSoup.NESTABLE_LIST_TAGS,
+    NESTABLE_TABLE_TAGS)
 
 BeautifulSoup.BeautifulSoup.NESTABLE_TABLE_TAGS = NESTABLE_TABLE_TAGS
 BeautifulSoup.BeautifulSoup.NESTABLE_TAGS = NESTABLE_TAGS
@@ -120,6 +126,7 @@ def soup_parser(buf):
 
         for s in form.findAll('select'):
             field = dict(s.attrs)
+
             def to_dict(tag):
                 """return a dict from select tag contents"""
                 r = {}
@@ -147,6 +154,7 @@ def soup_parser(buf):
 
 
 form_handler_registry = []
+
 
 class FormHandler(object):
     """
@@ -207,7 +215,7 @@ class DS(FormHandler):
         for d in data['user_idp']:
             if isinstance(data['user_idp'][d], dict):
                 idps.update(data['user_idp'][d])
-        if not idps.has_key(idp.get_idp()):
+        if not idp.get_idp() in idps:
             raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp)
         wayf_data['user_idp'] = idps[idp.get_idp()]
         wayf_data['Select'] = 'Select'
@@ -253,8 +261,10 @@ class WAYF(FormHandler):
         wayf_data = {}
         idp = self.idp
         data = self.data
-        if not data['origin'].has_key(idp.get_idp()):
-            raise WAYFException("Can't find IdP '%s' in WAYF's IdP list" % idp.get_idp())
+        if not idp.get_idp() in data['origin']:
+            raise WAYFException(
+                "Can't find IdP '{0}' in WAYF's IdP list".format(
+                    idp.get_idp()))
         wayf_data['origin'] = data['origin'][idp.get_idp()]
         wayf_data['shire'] = data['shire']['value']
         wayf_data['providerId'] = data['providerId']['value']
@@ -289,21 +299,22 @@ class IdPFormLogin(FormHandler):
         return self.cm.prompt(shibboleth)
 
     def submit(self, opener, res):
-        """
-        submit login form to IdP
+        """submit login form to IdP
 
         :param opener: the urllib2 opener
-        :param data: the form data as a dictionary
-        :param res: the response object
-        :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
+        :param data: the form data
+           as a dictionary :param res: the response object :param cm: a
+           :class:`~slick.passmgr.CredentialManager` containing the URL
+           to the service provider you want to connect to
+
         """
         idp_data = {}
         cm = self.cm
         data = self.data
 
         # insert the hidden fields into the post data
-        for k,v in data.items():
-            if v.has_key('type') and v.has_key('value'):
+        for k, v in data.items():
+            if 'type' in v and 'value' in v:
                 if v.get('type') == 'hidden':
                     idp_data[k] = v.get('value')
 
@@ -320,9 +331,7 @@ class IdPFormLogin(FormHandler):
 
 
 class CASFormLogin(IdPFormLogin):
-    """
-    CAS Form Login Handler
-    """
+    """CAS Form Login Handler"""
     form_type = 'cas_login'
     signature = ['password', 'username']
     username_field = signature[1]
@@ -330,9 +339,7 @@ class CASFormLogin(IdPFormLogin):
 
 
 class ESOEFormLogin(IdPFormLogin):
-    """
-    ESOE Form Login Handler
-    """
+    """ESOE Form Login Handler"""
     form_type = 'esoe_login'
     signature = ['esoeauthn_pw', 'esoeauthn_user']
     username_field = signature[1]
@@ -340,22 +347,21 @@ class ESOEFormLogin(IdPFormLogin):
 
 
 class COSignFormLogin(IdPFormLogin):
-    """
-    COSign Form Login Handler
-    """
+    """COSign Form Login Handler"""
     form_type = 'cosign_login'
     signature = ['password', 'login']
     username_field = signature[1]
     password_field = signature[0]
 
     def submit(self, opener, res):
-        """
-        submit login form to COSign IdP
+        """submit login form to COSign IdP
 
         :param opener: the urllib2 opener
-        :param data: the form data as a dictionary
-        :param res: the response object
-        :param cm: a :class:`~slick.passmgr.CredentialManager` containing the URL to the service provider you want to connect to
+        :param data: the form data
+           as a dictionary :param res: the response object :param cm: a
+           :class:`~slick.passmgr.CredentialManager` containing the URL
+           to the service provider you want to connect to
+
         """
         idp_data = {}
         cm = self.cm
@@ -375,25 +381,23 @@ class COSignFormLogin(IdPFormLogin):
 
 
 class IdPSPForm(FormHandler):
-    """
-    IDP Post-back Form Handler
-    """
+    """IDP Post-back Form Handler"""
     form_type = 'idp'
     signature = ['SAMLResponse', 'TARGET']
 
-
     def submit(self, opener, res):
-        """
-        submit IdP form to SP
+        """submit IdP form to SP
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         log.info('Submitting IdP SAML form')
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
-        data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'TARGET':'cookie'})
+        data = urllib.urlencode({'SAMLResponse': data['SAMLResponse']['value'],
+                                 'TARGET': 'cookie'})
         request = urllib2.Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
@@ -401,25 +405,23 @@ class IdPSPForm(FormHandler):
 
 
 class IdPSPFormRelayState(FormHandler):
-    """
-    Slight variation on the IdPSPForm
-    """
+    """Slight variation on the IdPSPForm"""
     form_type = 'idp'
     signature = ['SAMLResponse', 'RelayState']
 
-
     def submit(self, opener, res):
-        """
-        submit IdP form to SP
+        """submit IdP form to SP
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         log.info('Submitting IdP SAML form')
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
-        data = urllib.urlencode({'SAMLResponse':data['SAMLResponse']['value'], 'RelayState':'cookie'})
+        data = urllib.urlencode({'SAMLResponse': data['SAMLResponse']['value'],
+                                 'RelayState': 'cookie'})
         request = urllib2.Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
@@ -427,12 +429,9 @@ class IdPSPFormRelayState(FormHandler):
 
 
 class SAMLRequest(FormHandler):
-    """
-    Slight variation on the IdPSPForm
-    """
+    """Slight variation on the IdPSPForm"""
     form_type = 'samlrequest'
     signature = ['SAMLRequest']
-
 
     def submit(self, opener, res):
         """
@@ -445,7 +444,7 @@ class SAMLRequest(FormHandler):
         log.info('Submitting SAML Verification form')
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
-        data = urllib.urlencode({'SAMLRequest':data['SAMLRequest']['value']})
+        data = urllib.urlencode({'SAMLRequest': data['SAMLRequest']['value']})
         request = urllib2.Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
@@ -453,6 +452,7 @@ class SAMLRequest(FormHandler):
 
 
 page_handler_registry = []
+
 
 class PageHandler(object):
     # The list of form parts to detect
@@ -473,9 +473,7 @@ class PageHandler(object):
 
 
 class ESOEChooser(PageHandler):
-    """
-    Slight variation on the IdPSPForm
-    """
+    """Slight variation on the IdPSPForm"""
     type = 'esoe'
 
     def __init__(self, *args, **kwargs):
@@ -491,14 +489,13 @@ class ESOEChooser(PageHandler):
                 return True
         return False
 
-
     def submit(self, opener, res):
-        """
-        follow login link on ESOE Chooser page
+        """follow login link on ESOE Chooser page
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         url = urlparse.urljoin(res.url, self.url)
         request = urllib2.Request(url)
@@ -508,11 +505,10 @@ class ESOEChooser(PageHandler):
 
 
 class CASJSRedirect(PageHandler):
-    """
-    Handles the JavaScript redirect of a CAS page.
-    """
+    """Handles the JavaScript redirect of a CAS page."""
     type = 'cas_redirect'
-    re = re.compile("""\s+<!--\s+window.location.replace \("([\D\d]*)"\);\s+-->\s+""")
+    re = re.compile(
+        "\s+<!--\s+window.location.replace \(\"([\D\d]*)\"\);\s+-->\s+")
 
     def __init__(self, *args, **kwargs):
         PageHandler.__init__(self, *args, **kwargs)
@@ -534,14 +530,13 @@ class CASJSRedirect(PageHandler):
 
         return False
 
-
     def submit(self, opener, res):
-        """
-        follow login link on ESOE Chooser page
+        """follow login link on ESOE Chooser page
 
         :param opener: the urllib2 opener
         :param data: the form data as a dictionary
         :param res: the response object
+
         """
         request = urllib2.Request(self.url)
         log.debug("GET: %s" % request.get_full_url())
@@ -550,12 +545,11 @@ class CASJSRedirect(PageHandler):
 
 
 def getFormAdapter(response, idp, cm):
-    """
-    try to guess what type of form we have encountered
+    """try to guess what type of form we have encountered
 
     :param forms: a list of forms, the forms are dictionaries of fields
+    :returns: an adapter that can be used to submit the form
 
-    return an adapter that can be used to submit the form
     """
 
     parser, title, forms = soup_parser(response)
@@ -572,7 +566,9 @@ def getFormAdapter(response, idp, cm):
         for name, adapter in form_handler_registry:
             radapter = match_form(form, adapter.signature)
             if radapter:
-                return adapter.form_type, adapter(title, form, idp=idp, credentialmanager=cm)
+                return adapter.form_type, adapter(title, form,
+                                                  idp=idp,
+                                                  credentialmanager=cm)
 
     for name, adapter in page_handler_registry:
         radapter = adapter(parser, idp=idp, credentialmanager=cm)
@@ -580,5 +576,3 @@ def getFormAdapter(response, idp, cm):
             return radapter.type, radapter
 
     return '', None
-
-

@@ -1,5 +1,6 @@
 ##############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -25,7 +26,7 @@ from urllib2 import HTTPCookieProcessor, HTTPRedirectHandler
 from urllib2 import HTTPBasicAuthHandler
 from time import time
 import re
-from arcs.shibboleth.client.forms import getFormAdapter
+from sibboleth.forms import getFormAdapter
 import sys
 
 is_jython = sys.platform.startswith('java')
@@ -57,7 +58,8 @@ class ShibbolethHandler(HTTPRedirectHandler, HTTPCookieProcessor):
         newurl = urljoin(req.get_full_url(), newurl)
         log.debug("302 %s" % newurl)
 
-        result = HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
+        result = HTTPRedirectHandler.http_error_302(self, req, fp,
+                                                    code, msg, headers)
 
         return result
 
@@ -103,10 +105,9 @@ class ShibbolethAuthHandler(HTTPBasicAuthHandler, ShibbolethHandler):
 
 
 def set_cookies_expiries(cookiejar):
-    """
-    Set the shibboleth session cookies to the default SP expiry, this way
-    the cookies can be used by other applications.
-    The cookes that are modified are ``_shibsession_``
+    """Set the shibboleth session cookies to the default SP expiry,
+    this way the cookies can be used by other applications.  The
+    cookes that are modified are ``_shibsession_``
 
     :param cj: the cookie jar that stores the shibboleth cookies
     """
@@ -125,11 +126,12 @@ else:
 
 
 class Shibboleth(shib_interface):
-    """
-    return a urllib response from the service once shibboleth authentication is complete.
+    """return a urllib response from the service once shibboleth
+    authentication is complete.
 
     :param idp: the Identity Provider that will be selected at the WAYF
-    :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager` containing the URL to the service provider you want to connect to
+    :param cm: a :class:`~arcs.shibboleth.client.credentials.CredentialManager`
+       containing the URL to the service provider you want to connect to
     :param cj: the cookie jar that will be used to store the shibboleth cookies
     """
     def __init__(self, idp, cm, cookiejar=None, proxies=None):
@@ -140,23 +142,24 @@ class Shibboleth(shib_interface):
         self.idp = idp
         self.cm = cm
 
-        shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm, cookiejar=self.cookiejar)
+        shib_auth_handler = ShibbolethAuthHandler(credentialmanager=self.cm,
+                                                  cookiejar=self.cookiejar)
         proxy_support = urllib2.ProxyHandler(proxies=proxies)
         self.opener = urllib2.build_opener(proxy_support, shib_auth_handler)
 
         self.__listeners = []
 
     def add_listener(self, listener):
-        """
-        add a listner that will be called when the shibboleth authentication process is finished.
+        """add a listner that will be called when the shibboleth
+        authentication process is finished.
 
-        the method signature of the listner can optionally take one argument which will be the response.
+        the method signature of the listner can optionally take one
+        argument which will be the response.
         """
         self.__listeners.append(listener)
 
     def openurl(self, url=None):
-        """
-        return the response object as a result of opens the url
+        """return the response object as a result of opens the url
 
         :param url: the URL of the service provider you want to connect to
         """
@@ -169,7 +172,8 @@ class Shibboleth(shib_interface):
 
     def __follow_chain(self, response):
         for c in self.cookiejar:
-            if c.name.startswith('_shibsession_') and c.domain == urlsplit(self.url)[1]:
+            if c.name.startswith('_shibsession_') and \
+                   c.domain == urlsplit(self.url)[1]:
                 set_cookies_expiries(self.cookiejar)
                 self.response = response
                 for l in self.__listeners:
@@ -196,15 +200,14 @@ class Shibboleth(shib_interface):
         raise Exception("Unknown error: Shibboleth auth chain lead to nowhere")
 
     def run(self):
-        """
-        used by the :class:`~arcs.shibboleth.client.credentials.Idp` and :class:`~arcs.shibboleth.client.credentials.CredentialManager` controllers to resume the shibboleth auth.
+        """used by the
+        :class:`~arcs.shibboleth.client.credentials.Idp` and
+        :class:`~arcs.shibboleth.client.credentials.CredentialManager`
+        controllers to resume the shibboleth auth.
         """
         request, response = self.adapter.submit(self.opener, self.response)
         return self.__follow_chain(response)
 
     def get_response(self):
-        """
-        return the current response object
-        """
+        """return the current response object"""
         return self.response
-
