@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -22,7 +23,6 @@
 import HTMLParser
 import pprint
 import unittest
-from test import test_support
 
 
 class EventCollector(HTMLParser.HTMLParser):
@@ -112,16 +112,15 @@ class TestCaseBase(unittest.TestCase):
             parser.close()
         self.assertRaises(HTMLParser.HTMLParseError, parse)
 
+
 class TestParserModifications(TestCaseBase):
 
     def test_attr_syntax(self):
-        output = [
-          ("starttag", "a", [("b", "v"), ("c", "v"), ("d", "v"), ("e", None)])
-          ]
+        output = [("starttag", "a", [("b", "v"), ("c", "v"),
+                                     ("d", "v"), ("e", None)])]
         self._run_check("""<a b='v'c="v" d=v e>""", output)
         # TODO make the unittest below pass
         #self._run_check("""<a b="v" c=v d=v">""", output)
-
 
     def test_startendtag(self):
         # test end tag with attributes
@@ -129,4 +128,3 @@ class TestParserModifications(TestCaseBase):
             ("starttag", "p", []),
             ("endtag", "p"),
             ])
-

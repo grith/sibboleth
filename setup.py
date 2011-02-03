@@ -18,11 +18,12 @@ if sys.version_info[0] == 2:
         extra_deps.append('httpsproxy-urllib2')
 
 
-setup(name='arcs.shibboleth.client',
+setup(name='sibboleth',
       version=version,
       description="Shibboleth authentication handler",
-      long_description=".. contents::\n\n" + open(path.join("docs", "intro.rst")).read() + "\n" +
-                       open(path.join("docs", "history.rst")).read(),
+      long_description=".. contents::\n\n" + \
+        open(path.join("docs", "intro.rst")).read() + "\n" + \
+        open(path.join("docs", "history.rst")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
@@ -31,23 +32,23 @@ setup(name='arcs.shibboleth.client',
         ],
       keywords='jython',
       author='Russell Sim',
-      author_email='russell.sim@arcs.org.au',
-      url='http://code.arcs.org.au/hudson/job/arcs.shibboleth.client/javadoc/',
+      author_email='russell.sim@gmail.com',
+      url='https://github.com/grith/sibboleth',
       license='GPL',
       packages=find_packages('src/main/python', exclude=['ez_setup']),
       package_dir = {'': 'src/main/python'},
-      namespace_packages=['arcs', 'arcs.shibboleth'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'lxml',
           'BeautifulSoup',
           # -*- Extra requirements: -*-
       ] + extra_deps,
       entry_points="""
       # -*- Entry points: -*-
       [console_scripts]
-      shib-login = arcs.shibboleth.client.shiblogin:main
-      shib-logout = arcs.shibboleth.client.shiblogout:main
+      shib-login = sibboleth.client.shiblogin:main
+      shib-logout = sibboleth.client.shiblogout:main
       """,
       )

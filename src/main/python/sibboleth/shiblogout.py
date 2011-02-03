@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -24,58 +25,47 @@ from os import path
 import logging
 import optparse
 from cookielib import MozillaCookieJar
-from shibboleth import Shibboleth
-from credentials import CredentialManager, Idp
+import urllib2
+from urllib2 import HTTPCookieProcessor
 
 homedir = os.getenv('USERPROFILE') or os.getenv('HOME')
 
-log = logging.getLogger('shib-login')
+log = logging.getLogger('shib-logout')
+
 
 def main(*args):
 
     # Populate our options, -h/--help is already there for you.
     usage = "usage: %prog [options] URL"
     optp = optparse.OptionParser(usage=usage)
-    optp.add_option("-u", "--username",
-                    help="the username to login as.")
     optp.add_option("-d", "--storedir", dest="store_dir",
                      help="the directory to store the certificate/key and \
                      config file",
                      metavar="DIR",
                      default=path.join(homedir, ".shibboleth"))
-    optp.add_option("-i", "--idp",
-                    help="unique ID of the IdP used to log in")
     optp.add_option('-v', '--verbose', dest='verbose', action='count',
-                    help="Increase verbosity (specify multiple times for more)")
+            help="Increase verbosity (specify multiple times for more)")
     # Parse the arguments (defaults to parsing sys.argv).
     opts, args = optp.parse_args()
 
     # Here would be a good place to check what came in on the command line and
     # call optp.error("Useful message") to exit if all it not well.
 
-    log_level = logging.WARNING # default
+    log_level = logging.WARNING  # default
     if opts.verbose == 1:
         log_level = logging.INFO
     elif opts.verbose >= 2:
         log_level = logging.DEBUG
 
-    # Set up basic configuration, out to stderr with a reasonable default format.
+    # Set up basic configuration, out to stderr with a reasonable
+    # default format.
     logging.basicConfig(level=log_level)
-
-    if not args:
-        optp.print_help()
-        return
 
     if not path.exists(opts.store_dir):
         os.mkdir(opts.store_dir)
 
-    sp = args[0]
-
-
-    idp = Idp(opts.idp)
-    c = CredentialManager()
-    if opts.username:
-        c.username = opts.username
+    if args:
+        sp = args[0]
 
     # if the cookies file exists load it
     cookies_file = path.join(opts.store_dir, 'cookies.txt')
@@ -83,13 +73,23 @@ def main(*args):
     if path.exists(cookies_file):
         cj.load()
 
-    shibboleth = Shibboleth(idp, c, cj)
-    shibboleth.openurl(sp)
-    print("Successfully authenticated to %s" % sp)
+    logout_urls = []
+    for cookie in cj:
+        if cookie.name.startswith('_shibsession_') or \
+               cookie.name.startswith('_shibstate_'):
+            logout_urls.append(
+                "https://%s/Shibboleth.sso/Logout" % cookie.domain)
+
+    logout_urls = list(set(logout_urls))
+
+    opener = urllib2.build_opener(HTTPCookieProcessor(cookiejar=cj))
+    for url in logout_urls:
+        request = urllib2.Request(url)
+        log.debug("GET: %s" % request.get_full_url())
+        response = opener.open(request)
 
     cj.save()
 
 
 if __name__ == "__main__":
     main()
-

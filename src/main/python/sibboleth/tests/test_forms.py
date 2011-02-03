@@ -1,5 +1,6 @@
 #############################################################################
 #
+# Copyright (c) 2011 Russell Sim <russell.sim@gmail.com> Contributors.
 # Copyright (c) 2009 Victorian Partnership for Advanced Computing Ltd and
 # Contributors.
 # All Rights Reserved.
@@ -20,11 +21,13 @@
 #############################################################################
 
 import unittest
-from arcs.shibboleth.client import shibboleth, forms
+from sibboleth import shibboleth, forms
 import inspect
 
 from os import path
 here = path.join(path.dirname(inspect.getsourcefile(shibboleth)), 'tests/')
+
+
 class TestForms(unittest.TestCase):
 
     def setUp(self):
@@ -53,6 +56,7 @@ class TestForms(unittest.TestCase):
 
     def testDS(self):
         self._formadapter('ds_aaf')
+        self._formadapter('ds_aafnew')
 
     def testESOE(self):
         self._formadapter('esoe_chooser')
@@ -67,5 +71,3 @@ class TestForms(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
