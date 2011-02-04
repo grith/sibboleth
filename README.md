@@ -20,13 +20,17 @@ Documentation
 * [Wiki](https://github.com/grith/sibboleth/wiki)
 * [Issues](https://github.com/grith/sibboleth/issues)
 
-* [Python doc]()
-* [Javadoc](http://grith.github.com/sibboleth/javadoc/)
-
-Documentation on how to use the library please refer to:
+# Python doc #
 
 * [Readme.Python](https://github.com/grith/sibboleth/wiki/Readme.Python) for the Python version.
-and 
+* [Python doc]()
+
+# Java doc #
+
 * [Readme.Java](https://github.com/grith/sibboleth/wiki/Readme.Java) for the Python version.
+* [Javadoc](http://grith.github.com/sibboleth/javadoc/)
+
+
+
 
 
