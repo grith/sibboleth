@@ -1,45 +1,59 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>grith</groupId>
 	<artifactId>sibboleth</artifactId>
-	<name>Shibboleth client</name>
 	<version>0.3-SNAPSHOT</version>
+
+	<name>sibboleth</name>
+	<description>Non-web Shibboleth client written in Python (incl. Java wrapper)</description>
+
+	<organization>
+		<name>Grith open source project</name>
+		<url>https://github.com/grith</url>
+	</organization>
 
 	<repositories>
 		<repository>
-			<id>ARCS</id>
-			<url>http://code.arcs.org.au/nexus/content/groups/public</url>
+			<id>bestgrid.public.release</id>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>ARCS Snapshots</id>
-			<url>http://code.arcs.org.au/nexus/content/groups/public-snapshots</url>
+			<id>bestgrid.public.snapshot</id>
+			<url>http://code.arcs.org.au/nexus/content/groups/public-snapshots
+			</url>
 		</repository>
 	</repositories>
 
-	<description>Non-web Shibboleth client written in Python (incl. Java wrapper)</description>
-	<scm>
-        <connection>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
-        </connection>
-        <url>scm:git:git://code.arcs.org.au/shibboleth-client/arcs-shibboleth-client.git
-        </url>
-    </scm>
+	<distributionManagement>
+		<repository>
+			<name>BeSTGRID Releases Repository</name>
+			<id>bestgrid.release</id>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>bestgrid.snapshot</id>
+			<name>BeSTGRID Snapshots Repository</name>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>arcs.release</id>
-            <name>ARCS Release Repository</name>
-            <url>http://code.arcs.org.au/nexus/content/repositories/releases
-            </url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-        <snapshotRepository>
-            <id>arcs.snapshot</id>
-            <name>ARCS SNAPSHOT Repository</name>
-            <url>http://code.arcs.org.au/nexus/content/repositories/snapshots
-            </url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/grith/sibboleth/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Hudson</system>
+		<url>http://dev.ceres.auckland.ac.nz/hudson/job/Sibboleth-SNAPSHOT/</url>
+	</ciManagement>
+
+	<scm>
+        <connection>scm:git:git://github.com/grith/sibboleth.git
+        </connection>
+        <developerConnection>scm:git:git@github.com:grith/sibboleth.git</developerConnection>
+        <url>https://github.com/grith/sibboleth</url>
+	</scm>
 
 	<dependencies>
 		<dependency>
@@ -116,36 +130,17 @@
 				</configuration>
 			</plugin>
 			
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-jarsigner-plugin</artifactId>-->
-<!--				<version>1.2</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>sign</id>-->
-<!--						<goals>-->
-<!--							<goal>sign</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--				<configuration>-->
-<!--					<alias>arcs</alias>-->
-<!--					<storepass>FxAKs3p6</storepass>-->
-<!--					<keypass>FxAKs3p6</keypass>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
-			
 		</plugins>
 	</build>
 	
 	<profiles>
 		<profile>
 			<id>sign</id>
-<!--			<activation>-->
-<!--				<property>-->
-<!--					<name>BUILD_NUMBER</name>-->
-<!--				</property>-->
-<!--			</activation> -->
+			<activation>
+				<property>
+					<name>BUILD_NUMBER</name>
+				</property>
+			</activation> 
 
 			<build>
 				<plugins>

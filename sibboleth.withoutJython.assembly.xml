@@ -15,9 +15,9 @@
 				<include>grith:sibboleth</include>
 			</includes>
 			<excludes>
-			 	<exclude>jython:jython</exclude>
-			    <exclude>jython:jythonLib</exclude>
-			    <exclude>jython:jythonLibWithHttpProxy</exclude>
+				<exclude>jython:jython</exclude>
+				<exclude>jython:jythonLib</exclude>
+				<exclude>jython:jythonLibWithHttpProxy</exclude>
 				<exclude>junit:junit</exclude>
 				<exclude>bouncycastle:bcprov-jdk15</exclude>
 				<exclude>com.jgoodies:forms</exclude>
@@ -27,32 +27,29 @@
 					<exclude>**/INDEX.LIST</exclude>
 					<exclude>**/MANIFEST.MF</exclude>
 					<exclude>**/LICENSE.txt</exclude>
+					<exclude>**/LICENSE</exclude>
 					<exclude>**/NOTICE.txt</exclude>
+					<exclude>**/NOTICE</exclude>
+					<exclude>**/log4j.properties</exclude>
+					<exclude>META-INF/services/java.sql.Driver</exclude>
+					<exclude>overview.html</exclude>
+					<exclude>client-config.wsdd</exclude>
+					<exclude>gluev12r2-ext-class-map.properties</exclude>
+					<exclude>ARCS.SF</exclude>
+					<exclude>ARCS.RSA</exclude>
+					<exclude>log4j.properties</exclude>
+					<exclude>log4j.xml</exclude>
 				</excludes>
 			</unpackOptions>
 		</dependencySet>
 	</dependencySets>
 
-<!--	<fileSets>-->
-<!--		<fileSet>-->
-<!--			<directory>src/main/python</directory>-->
-<!--			<outputDirectory>Lib</outputDirectory>-->
-<!--		</fileSet>-->
-<!--	</fileSets>-->
-
-
-	<!-- probably unnecessary -->
-	<!--	<files>-->
-	<!--		<file>-->
-	<!--			<source>src/main/resources/log4j.properties</source>-->
-	<!--			<outputDirectory>/</outputDirectory>-->
-	<!--		</file>-->
-	<!--		<file>-->
-	<!--
-		<source>src/main/resources/gluev12r2-ext-class-map.properties</source>
-	-->
-	<!--			<outputDirectory>/</outputDirectory>-->
-	<!--		</file>-->
-	<!--	</files>-->
+	<!--to make sure the right log4j.properties file is used -->
+	<files>
+		<file>
+			<source>src/main/resources/log4j.properties</source>
+			<outputDirectory>/</outputDirectory>
+		</file>
+	</files>
 
 </assembly>
