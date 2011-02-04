@@ -14,11 +14,6 @@
 			<includes>
 				<include>grith:sibboleth</include>
 			</includes>
-			<excludes>
-				<exclude>junit:junit</exclude>
-				<exclude>bouncycastle:bcprov-jdk15</exclude>
-				<exclude>com.jgoodies:forms</exclude>
-			</excludes>
 			<unpackOptions>
 				<excludes>
 					<exclude>**/INDEX.LIST</exclude>

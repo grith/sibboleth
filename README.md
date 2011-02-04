@@ -13,8 +13,15 @@ Since **sibboleth** talks *Shibboleth* not via a web-browser but via a desktop a
 
 Originally it was written in Python, but it also provides a Java wrapper to enable its functionality from Java applications (via [Jython](http://jython.org)).
 
-Usage
-----------
+Documentation
+-------------
+
+* [Github page](https://github.com/grith/sibboleth/)
+* [Wiki](https://github.com/grith/sibboleth/wiki)
+* [Issues](https://github.com/grith/sibboleth/issues)
+
+* [Python doc]()
+* [Javadoc](http://grith.github.com/sibboleth/javadoc/)
 
 Documentation on how to use the library please refer to:
 
