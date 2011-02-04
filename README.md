@@ -20,12 +20,12 @@ Documentation
 * [Wiki](https://github.com/grith/sibboleth/wiki)
 * [Issues](https://github.com/grith/sibboleth/issues)
 
-# Python doc #
+### Python doc ###
 
 * [Readme.Python](https://github.com/grith/sibboleth/wiki/Readme.Python) for the Python version.
 * [Python doc]()
 
-# Java doc #
+### Java doc ###
 
 * [Readme.Java](https://github.com/grith/sibboleth/wiki/Readme.Java) for the Python version.
 * [Javadoc](http://grith.github.com/sibboleth/javadoc/)
