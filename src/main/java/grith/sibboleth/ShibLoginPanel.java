@@ -30,6 +30,16 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+/**
+ * Reusable Swing component that can be used to display a shib-login component
+ * in your Swing app.
+ * 
+ * You'd create it using one of the constructors and then add a custom
+ * {@link ShibListener} to the object.
+ * 
+ * @author Markus Binsteiner
+ * 
+ */
 public class ShibLoginPanel extends JPanel implements ShibListener,
 ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
@@ -70,7 +80,10 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 	private Vector<ShibListener> shibListeners;
 
 	/**
-	 * Create the panel.
+	 * Create the panel using the specified start url.
+	 * 
+	 * @param url
+	 *            the url of the WAYF/DS.
 	 */
 	public ShibLoginPanel(String url) {
 
@@ -125,11 +138,27 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/**
+	 * Create the panel using the specified start url.
+	 * 
+	 * @param url
+	 *            the url of the WAYF/DS.
+	 * @param showLoginFailedDialog
+	 *            whether to display a JDialog when login fails or not. You can
+	 *            display your own error message through the attached listener
+	 *            if you specify false here.
+	 */
 	public ShibLoginPanel(String url, boolean showLoginFailedDialog) {
 		this(url);
 		this.showLoginFailedDialog = showLoginFailedDialog;
 	}
 
+	/**
+	 * Adds an {@link IdpListener}.
+	 * 
+	 * @param l
+	 *            the listener
+	 */
 	synchronized public void addIdpListener(IdpListener l) {
 		idpObject.addIdpListener(l);
 	}
@@ -139,7 +168,13 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		usernameTextField.addKeyListener(l);
 	}
 
-	// register a listener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * grith.sibboleth.ShibLoginEventSource#addShibListener(grith.sibboleth.
+	 * ShibListener)
+	 */
 	synchronized public void addShibListener(ShibListener l) {
 		if (shibListeners == null) {
 			shibListeners = new Vector<ShibListener>();
@@ -217,6 +252,11 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/**
+	 * Returns the currently user-selected IdP.
+	 * 
+	 * @return the IdP name
+	 */
 	public String get_idp() {
 		return (String) (idpModel.getSelectedItem());
 	}
@@ -235,6 +275,12 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * grisu.jcommons.interfaces.IdpListener#idpListLoaded(java.util.SortedSet)
+	 */
 	public void idpListLoaded(SortedSet<String> idpList) {
 
 		idpModel.removeAllElements();
@@ -254,6 +300,12 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		idpComboBox.setEnabled(true);
 	}
 
+	/**
+	 * Used to lock/disable the UI elements of this panel.
+	 * 
+	 * @param lock
+	 *            true for disabling, false for enabling this panel
+	 */
 	public void lockUI(boolean lock) {
 
 		usernameTextField.setEnabled(!lock);
@@ -262,6 +314,10 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/**
+	 * Call this method to start the login process. Usually attached to the
+	 * action associated with a login button.
+	 */
 	public void login() {
 
 		fireShibLoginStarted();
@@ -310,6 +366,11 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bushe.swing.event.EventSubscriber#onEvent(java.lang.Object)
+	 */
 	public void onEvent(NewHttpProxyEvent arg0) {
 
 		// try to reload idplist
@@ -317,10 +378,25 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/**
+	 * Used from within the python code.
+	 * 
+	 * Don't call this manually.
+	 * 
+	 * @param shibboleth
+	 *            the controller object
+	 * @return the response
+	 */
 	public PyInstance prompt(ShibbolethClient shibboleth) {
 		return null;
 	}
 
+	/**
+	 * Call this to refresh the list of the displayed IdPs.
+	 * 
+	 * Usually called after http proxy settings change or such. You probably
+	 * don't need to do that though since it'll be done automatically.
+	 */
 	public void refreshIdpList() {
 
 		lockUI(true);
@@ -369,7 +445,12 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
-	// remove a listener
+	/**
+	 * Removes an {@link IdpListener}.
+	 * 
+	 * @param l
+	 *            the listener
+	 */
 	synchronized public void removeIdpListener(IdpListener l) {
 		idpObject.removeIdpListener(l);
 	}
@@ -379,7 +460,13 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		usernameTextField.removeKeyListener(l);
 	}
 
-	// remove a listener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * grith.sibboleth.ShibLoginEventSource#removeShibListener(grith.sibboleth
+	 * .ShibListener)
+	 */
 	synchronized public void removeShibListener(ShibListener l) {
 		if (shibListeners == null) {
 			shibListeners = new Vector<ShibListener>();
@@ -387,6 +474,13 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		shibListeners.removeElement(l);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * grith.sibboleth.ShibListener#shibLoginComplete(org.python.core.PyInstance
+	 * )
+	 */
 	public void shibLoginComplete(PyInstance response) {
 
 		realShibClient.removeShibListener(this);
@@ -397,6 +491,11 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		lockUI(false);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see grith.sibboleth.ShibListener#shibLoginFailed(java.lang.Exception)
+	 */
 	public void shibLoginFailed(Exception e) {
 
 		fireShibLoginFailed(e);
@@ -410,6 +509,11 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see grith.sibboleth.ShibListener#shibLoginStarted()
+	 */
 	public void shibLoginStarted() {
 
 		lockUI(true);

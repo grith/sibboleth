@@ -2,7 +2,30 @@ package grith.sibboleth;
 
 import org.python.core.PyInstance;
 
+/**
+ * Interface that can be used to monitor the login process.
+ * 
+ * Might be useful for graphical user interfaces. You'd connect it using the
+ * {@link Shibboleth#addShibListener(ShibListener)} method.
+ * 
+ * @author Markus Binsteiner
+ * 
+ */
 public interface ShibListener {
+
+	/**
+	 * Fired when shib login is complete.
+	 * 
+	 * @param response the response as a {@link PyInstance} object
+	 */
+	public void shibLoginComplete(PyInstance response);
+
+	/**
+	 * Fired when something during the shib login process failed.
+	 * 
+	 * @param e the exception
+	 */
+	public void shibLoginFailed(Exception e);
 
 	/**
 	 * Fired when shib login process starts.
@@ -11,9 +34,5 @@ public interface ShibListener {
 	 * it.
 	 */
 	public void shibLoginStarted();
-
-	public void shibLoginComplete(PyInstance response);
-
-	public void shibLoginFailed(Exception e);
 
 }

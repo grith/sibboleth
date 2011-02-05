@@ -4,6 +4,15 @@ import grisu.jcommons.utils.DefaultGridSecurityProvider;
 
 import org.python.core.PyInstance;
 
+/**
+ * Dummy implementation of an {@link IdpObject}.
+ * 
+ * Used to get a list of all availabe IdPs in order to display to the user
+ * interactively.
+ * 
+ * @author Markus Binsteiner
+ * 
+ */
 public class DummyIdpObject extends IdpObject {
 
 	public static void main(String[] args) throws InterruptedException {
@@ -13,31 +22,6 @@ public class DummyIdpObject extends IdpObject {
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
 		"TrustAllCertificates");
 
-		// IdpObject idp = new IdpObject() {
-		//
-		// @Override
-		// public void set_idps(Map<String, String> idps) {
-		//
-		// this.idpList = new TreeSet<String>(idps.keySet());
-		//
-		// for ( String idp : idpList ) {
-		// System.out.println(idp);
-		// }
-		//
-		// }
-		//
-		// @Override
-		// public PyInstance prompt(ShibbolethClient shibboleth) {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		//
-		// @Override
-		// public String get_idp() {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		// };
 
 		IdpObject idpO = new DummyIdpObject();
 

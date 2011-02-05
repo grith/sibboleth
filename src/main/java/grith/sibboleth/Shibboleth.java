@@ -16,11 +16,25 @@ import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
+/**
+ * Central wrapper class that imports the {@code Shibboleth} class from the
+ * {@code sibboleth.shibboleth.py} python module.
+ * 
+ * Encapsulates the whole redirect-flow that happens when you do a shibboleth
+ * authentication.
+ * 
+ * @author Markus Binsteiner
+ * 
+ */
 public class Shibboleth implements ShibLoginEventSource,
 EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 	static final Logger myLogger = Logger.getLogger(Shibboleth.class.getName());
 
+	/**
+	 * Convenience class to activate an All-trusting Trustmanager. Most useful
+	 * for testing.
+	 */
 	public static void initDefaultSecurityProvider() {
 
 		java.security.Security.addProvider(new DefaultGridSecurityProvider());
@@ -81,6 +95,19 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 	}
 
+	/**
+	 * Convenience method to tell the (j/p)ython and the Java code to use a
+	 * specific http prpxoy server.
+	 * 
+	 * @param host
+	 *            the http proxy server host
+	 * @param port
+	 *            the http proxy server port
+	 * @param username
+	 *            the http proxy server username (or null if non-authenticated)
+	 * @param password
+	 *            the http proxy server password (or null if non-authenticated)
+	 */
 	public static void setHttpProxy(String host, int port, String username,
 			char[] password) {
 
@@ -125,7 +152,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 		PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter
-.exec("from sibboleth import Shibboleth");
+		.exec("from sibboleth import Shibboleth");
 		PyObject shibbolethClientClass = interpreter.get("Shibboleth");
 
 		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp),
@@ -137,7 +164,13 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		"shibLoginComplete"));
 	}
 
-	// register a listener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * grith.sibboleth.ShibLoginEventSource#addShibListener(grith.sibboleth.
+	 * ShibListener)
+	 */
 	synchronized public void addShibListener(ShibListener l) {
 		if (shibListeners == null) {
 			shibListeners = new Vector<ShibListener>();
@@ -237,14 +270,32 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bushe.swing.event.Prioritized#getPriority()
+	 */
 	public int getPriority() {
 		return -100;
 	}
 
+	/**
+	 * Returns the last response in the sequence of shib-calls/redirects.
+	 * 
+	 * Needed, for example, to request a slcs certificate with the
+	 * {@code gsindl} package.
+	 * 
+	 * @return the response as an {@link PyInstance} object
+	 */
 	public PyInstance getResponse() {
 		return response;
 	}
 
+	/**
+	 * Convenience method to get last response in its String representation.
+	 * 
+	 * @return the response as a String
+	 */
 	public String getResponseAsString() {
 
 		Iterable<PyObject> it = response.asIterable();
@@ -258,6 +309,11 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		return responseString.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bushe.swing.event.EventSubscriber#onEvent(java.lang.Object)
+	 */
 	public void onEvent(NewHttpProxyEvent arg0) {
 
 		setHttpProxy(arg0.getProxyHost(), arg0.getProxyPort(),
@@ -265,6 +321,12 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param url
+	 * @return
+	 */
 	public PyInstance openurl(String url) {
 
 		try {

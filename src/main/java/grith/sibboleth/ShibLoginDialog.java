@@ -24,6 +24,12 @@ import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 
+/**
+ * An example Swing JDialog. Have a look at the code if you're interested...
+ * 
+ * @author Markus Binsteiner
+ * 
+ */
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
 	private class LoginAction extends AbstractAction {
@@ -63,6 +69,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			HttpProxyManager.setDefaultHttpProxy();
 
 			dialog.setVisible(true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
