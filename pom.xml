@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>grith</groupId>
@@ -6,7 +7,8 @@
 	<version>0.3-SNAPSHOT</version>
 
 	<name>sibboleth</name>
-	<description>Non-web Shibboleth client written in Python (incl. Java wrapper)</description>
+	<description>Non-web Shibboleth client written in Python (incl. Java
+		wrapper)</description>
 
 	<organization>
 		<name>Grith open source project</name>
@@ -16,7 +18,8 @@
 	<repositories>
 		<repository>
 			<id>bestgrid.public.release</id>
-			<url>http://dev.ceres.auckland.ac.nz/nexus/content/groups/public/</url>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/groups/public/
+			</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
@@ -49,12 +52,14 @@
 		<repository>
 			<name>BeSTGRID Releases Repository</name>
 			<id>bestgrid.release</id>
-			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/releases</url>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/releases
+			</url>
 		</repository>
 		<snapshotRepository>
 			<id>bestgrid.snapshot</id>
 			<name>BeSTGRID Snapshots Repository</name>
-			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/snapshots</url>
+			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/snapshots
+			</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -65,16 +70,18 @@
 
 	<ciManagement>
 		<system>Hudson</system>
-		<url>http://dev.ceres.auckland.ac.nz/hudson/job/Sibboleth-SNAPSHOT/</url>
+		<url>http://dev.ceres.auckland.ac.nz/hudson/job/Sibboleth-SNAPSHOT/
+		</url>
 	</ciManagement>
 
 	<scm>
-        <connection>scm:git:git://github.com/grith/sibboleth.git
+		<connection>scm:git:git://github.com/grith/sibboleth.git
         </connection>
-        <developerConnection>scm:git:git@github.com:grith/sibboleth.git</developerConnection>
-        <url>https://github.com/grith/sibboleth</url>
+		<developerConnection>scm:git:git@github.com:grith/sibboleth.git
+		</developerConnection>
+		<url>https://github.com/grith/sibboleth</url>
 	</scm>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -109,8 +116,8 @@
 
 		<resources>
 			<resource>
-<!--				<targetPath>${project.build.outputDirectory}</targetPath>-->
-<!--				<filtering>false</filtering>-->
+				<!-- <targetPath>${project.build.outputDirectory}</targetPath> -->
+				<!-- <filtering>false</filtering> -->
 				<directory>src/main/python</directory>
 			</resource>
 
@@ -154,10 +161,10 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>sign</id>
@@ -165,7 +172,7 @@
 				<property>
 					<name>BUILD_NUMBER</name>
 				</property>
-			</activation> 
+			</activation>
 
 			<build>
 				<plugins>
@@ -187,11 +194,28 @@
 							<keypass>FxAKs3p6</keypass>
 						</configuration>
 					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.7</version>
+						<configuration>
+							<linksource>true</linksource>
+							<breakiterator>true</breakiterator>
+							<source>1.5</source>
+							<detectLinks>true</detectLinks>
+							<links>
+								<!-- grisu stuff -->
+								<link>http://grisu.github.com/grid-jcommons/javadoc/</link>
+							</links>
+						</configuration>
+					</plugin>
+
 				</plugins>
 			</build>
 
 		</profile>
-	</profiles>	
+	</profiles>
 
 
 </project>
