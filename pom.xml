@@ -203,7 +203,7 @@
 							<linksource>true</linksource>
 							<breakiterator>true</breakiterator>
 							<source>1.5</source>
-							<detectLinks>true</detectLinks>
+							<detectLinks>false</detectLinks>
 							<links>
 								<!-- grisu stuff -->
 								<link>http://grisu.github.com/grid-jcommons/javadoc/</link>

@@ -76,7 +76,7 @@ public abstract class IdpObject {
 	 * 
 	 * @param shibboleth
 	 *            the controller object
-	 * @return
+	 * @return the remote response
 	 */
 	public abstract PyInstance prompt(ShibbolethClient shibboleth);
 

@@ -33,7 +33,7 @@ public interface CredentialManager {
 	 * 
 	 * @param shibboleth
 	 *            the controller object
-	 * @return
+	 * @return the remote response
 	 */
 	public PyObject prompt(Object shibboleth);
 
