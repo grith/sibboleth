@@ -67,7 +67,3 @@ class TestForms(unittest.TestCase):
 
     def testCASRedirect(self):
         self._formadapter('cas_redirect_jcu')
-
-
-if __name__ == '__main__':
-    unittest.main()
