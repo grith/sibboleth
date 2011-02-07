@@ -63,6 +63,12 @@ class TestShibboleth(unittest.TestCase):
     def setUp(self):
         pass
 
+    def test_pass(self):
+        """this test exists to prevent and error from the class
+        defining no tests
+        """
+        pass
+
 
 def add_test(cls, i):
     def tmpl_test_idp(self):
