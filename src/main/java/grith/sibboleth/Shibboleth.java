@@ -322,10 +322,11 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 	}
 
 	/**
-	 * 
+	 * Used by the (j/p)ython) code.
 	 * 
 	 * @param url
-	 * @return
+	 *            the url
+	 * @return the remote response
 	 */
 	public PyInstance openurl(String url) {
 

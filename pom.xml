@@ -200,14 +200,14 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>2.7</version>
 						<configuration>
+							<aggregate>true</aggregate>
 							<linksource>true</linksource>
 							<breakiterator>true</breakiterator>
 							<source>1.5</source>
-							<detectLinks>false</detectLinks>
 							<links>
-								<!-- grisu stuff -->
 								<link>http://grisu.github.com/grid-jcommons/javadoc/</link>
 							</links>
+							<detectLinks>true</detectLinks>
 						</configuration>
 					</plugin>
 
