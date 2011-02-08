@@ -27,7 +27,7 @@ from sibboleth.credentials import Idp, SimpleCredentialManager, \
      AuthenticationException
 import inspect
 
-from os import path
+from os import path, environ
 here = path.join(path.dirname(inspect.getsourcefile(sibboleth)), 'tests/')
 
 aaf_sp_url = 'https://slcs1.arcs.org.au/SLCS/login'
@@ -63,6 +63,12 @@ class TestShibboleth(unittest.TestCase):
     def setUp(self):
         pass
 
+    def test_pass(self):
+        """this test exists to prevent and error from the class
+        defining no tests
+        """
+        pass
+
 
 def add_test(cls, i):
     def tmpl_test_idp(self):
@@ -86,9 +92,9 @@ for i in idps.idps:
         continue  # uses basic auth and just hangs for ages
     if i.startswith('Murdoch University'):
         continue  # invalid html
+    if not 'SIBBOLETH_TEST' in environ:
+        continue
+
     add_test(TestShibboleth, i)
 
 del add_test
-
-if __name__ == '__main__':
-    unittest.main()
