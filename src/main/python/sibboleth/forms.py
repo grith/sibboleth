@@ -303,7 +303,7 @@ class IdPSPFormRelayState(FormHandler):
         data = self.data
         url = urlparse.urljoin(res.url, data['form']['action'])
         data = urllib.urlencode({'SAMLResponse': data['SAMLResponse']['value'],
-                                 'RelayState': 'cookie'})
+                                    'RelayState': data['RelayState']['value']})
         request = Request(url, data=data)
         log.debug("POST: %s" % request.get_full_url())
         response = opener.open(request)
