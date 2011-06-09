@@ -1,0 +1,151 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Introduction &mdash; sibboleth v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="sibboleth v1.0 documentation" href="index.html" />
+    <link rel="next" title="2. shibboleth – urllib shibboleth authentication" href="shibboleth.html" />
+    <link rel="prev" title="Welcome to sibboleth’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shibboleth.html" title="2. shibboleth – urllib shibboleth authentication"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to sibboleth’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">sibboleth v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>This library provides classes to help with using urllib2 to access a shibboleth protected URL.</p>
+<div class="section" id="shib-login">
+<h2>1.1. shib-login<a class="headerlink" href="#shib-login" title="Permalink to this headline">¶</a></h2>
+<p>This commandline tool was designed to dump cookies from the CookieJar after successfully accessing an SP. These cookies can then be used by other tools like <tt class="docutils literal"><span class="pre">wget</span></tt> of <tt class="docutils literal"><span class="pre">curl</span></tt> to access the same shibboleth protected URL.</p>
+<div class="highlight-python"><pre>$ shib-login -i VPAC https://slcs1.arcs.org.au/SLCS/login
+Username [russell]:
+Password:
+Successfully authenticated to https://slcs1.arcs.org.au/SLCS/login
+$ cat ~/.shibboleth/cookies.txt
+# Yummy shibboleth cookies
+slcs1.arcs.org.au       FALSE   /       FALSE   1250598932
+_shibsession_64656561756c7468747470766a2f2f736c6373312e617263732e6f72672e61752f73686962626f6c657468
+   _186abd265ea87bf980fae2a16b0243e2
+
+
+$ curl -b ~/.shibboleth/cookies.txt https://slcs1.arcs.org.au/SLCS/login
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;SLCSLoginResponse&gt;
+......
+
+$ wget --load-cookies ~/.shibboleth/cookies.txt https://slcs1.arcs.org.au/SLCS/login
+--2009-08-18 14:35:53--  https://slcs1.arcs.org.au/SLCS/login
+Resolving slcs1.arcs.org.au... 202.158.218.211
+Connecting to slcs1.arcs.org.au|202.158.218.211|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+.......</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Introduction</a><ul>
+<li><a class="reference internal" href="#shib-login">1.1. shib-login</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to sibboleth&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="shibboleth.html"
+                        title="next chapter">2. <tt class="docutils literal docutils literal"><span class="pre">shibboleth</span></tt> &#8211; urllib shibboleth authentication</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shibboleth.html" title="2. shibboleth – urllib shibboleth authentication"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to sibboleth’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">sibboleth v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Russell Sim.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
