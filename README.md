@@ -23,7 +23,7 @@ Documentation
 ### Python doc ###
 
 * [Readme.Python](https://github.com/grith/sibboleth/wiki/Readme.Python) for the Python version.
-* [Python doc]()
+* [Python doc](http://grith.github.com/sibboleth/pythondoc/)
 
 ### Java doc ###
 
