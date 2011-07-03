@@ -103,7 +103,8 @@ public abstract class IdpObject {
 	 */
 	public void set_idps(Map<String, String> idps) {
 
-		this.idpList = new TreeSet<String>(idps.keySet());
+		this.idpList = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+		this.idpList.addAll(idps.keySet());
 
 		fireIdpListSet();
 	}
