@@ -21,6 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
@@ -42,6 +43,9 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class ShibLoginPanel extends JPanel implements ShibListener,
 ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
+
+	static final Logger myLogger = Logger.getLogger(ShibLoginPanel.class
+			.getName());
 
 	private static final long serialVersionUID = 3143352249184524656L;
 
@@ -116,7 +120,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			add(lblUsername, "1, 4, right, default");
 		}
 		String defaultUsername = CommonGridProperties.getDefault()
-		.getGridProperty(CommonGridProperties.Property.SHIB_USERNAME);
+				.getGridProperty(CommonGridProperties.Property.SHIB_USERNAME);
 		{
 			usernameTextField = new JTextField();
 			if ((defaultUsername != null) && !"".equals(defaultUsername)) {
@@ -191,7 +195,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -213,7 +217,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -238,7 +242,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -356,7 +360,6 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 					shibLoginStarted();
 					realShibClient.openurl(url);
 				} catch (Exception e) {
-					e.printStackTrace();
 					shibLoginFailed(e);
 					// fireShibLoginFailed(e);
 				}
@@ -404,7 +407,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 		idpModel.removeAllElements();
 
 		final String lastIdp = CommonGridProperties.getDefault()
-		.getGridProperty(CommonGridProperties.Property.SHIB_IDP);
+				.getGridProperty(CommonGridProperties.Property.SHIB_IDP);
 
 		if (StringUtils.isNotBlank(lastIdp)) {
 			idpModel.addElement(lastIdp);
@@ -433,7 +436,7 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 						idpModel.removeAllElements();
 						idpModel.addElement(COULD_NOT_LOAD_IDP_LIST_STRING);
 					}
-					e.printStackTrace(System.err);
+					myLogger.error(e);
 				} finally {
 					lockUI(false);
 				}

@@ -40,7 +40,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
-		"TrustAllCertificates");
+				"TrustAllCertificates");
 	}
 
 	public static void main(String[] args) throws InterruptedException {
@@ -50,7 +50,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
-		"TrustAllCertificates");
+				"TrustAllCertificates");
 
 		IdpObject idp = new StaticIdpObject("The University of Auckland");
 
@@ -76,7 +76,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 			public void shibLoginFailed(Exception e) {
 
-				e.printStackTrace();
+				myLogger.error(e);
 
 			}
 
@@ -122,7 +122,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 					proxyString = "http://" + host + ":" + port;
 				} else {
 					proxyString = "http://" + username + ":"
-					+ new String(password) + "@" + host + ":" + port;
+							+ new String(password) + "@" + host + ":" + port;
 				}
 			}
 
@@ -135,7 +135,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 					+ "\") ");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 
 	}
@@ -158,10 +158,10 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 		PyObject shibObject = shibbolethClientClass.__call__(Py.java2py(idp),
 				Py.java2py(cm));
 		shibClient = (ShibbolethClient) shibObject
-		.__tojava__(ShibbolethClient.class);
+				.__tojava__(ShibbolethClient.class);
 
 		shibClient.add_listener(Py.java2py(this).__getattr__(
-		"shibLoginComplete"));
+				"shibLoginComplete"));
 	}
 
 	/*
@@ -187,7 +187,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -211,7 +211,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -233,7 +233,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and
@@ -256,7 +256,7 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 			Vector<ShibListener> shibChangeTargets;
 			synchronized (this) {
 				shibChangeTargets = (Vector<ShibListener>) shibListeners
-				.clone();
+						.clone();
 			}
 
 			// walk through the listener list and

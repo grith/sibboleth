@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
@@ -31,6 +32,9 @@ import org.python.core.PyObject;
  * 
  */
 public class ShibLoginDialog extends JDialog implements ShibListener {
+
+	static final Logger myLogger = Logger.getLogger(ShibLoginDialog.class
+			.getName());
 
 	private class LoginAction extends AbstractAction {
 		public LoginAction() {
@@ -63,7 +67,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			});
 
 			ShibLoginDialog dialog = new ShibLoginDialog(
-			"https://slcstest.arcs.org.au/SLCS/login");
+					"https://slcstest.arcs.org.au/SLCS/login");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 			HttpProxyManager.setDefaultHttpProxy();
@@ -71,7 +75,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			dialog.setVisible(true);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 	}
 	private final JPanel contentPanel = new JPanel();
@@ -88,7 +92,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 		java.security.Security.addProvider(new DefaultGridSecurityProvider());
 
 		java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm",
-		"TrustAllCertificates");
+				"TrustAllCertificates");
 
 		setBounds(100, 100, 529, 431);
 		getContentPane().setLayout(new BorderLayout());
