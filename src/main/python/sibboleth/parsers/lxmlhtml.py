@@ -25,7 +25,7 @@ from lxml import etree
 
 def lxml_parser(buf):
     """
-    Form parser based on Beautiful Soup
+    Form parser based on LXML etree HTML parser
     """
 
     html = etree.HTML(''.join(buf.readlines()))

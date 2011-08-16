@@ -24,7 +24,8 @@ setup(name='sibboleth',
       long_description=".. contents::\n\n" + \
         open(path.join("docs", "intro.rst")).read() + "\n" + \
         open(path.join("docs", "history.rst")).read(),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+      # Get more strings from
+      # http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -36,7 +37,8 @@ setup(name='sibboleth',
       url='https://github.com/grith/sibboleth',
       license='GPL',
       packages=find_packages('src/main/python', exclude=['ez_setup']),
-      package_dir = {'': 'src/main/python'},
+      package_dir={'': 'src/main/python'},
+      test_suite="sibboleth.tests",
       include_package_data=True,
       zip_safe=False,
       install_requires=[

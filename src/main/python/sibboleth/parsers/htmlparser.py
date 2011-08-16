@@ -65,6 +65,8 @@ class FormParser(HTMLParser):
             attrs = dict(attrs)
             if 'name' in attrs:
                 self.data[attrs['name']] = attrs
+            elif "submit" == attrs.get("type"):
+                self.data["submit"] = attrs
 
     def handle_data(self, data):
         if self.in_form and self.in_wayf and self.origin_idp and data.strip():
