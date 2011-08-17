@@ -20,10 +20,10 @@
 
 import unittest
 import inspect
+import sys
 
 from sibboleth import shibboleth
 from sibboleth.parsers.htmlparser import html_parser
-from sibboleth.parsers.lxmlhtml import lxml_parser
 from sibboleth.parsers.soup import soup_parser
 
 from os import path
@@ -55,11 +55,14 @@ class TestHTMLParser(unittest.TestCase):
             parser(f)[2])
 
 
-class TestLXMLParser(TestHTMLParser):
-    """This series of test is trying test the parsers to confirm the
-    data they return"""
-    def setUp(self):
-        self.parser = lxml_parser
+if not sys.platform.startswith('java'):
+    from sibboleth.parsers.lxmlhtml import lxml_parser
+
+    class TestLXMLParser(TestHTMLParser):
+        """This series of test is trying test the parsers to confirm the
+        data they return"""
+        def setUp(self):
+            self.parser = lxml_parser
 
 
 class TestSoupParser(TestHTMLParser):
