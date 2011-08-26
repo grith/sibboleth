@@ -54,7 +54,7 @@
   <div class="section" id="shibboleth-urllib-shibboleth-authentication">
 <h1>2. <a class="reference internal" href="#module-sibboleth.shibboleth" title="sibboleth.shibboleth"><tt class="xref py py-mod docutils literal"><span class="pre">shibboleth</span></tt></a> &#8211; urllib shibboleth authentication<a class="headerlink" href="#shibboleth-urllib-shibboleth-authentication" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-sibboleth.shibboleth"></span><div class="section" id="shibboleth-objects">
-<h2>2.1. <a class="reference internal" href="#sibboleth.shibboleth.Shibboleth" title="sibboleth.shibboleth.Shibboleth"><tt class="xref py py-class docutils literal"><span class="pre">Shibboleth</span></tt></a> Objects<a class="headerlink" href="#shibboleth-objects" title="Permalink to this headline">¶</a></h2>
+<h2>2.1. <tt class="xref py py-class docutils literal"><span class="pre">Shibboleth</span></tt> Objects<a class="headerlink" href="#shibboleth-objects" title="Permalink to this headline">¶</a></h2>
 <p>Using the shibboleth handler is a bit different to the urllib2 handlers because the shibboleth auth chain is far more complex.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">sibboleth</span> <span class="kn">import</span> <span class="n">Shibboleth</span><span class="p">,</span> <span class="n">SimpleCredentialManager</span><span class="p">,</span> <span class="n">Idp</span>
 <span class="n">idp</span> <span class="o">=</span> <span class="n">Idp</span><span class="p">(</span><span class="s">&#39;VPAC&#39;</span><span class="p">)</span>
@@ -70,133 +70,15 @@
 <span class="n">shibboleth</span> <span class="o">=</span> <span class="n">Shibboleth</span><span class="p">(</span><span class="n">idp</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="class">
-<dt id="sibboleth.shibboleth.Shibboleth">
-<em class="property">class </em><tt class="descclassname">sibboleth.shibboleth.</tt><tt class="descname">Shibboleth</tt><big>(</big><em>idp</em>, <em>cm</em>, <em>cookiejar=None</em>, <em>proxies=None</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.Shibboleth" title="Permalink to this definition">¶</a></dt>
-<dd><p>return a urllib response from the service once shibboleth
-authentication is complete.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>idp</strong> &#8211; the Identity Provider that will be selected at the WAYF</li>
-<li><strong>cm</strong> &#8211; a <a class="reference internal" href="credentials.html#sibboleth.credentials.CredentialManager" title="sibboleth.credentials.CredentialManager"><tt class="xref py py-class docutils literal"><span class="pre">CredentialManager</span></tt></a>
-containing the URL to the service provider you want to connect to</li>
-<li><strong>cj</strong> &#8211; the cookie jar that will be used to store the shibboleth cookies</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="sibboleth.shibboleth.Shibboleth.add_listener">
-<tt class="descname">add_listener</tt><big>(</big><em>listener</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.Shibboleth.add_listener" title="Permalink to this definition">¶</a></dt>
-<dd><p>add a listner that will be called when the shibboleth
-authentication process is finished.</p>
-<p>the method signature of the listner can optionally take one
-argument which will be the response.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.Shibboleth.get_response">
-<tt class="descname">get_response</tt><big>(</big><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.Shibboleth.get_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the current response object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.Shibboleth.openurl">
-<tt class="descname">openurl</tt><big>(</big><em>url=None</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.Shibboleth.openurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the response object as a result of opens the url</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>url</strong> &#8211; the URL of the service provider you want to connect to</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.Shibboleth.run">
-<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.Shibboleth.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>used by the
-<a class="reference internal" href="credentials.html#sibboleth.credentials.Idp" title="sibboleth.credentials.Idp"><tt class="xref py py-class docutils literal"><span class="pre">Idp</span></tt></a> and
-<a class="reference internal" href="credentials.html#sibboleth.credentials.CredentialManager" title="sibboleth.credentials.CredentialManager"><tt class="xref py py-class docutils literal"><span class="pre">CredentialManager</span></tt></a>
-controllers to resume the shibboleth auth.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="shibbolethhandler-objects">
-<h2>2.2. <a class="reference internal" href="#sibboleth.shibboleth.ShibbolethHandler" title="sibboleth.shibboleth.ShibbolethHandler"><tt class="xref py py-class docutils literal"><span class="pre">ShibbolethHandler</span></tt></a> Objects<a class="headerlink" href="#shibbolethhandler-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.shibboleth.ShibbolethHandler">
-<em class="property">class </em><tt class="descclassname">sibboleth.shibboleth.</tt><tt class="descname">ShibbolethHandler</tt><big>(</big><em>cookiejar=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logging Redirect Handler</p>
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethHandler.http_error_301">
-<tt class="descname">http_error_301</tt><big>(</big><em>req</em>, <em>fp</em>, <em>code</em>, <em>msg</em>, <em>headers</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethHandler.http_error_301" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethHandler.http_error_302">
-<tt class="descname">http_error_302</tt><big>(</big><em>req</em>, <em>fp</em>, <em>code</em>, <em>msg</em>, <em>headers</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethHandler.http_error_302" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethHandler.http_error_303">
-<tt class="descname">http_error_303</tt><big>(</big><em>req</em>, <em>fp</em>, <em>code</em>, <em>msg</em>, <em>headers</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethHandler.http_error_303" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethHandler.http_error_307">
-<tt class="descname">http_error_307</tt><big>(</big><em>req</em>, <em>fp</em>, <em>code</em>, <em>msg</em>, <em>headers</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethHandler.http_error_307" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<h2>2.2. <tt class="xref py py-class docutils literal"><span class="pre">ShibbolethHandler</span></tt> Objects<a class="headerlink" href="#shibbolethhandler-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="shibbolethauthhandler-objects">
-<h2>2.3. <a class="reference internal" href="#sibboleth.shibboleth.ShibbolethAuthHandler" title="sibboleth.shibboleth.ShibbolethAuthHandler"><tt class="xref py py-class docutils literal"><span class="pre">ShibbolethAuthHandler</span></tt></a> Objects<a class="headerlink" href="#shibbolethauthhandler-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.shibboleth.ShibbolethAuthHandler">
-<em class="property">class </em><tt class="descclassname">sibboleth.shibboleth.</tt><tt class="descname">ShibbolethAuthHandler</tt><big>(</big><em>credentialmanager=None</em>, <em>cookiejar=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethAuthHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>IDP Basic Auth Handler</p>
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethAuthHandler.http_error_401">
-<tt class="descname">http_error_401</tt><big>(</big><em>req</em>, <em>fp</em>, <em>code</em>, <em>msg</em>, <em>headers</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethAuthHandler.http_error_401" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basic Auth handler</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.shibboleth.ShibbolethAuthHandler.run">
-<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.ShibbolethAuthHandler.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<h2>2.3. <tt class="xref py py-class docutils literal"><span class="pre">ShibbolethAuthHandler</span></tt> Objects<a class="headerlink" href="#shibbolethauthhandler-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="set-cookies-expires-function">
 <h2>2.4. <tt class="xref py py-func docutils literal"><span class="pre">set_cookies_expires()</span></tt> Function<a class="headerlink" href="#set-cookies-expires-function" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="sibboleth.shibboleth.set_cookies_expiries">
-<tt class="descclassname">sibboleth.shibboleth.</tt><tt class="descname">set_cookies_expiries</tt><big>(</big><em>cookiejar</em><big>)</big><a class="headerlink" href="#sibboleth.shibboleth.set_cookies_expiries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the shibboleth session cookies to the default SP expiry,
-this way the cookies can be used by other applications.  The
-cookes that are modified are <tt class="docutils literal"><span class="pre">_shibsession_</span></tt></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cj</strong> &#8211; the cookie jar that stores the shibboleth cookies</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 </div>
 

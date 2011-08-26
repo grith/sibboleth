@@ -54,184 +54,25 @@
   <div class="section" id="forms-shibboleth-form-handlers">
 <h1>4. <a class="reference internal" href="#module-sibboleth.forms" title="sibboleth.forms"><tt class="xref py py-mod docutils literal"><span class="pre">forms</span></tt></a> &#8211; shibboleth form handlers<a class="headerlink" href="#forms-shibboleth-form-handlers" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-sibboleth.forms"></span><div class="section" id="formhandler-objects">
-<h2>4.1. <a class="reference internal" href="#sibboleth.forms.FormHandler" title="sibboleth.forms.FormHandler"><tt class="xref py py-class docutils literal"><span class="pre">FormHandler</span></tt></a> Objects<a class="headerlink" href="#formhandler-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.FormHandler">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">FormHandler</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.FormHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base Form Handler Class</p>
-<dl class="method">
-<dt id="sibboleth.forms.FormHandler.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.FormHandler.submit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<h2>4.1. <tt class="xref py py-class docutils literal"><span class="pre">FormHandler</span></tt> Objects<a class="headerlink" href="#formhandler-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="ds-objects">
-<h2>4.2. <a class="reference internal" href="#sibboleth.forms.DS" title="sibboleth.forms.DS"><tt class="xref py py-class docutils literal"><span class="pre">DS</span></tt></a> Objects<a class="headerlink" href="#ds-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.DS">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">DS</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.DS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Discovery Service Handler</p>
-<dl class="method">
-<dt id="sibboleth.forms.DS.prompt">
-<tt class="descname">prompt</tt><big>(</big><em>shibboleth</em><big>)</big><a class="headerlink" href="#sibboleth.forms.DS.prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.forms.DS.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.DS.submit" title="Permalink to this definition">¶</a></dt>
-<dd><p>submit WAYF form with IDP</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opener</strong> &#8211; the urllib2 opener</li>
-<li><strong>data</strong> &#8211; the form data as a dictionary</li>
-<li><strong>res</strong> &#8211; the response object</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<h2>4.2. <tt class="xref py py-class docutils literal"><span class="pre">DS</span></tt> Objects<a class="headerlink" href="#ds-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="wayf-objects">
-<h2>4.3. <a class="reference internal" href="#sibboleth.forms.WAYF" title="sibboleth.forms.WAYF"><tt class="xref py py-class docutils literal"><span class="pre">WAYF</span></tt></a> Objects<a class="headerlink" href="#wayf-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.WAYF">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">WAYF</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.WAYF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Where Are You From Handler</p>
-<dl class="method">
-<dt id="sibboleth.forms.WAYF.prompt">
-<tt class="descname">prompt</tt><big>(</big><em>shibboleth</em><big>)</big><a class="headerlink" href="#sibboleth.forms.WAYF.prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.forms.WAYF.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.WAYF.submit" title="Permalink to this definition">¶</a></dt>
-<dd><p>submit WAYF form with IDP</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opener</strong> &#8211; the urllib2 opener</li>
-<li><strong>data</strong> &#8211; the form data as a dictionary</li>
-<li><strong>res</strong> &#8211; the response object</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<h2>4.3. <tt class="xref py py-class docutils literal"><span class="pre">WAYF</span></tt> Objects<a class="headerlink" href="#wayf-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="idpformlogin-objects">
-<h2>4.4. <a class="reference internal" href="#sibboleth.forms.IdPFormLogin" title="sibboleth.forms.IdPFormLogin"><tt class="xref py py-class docutils literal"><span class="pre">IdPFormLogin</span></tt></a> Objects<a class="headerlink" href="#idpformlogin-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.IdPFormLogin">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">IdPFormLogin</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPFormLogin" title="Permalink to this definition">¶</a></dt>
-<dd><p>IDP Form Login Handler</p>
-<dl class="method">
-<dt id="sibboleth.forms.IdPFormLogin.prompt">
-<tt class="descname">prompt</tt><big>(</big><em>shibboleth</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPFormLogin.prompt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="sibboleth.forms.IdPFormLogin.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPFormLogin.submit" title="Permalink to this definition">¶</a></dt>
-<dd><p>submit login form to IdP</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opener</strong> &#8211; the urllib2 opener</li>
-<li><strong>data</strong> &#8211; the form data
-as a dictionary :param res: the response object :param cm: a
-<tt class="xref py py-class docutils literal"><span class="pre">CredentialManager</span></tt> containing the URL
-to the service provider you want to connect to</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<h2>4.4. <tt class="xref py py-class docutils literal"><span class="pre">IdPFormLogin</span></tt> Objects<a class="headerlink" href="#idpformlogin-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="casformlogin-objects">
-<h2>4.5. <a class="reference internal" href="#sibboleth.forms.CASFormLogin" title="sibboleth.forms.CASFormLogin"><tt class="xref py py-class docutils literal"><span class="pre">CASFormLogin</span></tt></a> Objects<a class="headerlink" href="#casformlogin-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.CASFormLogin">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">CASFormLogin</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.CASFormLogin" title="Permalink to this definition">¶</a></dt>
-<dd><p>CAS Form Login Handler</p>
-</dd></dl>
-
+<h2>4.5. <tt class="xref py py-class docutils literal"><span class="pre">CASFormLogin</span></tt> Objects<a class="headerlink" href="#casformlogin-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="idpspform-objects">
-<h2>4.6. <a class="reference internal" href="#sibboleth.forms.IdPSPForm" title="sibboleth.forms.IdPSPForm"><tt class="xref py py-class docutils literal"><span class="pre">IdPSPForm</span></tt></a> Objects<a class="headerlink" href="#idpspform-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.IdPSPForm">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">IdPSPForm</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPSPForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>IDP Post-back Form Handler</p>
-<dl class="method">
-<dt id="sibboleth.forms.IdPSPForm.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPSPForm.submit" title="Permalink to this definition">¶</a></dt>
-<dd><p>submit IdP form to SP</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opener</strong> &#8211; the urllib2 opener</li>
-<li><strong>data</strong> &#8211; the form data as a dictionary</li>
-<li><strong>res</strong> &#8211; the response object</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<h2>4.6. <tt class="xref py py-class docutils literal"><span class="pre">IdPSPForm</span></tt> Objects<a class="headerlink" href="#idpspform-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="idpspformrelaystate-objects">
-<h2>4.7. <a class="reference internal" href="#sibboleth.forms.IdPSPFormRelayState" title="sibboleth.forms.IdPSPFormRelayState"><tt class="xref py py-class docutils literal"><span class="pre">IdPSPFormRelayState</span></tt></a> Objects<a class="headerlink" href="#idpspformrelaystate-objects" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="sibboleth.forms.IdPSPFormRelayState">
-<em class="property">class </em><tt class="descclassname">sibboleth.forms.</tt><tt class="descname">IdPSPFormRelayState</tt><big>(</big><em>title</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPSPFormRelayState" title="Permalink to this definition">¶</a></dt>
-<dd><p>Slight variation on the IdPSPForm</p>
-<dl class="method">
-<dt id="sibboleth.forms.IdPSPFormRelayState.submit">
-<tt class="descname">submit</tt><big>(</big><em>opener</em>, <em>res</em><big>)</big><a class="headerlink" href="#sibboleth.forms.IdPSPFormRelayState.submit" title="Permalink to this definition">¶</a></dt>
-<dd><p>submit IdP form to SP</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opener</strong> &#8211; the urllib2 opener</li>
-<li><strong>data</strong> &#8211; the form data as a dictionary</li>
-<li><strong>res</strong> &#8211; the response object</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<h2>4.7. <tt class="xref py py-class docutils literal"><span class="pre">IdPSPFormRelayState</span></tt> Objects<a class="headerlink" href="#idpspformrelaystate-objects" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
