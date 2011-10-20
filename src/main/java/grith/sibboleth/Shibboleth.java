@@ -7,7 +7,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.bushe.swing.event.Prioritized;
@@ -15,6 +14,8 @@ import org.python.core.Py;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Central wrapper class that imports the {@code Shibboleth} class from the
@@ -29,7 +30,7 @@ import org.python.util.PythonInterpreter;
 public class Shibboleth implements ShibLoginEventSource,
 EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
-	static final Logger myLogger = Logger.getLogger(Shibboleth.class.getName());
+	static final Logger myLogger = LoggerFactory.getLogger(Shibboleth.class.getName());
 
 	/**
 	 * Convenience class to activate an All-trusting Trustmanager. Most useful
@@ -76,7 +77,8 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 
 			public void shibLoginFailed(Exception e) {
 
-				myLogger.error(e);
+				myLogger.error("Shib login failed: " + e.getLocalizedMessage(),
+						e);
 
 			}
 
@@ -135,7 +137,9 @@ EventSubscriber<NewHttpProxyEvent>, Prioritized {
 					+ "\") ");
 
 		} catch (Exception e) {
-			myLogger.error(e);
+			myLogger.error(
+					"Setting of http proxy failed: " + e.getLocalizedMessage(),
+					e);
 		}
 
 	}

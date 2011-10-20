@@ -21,10 +21,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -44,7 +45,7 @@ import com.jgoodies.forms.layout.RowSpec;
 public class ShibLoginPanel extends JPanel implements ShibListener,
 ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 
-	static final Logger myLogger = Logger.getLogger(ShibLoginPanel.class
+	static final Logger myLogger = LoggerFactory.getLogger(ShibLoginPanel.class
 			.getName());
 
 	private static final long serialVersionUID = 3143352249184524656L;
@@ -436,7 +437,9 @@ ShibLoginEventSource, IdpListener, EventSubscriber<NewHttpProxyEvent> {
 						idpModel.removeAllElements();
 						idpModel.addElement(COULD_NOT_LOAD_IDP_LIST_STRING);
 					}
-					myLogger.error(e);
+					myLogger.error(
+							"Refreshing of IDP list failed: "
+									+ e.getLocalizedMessage(), e);
 				} finally {
 					lockUI(false);
 				}

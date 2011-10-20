@@ -19,11 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
-import org.apache.log4j.Logger;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.python.core.PyInstance;
 import org.python.core.PyObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An example Swing JDialog. Have a look at the code if you're interested...
@@ -33,7 +34,7 @@ import org.python.core.PyObject;
  */
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
-	static final Logger myLogger = Logger.getLogger(ShibLoginDialog.class
+	static final Logger myLogger = LoggerFactory.getLogger(ShibLoginDialog.class
 			.getName());
 
 	private class LoginAction extends AbstractAction {
@@ -75,7 +76,7 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			dialog.setVisible(true);
 
 		} catch (Exception e) {
-			myLogger.error(e);
+			myLogger.error(e.getLocalizedMessage());
 		}
 	}
 	private final JPanel contentPanel = new JPanel();
