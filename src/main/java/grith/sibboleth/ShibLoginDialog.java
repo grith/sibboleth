@@ -34,9 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ShibLoginDialog extends JDialog implements ShibListener {
 
-	static final Logger myLogger = LoggerFactory.getLogger(ShibLoginDialog.class
-			.getName());
-
 	private class LoginAction extends AbstractAction {
 		public LoginAction() {
 			putValue(NAME, "Login");
@@ -49,6 +46,9 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 
 		}
 	}
+
+	static final Logger myLogger = LoggerFactory.getLogger(ShibLoginDialog.class
+			.getName());
 	/**
 	 * Launch the application.
 	 */
@@ -68,7 +68,8 @@ public class ShibLoginDialog extends JDialog implements ShibListener {
 			});
 
 			ShibLoginDialog dialog = new ShibLoginDialog(
-					"https://slcstest.arcs.org.au/SLCS/login");
+			// "https://slcstest.arcs.org.au/SLCS/login");
+					"https://manager.test.aaf.edu.au/federationregistry/login");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 			HttpProxyManager.setDefaultHttpProxy();

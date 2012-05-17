@@ -30,37 +30,7 @@
 				<checksumPolicy>fail</checksumPolicy>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>bestgrid.public.snapshot</id>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public-snapshots/
-			</url>
-			<releases>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-		</repository>
 	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<name>BeSTGRID Releases Repository</name>
-			<id>bestgrid.release</id>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/releases
-			</url>
-		</repository>
-		<snapshotRepository>
-			<id>bestgrid.snapshot</id>
-			<name>BeSTGRID Snapshots Repository</name>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/snapshots
-			</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<issueManagement>
 		<system>Github</system>
@@ -68,8 +38,8 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>Hudson</system>
-		<url>http://dev.ceres.auckland.ac.nz/hudson/job/Sibboleth-SNAPSHOT/
+		<system>Jenkins</system>
+		<url>https://code.ceres.auckland.ac.nz/jenkins/job/Sibboleth-SNAPSHOT/
 		</url>
 	</ciManagement>
 
@@ -81,9 +51,6 @@
 		<url>https://github.com/grith/sibboleth</url>
 	</scm>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -106,7 +73,7 @@
 		<dependency>
 			<groupId>grisu</groupId>
 			<artifactId>grid-jcommons</artifactId>
-			<version>1.5-SNAPSHOT</version>
+			<version>${grid-jcommons.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -227,4 +194,9 @@
 	</profiles>
 
 
+	<parent>
+		<groupId>nz.org.nesi</groupId>
+		<artifactId>nesi</artifactId>
+		<version>0.13</version>
+	</parent>
 </project>

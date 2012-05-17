@@ -11,7 +11,9 @@ public class TestClass {
 		final CredentialManager cm = new DummyCredentialManager();
 
 		final Shibboleth shib = new Shibboleth(idpObj, cm);
-		shib.openurl("https://slcs1.arcs.org.au/SLCS/login");
+		// shib.openurl("https://wiki.test.bestgrid.org/Shibboleth.sso/Login");
+		shib.openurl("https://manager.test.aaf.edu.au/federationregistry/login");
+		// shib.openurl("https://slcs1.arcs.org.au/SLCS/login");
 
 		for (String idp : idpObj.getIdps()) {
 			System.out.println(idp);
