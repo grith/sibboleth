@@ -3,7 +3,7 @@
 
 	<groupId>grith</groupId>
 	<artifactId>sibboleth</artifactId>
-	<version>0.6-SNAPSHOT</version>
+	<version>0.4.1-SNAPSHOT</version>
 
 	<name>sibboleth</name>
 	<description>Non-web Shibboleth client written in Python (incl. Java
@@ -101,7 +101,7 @@
 					<pushChanges>true</pushChanges>
 					<localCheckout>true</localCheckout>
 					<tagNameFormat>@{project.version}</tagNameFormat>
-					<releaseProfiles />
+					<releaseProfiles></releaseProfiles>
 				</configuration>
 			</plugin>
 			<plugin>
