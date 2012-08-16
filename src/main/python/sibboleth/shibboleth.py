@@ -29,6 +29,9 @@ import re
 from sibboleth.forms import getFormAdapter
 import sys
 
+# import a workaround to SSL issues on some versions of Java
+import sibboleth.socketsslonlydefaultciphers
+
 is_jython = sys.platform.startswith('java')
 
 if is_jython:
