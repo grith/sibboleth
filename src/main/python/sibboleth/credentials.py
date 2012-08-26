@@ -121,14 +121,6 @@ class Idp(IIdp):
     """
     def __init__(self, idp=None):
         self.idp = idp or ''
-        self.raw_idps = {}
-        self.idps = []
-
-    def set_idps(self, idps):
-        """set the list of possible idps"""
-        self.raw_idps = idps
-        self.idps = idps.keys()
-        self.idps.sort()
 
     def prompt(self, controller):
         """some how decide what idp to authenticate to the
