@@ -31,7 +31,24 @@ if is_jython:
     from grith.sibboleth import IdpObject as IIdp
 else:
     ICredentialManager = object
-    IIdp = object
+
+    # declare an almost empty class IIdp - but we must define the set_idps method here
+    # (It was earlier declared in the IdP class itself, but that breaks under
+    # jython when it clashes with the set_idps method inhereted from Java
+    # IdpObject).  
+    # Hence, declare it into IIdp when NOT running under jython to provide an
+    # equivalent replacement.
+    ### IIdp = object
+    class IIdp:
+	def __init__(self):
+	    self.raw_idps = {}
+	    self.idps = []
+
+	def set_idps(self, idps):
+	    """set the list of possible idps"""
+	    self.raw_idps = idps
+	    self.idps = idps.keys()
+	    self.idps.sort()
 
 
 class AuthenticationException(Exception):
