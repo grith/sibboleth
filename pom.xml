@@ -65,9 +65,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jgoodies</groupId>
-			<artifactId>forms</artifactId>
-			<version>1.2.1</version>
-			<type>jar</type>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.7.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
